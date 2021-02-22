@@ -228,4 +228,4 @@ client.on('message', async message => {
     }*/
 });
 
-client.login("ODEyMzU2OTI3NzczOTk5MTI2.YC_kWA.QWN3-uWpqF_4xQD_uWr09i2Rdos");
+client.login("BOT TOKEN HERE");
