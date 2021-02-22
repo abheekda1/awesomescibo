@@ -1,5 +1,4 @@
 # AwesomeSciBo
-A simple Discord bot that automatically generates Science Bowl rounds using the ScibowlDB API!
 
 [![GitHub stars](https://img.shields.io/github/stars/ADawesomeguy/AwesomeSciBo?color=blue&style=for-the-badge)](https://github.com/ADawesomeguy/AwesomeSciBo/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/ADawesomeguy/AwesomeSciBo?style=for-the-badge)](https://github.com/ADawesomeguy/AwesomeSciBo/network)
@@ -7,6 +6,7 @@ A simple Discord bot that automatically generates Science Bowl rounds using the 
 [![GitHub issues](https://img.shields.io/github/issues/ADawesomeguy/AwesomeSciBo?color=blue&style=for-the-badge)](https://github.com/ADawesomeguy/AwesomeSciBo/issues)
 ![API](https://img.shields.io/badge/API-ScibowlDB-blue?style=for-the-badge)
 
+A simple Discord bot that automatically generates Science Bowl rounds using the ScibowlDB API!
 
 ## Deployment
 Deploying this bot to your Discord server is relatively simple: you can add it to your own server by using [this link](http://scibot.adawesome.tech/).
