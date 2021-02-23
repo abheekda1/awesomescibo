@@ -14,6 +14,7 @@ Deploying this bot to your Discord server is relatively simple: you can add it t
 ## Contributing
 If you want to make a contribution to this bot, please make a [Pull Request](https://github.com/ADawesomeguy/AwesomeSciBo/pulls) with as much detail as you can. I'll take a look in my free time and see if it's worth adding. If not, I'll let you know what to do to *make* it worth adding!
 
+
 ## Installation
 There are two ways to install this on your own server: using npm and cloning this repository.
 
@@ -46,6 +47,11 @@ cd AwesomeSciBo/bot && npm i
 ```
 node roundbot.mjs
 ```
+
+## Usage
+To get started, run the command `do be helping` to get a list of commands. The more helpful commands will be the ones that generate packets, which are `do be roundgen pdf/html` and `do be roundgen pdf/html dm`.
+
+> Note: if you plan to use PDF files, you must have `gotenberg` installed and running at `localhost:3136` (or change the `awesomescibo.mjs` script to point to a different location). You can find more info about that [here](https://github.com/thecodingmachine/gotenberg).
 
 ## Notes
 ### Creating a Discord Application/Bot
