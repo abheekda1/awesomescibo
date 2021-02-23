@@ -24,11 +24,11 @@ git clone https://github.com/ADawesomeguy/AwesomeSciBo.git
 ```
 cd AwesomeSciBo/bot && npm i
 ```
-3) Create your own application and bot using the [Discord Developer Portal](https://discord.com/developers) and add your bot token to `roundbot.mjs` file. You can find the bot token in the `Bot` section of your application:
+3) Create your own application and bot using the [Discord Developer Portal](https://discord.com/developers) and add your bot token to the `roundbot.mjs` file. You can find the bot token in the `Bot` section of your application:
 
-![](images/discord-developer.png)
+    ![](images/discord-developer.png)
 
-6) Run your bot:
+4) Run your bot:
 ```
 node roundbot.mjs
 ```
