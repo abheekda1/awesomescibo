@@ -4,7 +4,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/ADawesomeguy/AwesomeSciBo?style=for-the-badge)](https://github.com/ADawesomeguy/AwesomeSciBo/network)
 [![GitHub license](https://img.shields.io/github/license/ADawesomeguy/AwesomeSciBo?color=blue&style=for-the-badge)](https://github.com/ADawesomeguy/AwesomeSciBo/blob/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/ADawesomeguy/AwesomeSciBo?color=blue&style=for-the-badge)](https://github.com/ADawesomeguy/AwesomeSciBo/issues)
-![API](https://img.shields.io/badge/API-ScibowlDB-blue?style=for-the-badge)
+[![API](https://img.shields.io/badge/API-ScibowlDB-blue?style=for-the-badge)](https://github.com/CQCumbers/ScibowlDB)
 
 A simple Discord bot that automatically generates Science Bowl rounds using the ScibowlDB API!
 
@@ -34,4 +34,4 @@ node roundbot.mjs
 ```
 
 ## Credit
-The bot was made by [@ADawesomeguy](https://github.com/ADawesomeguy), however, the API was made by [@CQCumber](https://github.com/CQCumber). Go give [his API](https://github.com/CQCumbers/ScibowlDB) a star, he totally deserves it!
+The bot was made by [@ADawesomeguy](https://github.com/ADawesomeguy. However, the API was made by [@CQCumber](https://github.com/CQCumber). Go give [his API](https://github.com/CQCumbers/ScibowlDB) a star, he totally deserves it!
