@@ -34,4 +34,4 @@ node roundbot.mjs
 ```
 
 ## Credit
-The bot was made by [@ADawesomeguy](https://github.com/ADawesomeguy. However, the API was made by [@CQCumber](https://github.com/CQCumber). Go give [his API](https://github.com/CQCumbers/ScibowlDB) a star, he totally deserves it!
+The bot was made by [@ADawesomeguy](https://github.com/ADawesomeguy). However, the API was made by [@CQCumber](https://github.com/CQCumber). Go give [his API](https://github.com/CQCumbers/ScibowlDB) a star, he totally deserves it!
