@@ -12,7 +12,7 @@ A simple Discord bot that automatically generates Science Bowl rounds using the 
 Deploying this bot to your Discord server is relatively simple: you can add it to your own server by using [this link](http://scibot.adawesome.tech/).
 
 ## Contributing
-If you want to make a contribution to this bot, please make a [Pull Request](https://github.com/ADawesomeguy/AwesomeSciBo/pulls) with as much detail as you can. I'll take a look in my free time and see if it's worth adding. If not, I'll let you know what to do to *make* it worth adding!https://github.com/ADawesomeguy/AwesomeSciBo/pulls
+If you want to make a contribution to this bot, please make a [Pull Request](https://github.com/ADawesomeguy/AwesomeSciBo/pulls) with as much detail as you can. I'll take a look in my free time and see if it's worth adding. If not, I'll let you know what to do to *make* it worth adding!
 
 ## Installation
 There are a couple steps to installing this bot on your own server.
