@@ -4,9 +4,9 @@ const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 import fetch from 'node-fetch';
 import * as fs from 'fs';
 var hits = 0;
-fs.readFile('numhits.txt', 'utf8', function(err, data){
+fs.readFile('numhits.txt', 'utf8', function(error, data){
     hits = data;
-    if (err) {
+    if (error) {
         console.log(error);
     }
 });
