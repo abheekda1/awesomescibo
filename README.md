@@ -15,7 +15,24 @@ Deploying this bot to your Discord server is relatively simple: you can add it t
 If you want to make a contribution to this bot, please make a [Pull Request](https://github.com/ADawesomeguy/AwesomeSciBo/pulls) with as much detail as you can. I'll take a look in my free time and see if it's worth adding. If not, I'll let you know what to do to *make* it worth adding!
 
 ## Installation
-There are a couple steps to installing this bot on your own server.
+There are two ways to install this on your own server: using npm and cloning this repository.
+
+> Note: make sure you have `node` installed  on your system. This varies from computer to computer, but make sure you have the right version installed. Generally, versions older than 12.X don't work properly.
+
+### *RECOMMENDED*
+### Option 1: NPM
+#### Steps
+1) Install the package with npm
+```
+sudo npm i -g awscibo
+```
+2) Run the command (learn how to get your token [here](https://github.com/ADawesomeguy/AwesomeSciBo/blob/master/README.md#Notes)
+```
+awscibo [your token here]
+```
+
+### Option 2: Clone repository
+#### Steps
 1) Clone repo:
 ```
 git clone https://github.com/ADawesomeguy/AwesomeSciBo.git
@@ -24,14 +41,19 @@ git clone https://github.com/ADawesomeguy/AwesomeSciBo.git
 ```
 cd AwesomeSciBo/bot && npm i
 ```
-3) Create your own application and bot using the [Discord Developer Portal](https://discord.com/developers) and add your bot token to the `roundbot.mjs` file. You can find the bot token in the `Bot` section of your application:
 
-    ![](images/discord-developer.png)
-
-4) Run your bot:
+3) Run your bot:
 ```
 node roundbot.mjs
 ```
+
+## Notes
+### Creating a Discord Application/Bot
+To create your own application and bot using the [Discord Developer Portal](https://discord.com/developers), go to the previous link and sign in. Then create a new application, and click bots on the left. Configure it to your liking, and then copy the token.
+
+   ![](images/discord-developer.png)
+
+That's the most important part of your bot *and don't share it with anyone*.
 
 ## Credit
 The bot was made by [@ADawesomeguy](https://github.com/ADawesomeguy). However, the API was made by [@CQCumbers](https://github.com/CQCumbers). Go give [his API](https://github.com/CQCumbers/ScibowlDB) a star, he totally deserves it!
