@@ -4,15 +4,17 @@
     "fs": "^0.0.1-security",
     "node-fetch": "^2.6.1"
   },
-  "name": "roundbot2",
-  "version": "1.0.0",
-  "main": "index.js",
-  "devDependencies": {},
+  "name": "awscibo",
+  "version": "0.0.2",
+  "main": "awesomescibo.mjs",
+  "bin": {
+    "awscibo": "./awesomescibo.mjs"
+  },
   "scripts": {
-    "test": "node roundbot.mjs"
+    "test": "node awesomescibo.mjs"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "author": "Abheek Dhawan",
+  "license": "Apache 2.0",
+  "description": "A simple Discord bot that automatically generates Science Bowl rounds using the ScibowlDB API!"
 }

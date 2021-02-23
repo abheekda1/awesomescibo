@@ -1,15 +1,26 @@
+#!/usr/bin/env node
+
 import * as Discord from 'discord.js';
 import { execSync } from 'child_process';
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 import fetch from 'node-fetch';
 import * as fs from 'fs';
+
+/*const Discord = require('discord.js');
+const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const fetch = require('node-fetch');
+const fs = require('fs');*/
 var hits = 0;
-fs.readFile('numhits.txt', 'utf8', function(error, data){
-    hits = data;
-    if (error) {
-        console.log(error);
-    }
-});
+
+if (fs.existsSync('numhits.txt')) {
+  fs.readFile('numhits.txt', 'utf8', function(err, data){
+      hits = data;
+      if (err) {
+          console.log(err);
+      }
+  });
+
+}
 
 
 client.once('ready', () => {
@@ -18,7 +29,7 @@ client.once('ready', () => {
 });
 
 client.on('guildCreate', guild => {
-  guild.channels.cache.find(channel => channel.name === 'general').send("what is up peeps I am roundbutt");
+  guild.channels.cache.find(channel => channel.name === 'general').send("What is up peeps I am the AwesomeSciBo Bot!");
 });
 
 client.on('message', async message => {
@@ -27,7 +38,7 @@ client.on('message', async message => {
         fs.writeFile('numhits.txt', hits, (error) => { if (error) { console.log(error); } });
     }
   if (message.content.toLowerCase() === ("do be helping")) {
-    message.channel.send(new Discord.MessageEmbed().setTitle("Help").setDescription("`do be helping`: display this help message\n`do be roundgen html`: send a round to the channel\n`do be roundgen html dm`: dm a round to you\n`do be roundgen pdf`: send a pdf round to the channel\n`do be roundgen pdf dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n - `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n - `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of round requests"));
+    message.channel.send(new Discord.MessageEmbed().setTitle("Help").setDescription("`do be helping`: display this help message\n`do be roundgen html`: send a round to the channel\n`do be roundgen html dm`: dm a round to you\n`do be roundgen pdf`: send a pdf round to the channel\n`do be roundgen pdf dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of rounds generated\n`do be servers`: send the number of servers this bot is a part of\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo"));
 
   }
   if (message.content.toLowerCase() === ("do be roundgen html dm")) {
@@ -210,22 +221,6 @@ client.on('message', async message => {
     if (message.content.toLowerCase() === "do be servers") {
         message.channel.send(client.guilds.cache.size);
     }
-
-    if (message.content.toLowerCase() === "do be pog") {
-        message.channel.send(new Discord.MessageEmbed().setTitle("POG POG POG").setURL("https://media.giphy.com/media/c5skRQb3BXp8RwKGKW/giphy.gif").setImage("https://media.giphy.com/media/c5skRQb3BXp8RwKGKW/giphy.gif"));
-    }
-
-/*    if (message.content.toLowerCase() === "do be user channel create") {
-      const userChannel = await message.guild.channels.create('Users: ' + message.guild.memberCount, {
-        reason: 'Create channel to track number of users',
-        type: 'voice'
-      })
-        //.then(console.log)
-        .catch(console.error);
-      
-      console.log(userChannel.id);
-      setInterval(async () => { await message.guild.channels.cache.get(userChannel.id).setName('Members: ' + message.guild.memberCount).catch(console.error); }, 10000);
-    }*/
 });
 
-client.login("BOT TOKEN HERE");
+client.login(process.argv[2]);
