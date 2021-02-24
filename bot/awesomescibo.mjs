@@ -221,6 +221,21 @@ client.on('message', async message => {
     if (message.content.toLowerCase() === "do be servers") {
         message.channel.send(client.guilds.cache.size);
     }
+
+    if (message.content.toLowerCase() === "do be iss") {
+        await fetch("http://api.open-notify.org/iss-now.json")
+        .then(request => request.json())
+            .then(data => {
+                //var astros = '';
+                //for (let i = 0; i < data.people.length; i++) {
+                //  console.log(data.people[i]);
+                //  astros += `${data.people[i]}\n`;
+                //}
+                message.channel.send(new Discord.MessageEmbed().setTitle("The current location of the ISS!").setImage(`https://api.mapbox.com/styles/v1/mapbox/light-v10/static/pin-s-l+000(${data.iss_position.longitude},${data.iss_position.latitude})/-87.0186,20,1/1000x1000?access_token=pk.eyJ1IjoiYWRhd2Vzb21lZ3V5IiwiYSI6ImNrbGpuaWdrYzJ0bGYydXBja2xsNmd2YTcifQ.Ude0UFOf9lFcQ-3BANWY5A`).setURL('https://spotthestation.nasa.gov/tracking_map.cfm')/*.addFields(
+                    { name: 'Current inhabitants', value: `${astros}` }
+                )*/);
+            });
+    }
 });
 
 client.login(process.argv[2]).catch(error => console.log(error));
