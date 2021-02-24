@@ -223,4 +223,4 @@ client.on('message', async message => {
     }
 });
 
-client.login(process.argv[2]);
+client.login(process.argv[2]).catch(error => console.log(error));
