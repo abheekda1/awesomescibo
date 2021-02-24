@@ -5,7 +5,7 @@
     "node-fetch": "^2.6.1"
   },
   "name": "awscibo",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "awesomescibo.mjs",
   "bin": {
     "awscibo": "./awesomescibo.mjs"
@@ -13,7 +13,7 @@
   "scripts": {
     "test": "node awesomescibo.mjs randomtoken"
   },
-  "keywords": [],
+  "keywords": ["discord", "bot", "science bowl", "discord.js"],
   "author": "Abheek Dhawan",
   "license": "Apache 2.0",
   "description": "A simple Discord bot that automatically generates Science Bowl rounds using the ScibowlDB API!"
