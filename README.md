@@ -27,7 +27,7 @@ There are two ways to install this on your own server: using npm and cloning thi
 ```
 sudo npm i -g awscibo
 ```
-2) Run the command (learn how to get your token [here](https://github.com/ADawesomeguy/AwesomeSciBo/blob/master/README.md#Notes)
+2) Run the command (learn how to get your token [here](https://github.com/ADawesomeguy/AwesomeSciBo/blob/master/README.md#Notes))
 ```
 awscibo [your token here]
 ```
