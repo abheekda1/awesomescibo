@@ -11,7 +11,7 @@
     "awscibo": "./awesomescibo.mjs"
   },
   "scripts": {
-    "test": "node awesomescibo.mjs"
+    "test": "node awesomescibo.mjs randomtoken"
   },
   "keywords": [],
   "author": "Abheek Dhawan",
