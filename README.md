@@ -45,7 +45,7 @@ cd AwesomeSciBo/bot && npm i
 
 3) Run your bot:
 ```
-node roundbot.mjs
+node awesomescibo.mjs
 ```
 
 ## Usage
