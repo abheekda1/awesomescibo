@@ -16,9 +16,9 @@ If you want to make a contribution to this bot, please make a [Pull Request](htt
 
 
 ## Installation
-There are two ways to install this on your own server: using npm and cloning this repository.
+There are three ways to install this on your own server: using npm, cloning this repository, or using Docker.
 
-> Note: make sure you have `node` installed  on your system. This varies from computer to computer, but make sure you have the right version installed. Generally, versions older than 12.X don't work properly.
+> Note: make sure you have `node` installed  on your system (unless you plan to use Docker). This varies from computer to computer, but make sure you have the right version installed. Generally, versions older than 12.X don't work properly.
 
 ### *RECOMMENDED*
 ### Option 1: NPM
