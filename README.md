@@ -24,50 +24,8 @@ If you want to make a contribution to this bot, please make a [Pull Request](htt
 
 
 ## Installation
-There are three ways to install this on your own server: using npm, cloning this repository, or using Docker.
+Please see [the wiki](https://github.com/ADawesomeguy/AwesomeSciBo/wiki/installation) install page.
 
-> Note: make sure you have `node` installed  on your system (unless you plan to use Docker). This varies from computer to computer, but make sure you have the right version installed. Generally, versions older than 12.X don't work properly.
-
-### *RECOMMENDED*
-### Option 1: NPM
-#### Steps
-1) Install the package with npm
-```
-sudo npm i -g awscibo
-```
-2) Run the command (learn how to get your token [here](https://github.com/ADawesomeguy/AwesomeSciBo/blob/master/README.md#Notes))
-```
-awscibo [your token here]
-```
-
-### Option 2: Clone repository
-#### Steps
-1) Clone repo:
-```
-git clone https://github.com/ADawesomeguy/AwesomeSciBo.git
-```
-2) Enter repo and install dependencies
-```
-cd AwesomeSciBo/bot && npm i
-```
-
-3) Run your bot:
-```
-node awesomescibo.mjs
-```
-
-### Option 3: Dockerfile
-#### Steps
-1) Clone repo
-```
-git clone https://github.com/ADawesomeguy/AwesomeSciBo.git
-```
-2) Enter repo, build, and run Docker image
-```
-cd AwesomeSciBo
-docker build -t awscibo .
-docker run -e BOT_TOKEN=[your bot token here] --name awscibo -d awscibo
-```
 ## Usage
 To get started, run the command `do be helping` to get a list of commands. The more helpful commands will be the ones that generate packets, which are `do be roundgen pdf/html` and `do be roundgen pdf/html dm`.
 
