@@ -54,15 +54,11 @@ node awesomescibo.mjs
 ```
 git clone https://github.com/ADawesomeguy/AwesomeSciBo.git
 ```
-2) Enter repo and edit bot token in Dockerfile
+2) Enter repo, build, and run Docker image
 ```
-cd AwesomeSciBo.
-vim Dockerfile
-```
-3) Build and run Docker image
-```
+cd AwesomeSciBo
 docker build -t awscibo .
-docker run --name awscibo -d awscibo
+docker run -e BOT_TOKEN=[your bot token here] --name awscibo -d awscibo
 ```
 ## Usage
 To get started, run the command `do be helping` to get a list of commands. The more helpful commands will be the ones that generate packets, which are `do be roundgen pdf/html` and `do be roundgen pdf/html dm`.
