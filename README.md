@@ -48,6 +48,22 @@ cd AwesomeSciBo/bot && npm i
 node awesomescibo.mjs
 ```
 
+### Option 3: Dockerfile
+#### Steps
+1) Clone repo
+```
+git clone https://github.com/ADawesomeguy/AwesomeSciBo.git
+```
+2) Enter repo and edit bot token in Dockerfile
+```
+cd AwesomeSciBo.
+vim Dockerfile
+```
+3) Build and run Docker image
+```
+docker build -t awscibo .
+docker run --name awscibo -d awscibo
+```
 ## Usage
 To get started, run the command `do be helping` to get a list of commands. The more helpful commands will be the ones that generate packets, which are `do be roundgen pdf/html` and `do be roundgen pdf/html dm`.
 
