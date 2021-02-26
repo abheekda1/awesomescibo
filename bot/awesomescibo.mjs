@@ -33,7 +33,7 @@ client.on('message', async message => {
   if (message.content.startsWith("do be announcing") && message.author.id === "745063586422063214") {
     var announcement = message.content.substring(17);
     client.guilds.cache.array().forEach((guild) => {
-      guild.channels.cache.find(channel => channel.name === 'general').send(announcement);
+      guild.channels.cache.find(channel => channel.name === 'general').send(announcement).catch((error) => { console.log(error) })
     });
   }
   if (message.content.toLowerCase() === "do be hits") {
@@ -283,7 +283,6 @@ client.on('message', async message => {
             })
         })
         .catch (collected => {
-          console.log(collected);
           message.reply('\n**ANSWER TIMEOUT**');
         })
       })
