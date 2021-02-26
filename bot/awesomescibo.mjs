@@ -35,7 +35,7 @@ client.on('message', async message => {
     fs.writeFile('numhits.txt', hits.toString(), (error) => { if (error) { console.log(error); } });
   }
   if (message.content.toLowerCase() === ("do be helping")) {
-    message.channel.send(new Discord.MessageEmbed().setTitle("Help").setDescription("`do be helping`: display this help message\n`do be roundgen html`: send a round to the channel\n`do be roundgen html dm`: dm a round to you\n`do be roundgen pdf`: send a pdf round to the channel\n`do be roundgen pdf dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of rounds generated\n`do be servers`: send the number of servers this bot is a part of\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo"));
+    message.channel.send(new Discord.MessageEmbed().setTitle("Help").setDescription("`do be helping`: display this help message\n`do be roundgen html`: send a round to the channel\n`do be roundgen html dm`: dm a round to you\n`do be roundgen pdf`: send a pdf round to the channel\n`do be roundgen pdf dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of rounds generated\n`do be servers`: send the number of servers this bot is a part of\n`do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo"));
 
   }
   if (message.content.toLowerCase() === ("do be roundgen html dm")) {
@@ -141,7 +141,6 @@ client.on('message', async message => {
     setTimeout(function () { person.send(new Discord.MessageEmbed().setTitle("Here's your round!").attachFiles("round.pdf")); }, 1000);
     hits++;
   }
-
   if (message.content.toLowerCase() === ("do be roundgen pdf")) {
     fs.writeFile('index.html', "<h1>Here's your round!</h1>", (error) => { if (error) { console.log(error); } });
     var i;
@@ -210,15 +209,12 @@ client.on('message', async message => {
         });
       })
   }
-
   if (message.content.toLowerCase() === "do be happy") {
     message.channel.send(new Discord.MessageEmbed().setTitle(`Don't Worry Be Happy!`).setImage("https://media.giphy.com/media/7OKC8ZpTT0PVm/giphy.gif").setURL("https://youtu.be/d-diB65scQU"));
   }
-
   if (message.content.toLowerCase() === "do be servers") {
     message.channel.send(client.guilds.cache.size);
   }
-
   if (message.content.toLowerCase() === "do be iss") {
     await fetch("http://api.open-notify.org/iss-now.json")
       .then(request => request.json())
@@ -232,6 +228,60 @@ client.on('message', async message => {
                     { name: 'Current inhabitants', value: `${astros}` }
                 )*/);
       });
+  }
+  if (message.content.toLowerCase() === "do be training") {
+    var author = message.author;
+    fetch("https://scibowldb.com/api/questions/random")
+    .then(response => response.json())
+    .then(data => {
+      let filter = m => m.author.id === message.author.id;
+      message.channel.send(data.question.tossup_question).then(() => {
+        message.channel.awaitMessages(filter, {
+          max: 1,
+          time: 30000,
+          errors: ['time']
+        })
+        .then(message => {
+          message = message.first();
+          var predicted = "unsure";
+          if (data.question.tossup_format === "Multiple Choice") {
+            if (message.content.charAt(0).toLowerCase() === data.question.tossup_answer.charAt(0).toLowerCase()) {
+              predicted = "correct";
+            } else {
+              predicted = "incorrect";
+            }
+          } else {
+              if (message.content.toLowerCase() === data.question.tossup_answer.toLowerCase()) {
+                  predicted = "correct";
+              } else {
+                  predicted = "incorrect";
+              }
+          }
+          message.channel.send(`Correct answer: *${data.question.tossup_answer}*. Predicted: *${predicted}*.`);
+          message.react('✅');
+          message.react('❌');
+          const filter = (reaction, user) => {
+	          return ['❌', '✅'].includes(reaction.emoji.name) && user.id === message.author.id;
+          };
+          message.awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
+            .then(reaction => {
+              var reaction = reaction.first();
+              if (reaction.emoji.name === "❌") {
+                message.reply("Wow, you *really* suck");
+              } else {
+                message.reply("I guess you're *okay*");
+              }
+            })
+            .catch(collected => {
+              message.reply("\n**TIMEOUT**");
+            })
+        })
+        .catch (collected => {
+          console.log(collected);
+          message.channel.send('\n**TIMEOUT**');
+        })
+      })
+    }) 
   }
 });
 
