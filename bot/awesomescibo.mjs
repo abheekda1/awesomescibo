@@ -273,12 +273,12 @@ client.on('message', async message => {
               }
             })
             .catch(collected => {
-              message.reply("\n**TIMEOUT**");
+              message.reply("\n**REACTION TIMEOUT**");
             })
         })
         .catch (collected => {
           console.log(collected);
-          message.channel.send('\n**TIMEOUT**');
+          message.channel.send('\n**ANSWER TIMEOUT**');
         })
       })
     }) 
