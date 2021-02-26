@@ -21,7 +21,7 @@ if (fs.existsSync('numhits.txt')) {
 
 
 client.once('ready', () => {
-  console.log('Ready!');
+  console.log(client.user.username);
   client.user.setActivity("for \"do be helping\"", { type: "WATCHING" });
 });
 
@@ -30,10 +30,16 @@ client.on('guildCreate', guild => {
 });
 
 client.on('message', async message => {
-  if (message.content.startsWith("do be announcing") && message.author.id === "745063586422063214") {
+  
+  if (message.content.startsWith("do be announcing") && message.author.id === "author-id") {
     var announcement = message.content.substring(17);
-    client.guilds.cache.array().forEach((guild) => {
-      guild.channels.cache.find(channel => channel.name === 'general').send(announcement).catch((error) => { console.log(error) })
+    client.guilds.cache.forEach((guild) => {
+      var channel = guild.channels.cache.find(channel => channel.name === 'general');
+      if (channel) {
+        if (channel.type = "text") {
+          channel.send(announcement);
+        }
+      }
     });
   }
   if (message.content.toLowerCase() === "do be hits") {
