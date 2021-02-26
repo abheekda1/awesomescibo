@@ -35,7 +35,7 @@ client.on('message', async message => {
     fs.writeFile('numhits.txt', hits.toString(), (error) => { if (error) { console.log(error); } });
   }
   if (message.content.toLowerCase() === ("do be helping")) {
-    message.channel.send(new Discord.MessageEmbed().setTitle("Help").setDescription("`do be helping`: display this help message\n`do be roundgen html`: send a round to the channel\n`do be roundgen html dm`: dm a round to you\n`do be roundgen pdf`: send a pdf round to the channel\n`do be roundgen pdf dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of rounds generated\n`do be servers`: send the number of servers this bot is a part of\n`do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo"));
+    message.channel.send(new Discord.MessageEmbed().setTitle("Help").setDescription("`do be helping`: display this help message\n`do be roundgen html`: send a round to the channel\n`do be roundgen html dm`: dm a round to you\n`do be roundgen pdf`: send a pdf round to the channel\n`do be roundgen pdf dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of rounds generated\n`do be servers`: send the number of servers this bot is a part of\n`do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo"));
 
   }
   if (message.content.toLowerCase() === ("do be roundgen html dm")) {
@@ -267,9 +267,9 @@ client.on('message', async message => {
             .then(reaction => {
               var reaction = reaction.first();
               if (reaction.emoji.name === "❌") {
-                message.reply("Wow, you *really* suck");
+                message.reply("nice try!");
               } else {
-                message.reply("I guess you're *okay*");
+                message.reply("nice job!");
               }
             })
             .catch(collected => {

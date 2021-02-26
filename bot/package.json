@@ -5,7 +5,7 @@
     "node-fetch": "^2.6.1"
   },
   "name": "awscibo",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "main": "awesomescibo.mjs",
   "bin": {
     "awscibo": "./awesomescibo.mjs"
