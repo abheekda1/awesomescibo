@@ -235,7 +235,7 @@ client.on('message', async message => {
     .then(response => response.json())
     .then(data => {
       let filter = m => m.author.id === message.author.id;
-      message.channel.send(data.question.tossup_question).then(() => {
+      message.reply(data.question.tossup_question).then(() => {
         message.channel.awaitMessages(filter, {
           max: 1,
           time: 30000,
