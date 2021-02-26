@@ -30,6 +30,12 @@ client.on('guildCreate', guild => {
 });
 
 client.on('message', async message => {
+  if (message.content.startsWith("do be announcing") && message.author.id === "745063586422063214") {
+    var announcement = message.content.substring(17);
+    client.guilds.cache.array().forEach((guild) => {
+      guild.channels.cache.find(channel => channel.name === 'general').send(announcement);
+    });
+  }
   if (message.content.toLowerCase() === "do be hits") {
     message.channel.send(hits);
     fs.writeFile('numhits.txt', hits.toString(), (error) => { if (error) { console.log(error); } });
@@ -257,7 +263,7 @@ client.on('message', async message => {
                   predicted = "incorrect";
               }
           }
-          message.channel.send(`Correct answer: *${data.question.tossup_answer}*. Predicted: *${predicted}*.`);
+          message.channel.send(`Correct answer: **${data.question.tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`);
           message.react('✅');
           message.react('❌');
           const filter = (reaction, user) => {
@@ -273,12 +279,12 @@ client.on('message', async message => {
               }
             })
             .catch(collected => {
-              message.reply("\n**REACTION TIMEOUT**");
+              message.channel.send("\n**REACTION TIMEOUT**");
             })
         })
         .catch (collected => {
           console.log(collected);
-          message.channel.send('\n**ANSWER TIMEOUT**');
+          message.reply('\n**ANSWER TIMEOUT**');
         })
       })
     }) 
