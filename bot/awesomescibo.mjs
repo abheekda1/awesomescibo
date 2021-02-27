@@ -275,7 +275,7 @@ client.on('message', async message => {
           const filter = (reaction, user) => {
 	          return ['❌', '✅'].includes(reaction.emoji.name) && user.id === message.author.id;
           };
-          message.awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
+          message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
             .then(reaction => {
               var reaction = reaction.first();
               if (reaction.emoji.name === "❌") {
@@ -285,7 +285,7 @@ client.on('message', async message => {
               }
             })
             .catch(collected => {
-              message.channel.send("\n**REACTION TIMEOUT**");
+              //message.channel.send("\n**REACTION TIMEOUT**");
             })
         })
         .catch (collected => {
