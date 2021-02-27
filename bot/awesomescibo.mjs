@@ -255,6 +255,17 @@ client.on('message', async message => {
         })
         .then(message => {
           message = message.first();
+          var score = 0;
+          if (fs.existsSync(`userScore/${message.author.id}`)) {
+            fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
+              score = Number(data);
+              if (err) {
+                console.log(err);
+              }
+            });
+          } else {
+            fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
+          }
           var predicted = "unsure";
           if (data.question.tossup_format === "Multiple Choice") {
             if (message.content.charAt(0).toLowerCase() === data.question.tossup_answer.charAt(0).toLowerCase()) {
@@ -279,16 +290,20 @@ client.on('message', async message => {
             .then(reaction => {
               var reaction = reaction.first();
               if (reaction.emoji.name === "❌") {
-                message.reply("nice try!");
+                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
+                message.reply(`nice try! Your score is now ${score}`);
               } else {
-                message.reply("nice job!");
+                score += 4;
+                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
+                message.reply(`nice job! Your score is now ${score}`);
+                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
               }
             })
             .catch(collected => {
               //message.channel.send("\n**REACTION TIMEOUT**");
             })
         })
-        .catch (collected => {
+        .catch ((collected, error) => {
           message.reply('\n**ANSWER TIMEOUT**');
         })
       })
@@ -297,3 +312,4 @@ client.on('message', async message => {
 });
 
 client.login(process.argv[2]).catch(error => console.log(error));
+
