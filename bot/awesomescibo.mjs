@@ -31,7 +31,7 @@ client.on('guildCreate', guild => {
 
 client.on('message', async message => {
   
-  if (message.content.startsWith("do be announcing") && message.author.id === "author-id") {
+  if (message.content.startsWith("do be announcing") && message.author.id === process.argv[3]) {
     var announcement = message.content.substring(17);
     client.guilds.cache.forEach((guild) => {
       var channel = guild.channels.cache.find(channel => channel.name === 'general');
