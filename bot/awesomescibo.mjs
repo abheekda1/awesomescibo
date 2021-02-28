@@ -241,7 +241,7 @@ client.on('message', async message => {
                 )*/);
       });
   }
-  if (message.content.startsWith("do be training")) {
+  if (message.content.toLowerCase === "do be training") {
     if (message.content === "do be training") {
       var author = message.author;
       fetch("https://scibowldb.com/api/questions/random")
