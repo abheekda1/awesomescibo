@@ -30,7 +30,7 @@ client.on('guildCreate', guild => {
 });
 
 client.on('message', async message => {
-  
+
   if (message.content.startsWith("do be announcing") && message.author.id === process.argv[3]) {
     var announcement = message.content.substring(17);
     client.guilds.cache.forEach((guild) => {
@@ -47,7 +47,7 @@ client.on('message', async message => {
     fs.writeFile('numhits.txt', hits.toString(), (error) => { if (error) { console.log(error); } });
   }
   if (message.content.toLowerCase() === ("do be helping")) {
-    message.channel.send(new Discord.MessageEmbed().setTitle("Help").setDescription("`do be helping`: display this help message\n`do be roundgen html`: send a round to the channel\n`do be roundgen html dm`: dm a round to you\n`do be roundgen pdf`: send a pdf round to the channel\n`do be roundgen pdf dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of rounds generated\n`do be servers`: send the number of servers this bot is a part of\n`do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo"));
+    message.channel.send(new Discord.MessageEmbed().setTitle("Help").setDescription("`do be helping`: display this help message\n`do be roundgen html`: send a round to the channel\n`do be roundgen html dm`: dm a round to you\n`do be roundgen pdf`: send a pdf round to the channel\n`do be roundgen pdf dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of rounds generated\n`do be servers`: send the number of servers this bot is a part of\n`do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo (please star!)"));
 
   }
   if (message.content.toLowerCase() === ("do be roundgen html dm")) {
@@ -241,495 +241,171 @@ client.on('message', async message => {
                 )*/);
       });
   }
-  if (message.content.toLowerCase() === "do be training") {
-    var author = message.author;
-    fetch("https://scibowldb.com/api/questions/random")
-    .then(response => response.json())
-    .then(data => {
-      let filter = m => m.author.id === message.author.id;
-      message.reply(data.question.tossup_question).then(() => {
-        message.channel.awaitMessages(filter, {
-          max: 1,
-          time: 30000,
-          errors: ['time']
-        })
-        .then(message => {
-          message = message.first();
-          var score = 0;
-          if (fs.existsSync(`userScore/${message.author.id}`)) {
-            fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
-              score = Number(data);
-              if (err) {
-                console.log(err);
-              }
-            });
-          } else {
-            fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-          }
-          var predicted = "unsure";
-          if (data.question.tossup_format === "Multiple Choice") {
-            if (message.content.charAt(0).toLowerCase() === data.question.tossup_answer.charAt(0).toLowerCase()) {
-              predicted = "correct";
+  if (message.content.startsWith("do be training")) {
+    if (message.content === "do be training") {
+      var author = message.author;
+      fetch("https://scibowldb.com/api/questions/random")
+      .then(response => response.json())
+      .then(data => {
+        let filter = m => m.author.id === message.author.id;
+        message.reply(data.question.tossup_question).then(() => {
+          message.channel.awaitMessages(filter, {
+            max: 1,
+            time: 30000,
+            errors: ['time']
+          })
+          .then(message => {
+            message = message.first();
+            var score = 0;
+            if (fs.existsSync(`userScore/${message.author.id}`)) {
+              fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
+                score = Number(data);
+                if (err) {
+                  console.log(err);
+                }
+              });
             } else {
-              predicted = "incorrect";
+              fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
             }
-          } else {
-              if (message.content.toLowerCase() === data.question.tossup_answer.toLowerCase()) {
-                  predicted = "correct";
+            var predicted = "unsure";
+            if (data.question.tossup_format === "Multiple Choice") {
+              if (message.content.charAt(0).toLowerCase() === data.question.tossup_answer.charAt(0).toLowerCase()) {
+                predicted = "correct";
               } else {
-                  predicted = "incorrect";
+                predicted = "incorrect";
               }
-          }
-          message.channel.send(`Correct answer: **${data.question.tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`);
-          message.react('✅');
-          message.react('❌');
-          const filter = (reaction, user) => {
-	          return ['❌', '✅'].includes(reaction.emoji.name) && user.id === message.author.id;
-          };
-          message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
-            .then(reaction => {
-              var reaction = reaction.first();
-              if (reaction.emoji.name === "❌") {
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice try! Your score is now ${score}`);
-              } else {
-                score += 4;
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice job! Your score is now ${score}`);
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-              }
-            })
-            .catch(collected => {
-              //message.channel.send("\n**REACTION TIMEOUT**");
-            })
-        })
-        .catch ((collected, error) => {
-          message.reply('\n**ANSWER TIMEOUT**');
+            } else {
+                if (message.content.toLowerCase() === data.question.tossup_answer.toLowerCase()) {
+                    predicted = "correct";
+                } else {
+                    predicted = "incorrect";
+                }
+            }
+            message.channel.send(`Correct answer: **${data.question.tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`);
+            message.react('✅');
+            message.react('❌');
+            const filter = (reaction, user) => {
+  	          return ['❌', '✅'].includes(reaction.emoji.name) && user.id === message.author.id;
+            };
+            message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
+              .then(reaction => {
+                var reaction = reaction.first();
+                if (reaction.emoji.name === "❌") {
+                  fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
+                  message.reply(`nice try! Your score is now ${score}`);
+                } else {
+                  score += 4;
+                  fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
+                  message.reply(`nice job! Your score is now ${score}`);
+                  fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
+                }
+              })
+              .catch(collected => {
+                //message.channel.send("\n**REACTION TIMEOUT**");
+              })
+          })
+          .catch ((collected, error) => {
+            message.reply('\n**ANSWER TIMEOUT**');
+          })
         })
       })
-    }) 
-  }
-  if (message.content.toLowerCase() === "do be training astronomy") {
-    var author = message.author;
-    fetch("https://moose.lcsrc.org/subjects/astronomy.json")
-    .then(response => response.json())
-    .then(data => {
-      var questionNum = Math.floor(Math.random() * data.length);
-      console.log(`index ${questionNum} is ${data[questionNum]}`)
-      let filter = m => m.author.id === message.author.id;
-      message.reply(data[questionNum].tossup_question).then(() => {
-        message.channel.awaitMessages(filter, {
-          max: 1,
-          time: 30000,
-          errors: ['time']
-        })
-        .then(message => {
-          message = message.first();
-          var score = 0;
-          if (fs.existsSync(`userScore/${message.author.id}`)) {
-            fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
-              score = Number(data);
-              if (err) {
-                console.log(err);
-              }
-            });
-          } else {
-            fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-          }
-          var predicted = "unsure";
-          if (data[questionNum].tossup_format === "Multiple Choice") {
-            if (message.content.charAt(0).toLowerCase() === data[questionNum].tossup_answer.charAt(0).toLowerCase()) {
-              predicted = "correct";
+    } else {
+      var subject = message.content.substring(15);
+      console.log("Subject is:", subject);
+      var subjectURL;
+      switch (subject) {
+        case 'astro':
+          subjectURL = `https://moose.lcsrc.org/subjects/astronomy.json`;
+          break;
+        case 'bio':
+          subjectURL = `https://moose.lcsrc.org/subjects/biology.json`;
+          break;
+        case 'ess':
+          subjectURL = `https://moose.lcsrc.org/subjects/ess.json`;
+          break;
+        case 'chem':
+          subjectURL = `https://moose.lcsrc.org/subjects/chemistry.json`;
+          break;
+        case 'phys':
+          subjectURL = `https://moose.lcsrc.org/subjects/physics.json`;
+          break;
+        case 'math':
+          subjectURL = `https://moose.lcsrc.org/subjects/math.json`;
+          break;
+        default:
+          subjectURL = `https://scibowldb.com/api/questions/random`;
+          break;
+      }
+      var author = message.author;
+      fetch(subjectURL)
+      .then(response => response.json())
+      .then(data => {
+        var questionNum = Math.floor(Math.random() * data.length);
+        console.log(`index ${questionNum} is ${data[questionNum]}`)
+        let filter = m => m.author.id === message.author.id;
+        message.reply(data[questionNum].tossup_question).then(() => {
+          message.channel.awaitMessages(filter, {
+            max: 1,
+            time: 30000,
+            errors: ['time']
+          })
+          .then(message => {
+            message = message.first();
+            var score = 0;
+            if (fs.existsSync(`userScore/${message.author.id}`)) {
+              fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
+                score = Number(data);
+                if (err) {
+                  console.log(err);
+                }
+              });
             } else {
-              predicted = "incorrect";
+              fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
             }
-          } else {
-              if (message.content.toLowerCase() === data[questionNum].tossup_answer.toLowerCase()) {
-                  predicted = "correct";
+            var predicted = "unsure";
+            if (data[questionNum].tossup_format === "Multiple Choice") {
+              if (message.content.charAt(0).toLowerCase() === data[questionNum].tossup_answer.charAt(0).toLowerCase()) {
+                predicted = "correct";
               } else {
-                  predicted = "incorrect";
+                predicted = "incorrect";
               }
-          }
-          message.channel.send(`Correct answer: **${data[questionNum].tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`);
-          message.react('✅');
-          message.react('❌');
-          const filter = (reaction, user) => {
-	          return ['❌', '✅'].includes(reaction.emoji.name) && user.id === message.author.id;
-          };
-          message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
-            .then(reaction => {
-              var reaction = reaction.first();
-              if (reaction.emoji.name === "❌") {
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice try! Your score is now ${score}`);
-              } else {
-                score += 4;
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice job! Your score is now ${score}`);
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-              }
-            })
-            .catch(collected => {
-              //message.channel.send("\n**REACTION TIMEOUT**");
-            })
-        })
-        .catch ((collected, error) => {
-          message.reply('\n**ANSWER TIMEOUT**');
+            } else {
+                if (message.content.toLowerCase() === data[questionNum].tossup_answer.toLowerCase()) {
+                    predicted = "correct";
+                } else {
+                    predicted = "incorrect";
+                }
+            }
+            message.channel.send(`Correct answer: **${data[questionNum].tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`);
+            message.react('✅');
+            message.react('❌');
+            const filter = (reaction, user) => {
+              return ['❌', '✅'].includes(reaction.emoji.name) && user.id === message.author.id;
+            };
+            message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
+              .then(reaction => {
+                var reaction = reaction.first();
+                if (reaction.emoji.name === "❌") {
+                  fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
+                  message.reply(`nice try! Your score is now ${score}`);
+                } else {
+                  score += 4;
+                  fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
+                  message.reply(`nice job! Your score is now ${score}`);
+                  fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
+                }
+              })
+              .catch(collected => {
+                //message.channel.send("\n**REACTION TIMEOUT**");
+              })
+          })
+          .catch ((collected, error) => {
+            message.reply('\n**ANSWER TIMEOUT**');
+          })
         })
       })
-    }) 
-  }
-  if (message.content.toLowerCase() === "do be training ess") {
-    var author = message.author;
-    fetch("https://moose.lcsrc.org/subjects/ess.json")
-    .then(response => response.json())
-    .then(data => {
-      var questionNum = Math.floor(Math.random() * data.length);
-      console.log(`index ${questionNum} is ${data[questionNum]}`)
-      let filter = m => m.author.id === message.author.id;
-      message.reply(data[questionNum].tossup_question).then(() => {
-        message.channel.awaitMessages(filter, {
-          max: 1,
-          time: 30000,
-          errors: ['time']
-        })
-        .then(message => {
-          message = message.first();
-          var score = 0;
-          if (fs.existsSync(`userScore/${message.author.id}`)) {
-            fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
-              score = Number(data);
-              if (err) {
-                console.log(err);
-              }
-            });
-          } else {
-            fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-          }
-          var predicted = "unsure";
-          if (data[questionNum].tossup_format === "Multiple Choice") {
-            if (message.content.charAt(0).toLowerCase() === data[questionNum].tossup_answer.charAt(0).toLowerCase()) {
-              predicted = "correct";
-            } else {
-              predicted = "incorrect";
-            }
-          } else {
-              if (message.content.toLowerCase() === data[questionNum].tossup_answer.toLowerCase()) {
-                  predicted = "correct";
-              } else {
-                  predicted = "incorrect";
-              }
-          }
-          message.channel.send(`Correct answer: **${data[questionNum].tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`);
-          message.react('✅');
-          message.react('❌');
-          const filter = (reaction, user) => {
-	          return ['❌', '✅'].includes(reaction.emoji.name) && user.id === message.author.id;
-          };
-          message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
-            .then(reaction => {
-              var reaction = reaction.first();
-              if (reaction.emoji.name === "❌") {
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice try! Your score is now ${score}`);
-              } else {
-                score += 4;
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice job! Your score is now ${score}`);
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-              }
-            })
-            .catch(collected => {
-              //message.channel.send("\n**REACTION TIMEOUT**");
-            })
-        })
-        .catch ((collected, error) => {
-          message.reply('\n**ANSWER TIMEOUT**');
-        })
-      })
-    }) 
-  }
-  if (message.content.toLowerCase() === "do be training physics") {
-    var author = message.author;
-    fetch("https://moose.lcsrc.org/subjects/physics.json")
-    .then(response => response.json())
-    .then(data => {
-      var questionNum = Math.floor(Math.random() * data.length);
-      console.log(`index ${questionNum} is ${data[questionNum]}`)
-      let filter = m => m.author.id === message.author.id;
-      message.reply(data[questionNum].tossup_question).then(() => {
-        message.channel.awaitMessages(filter, {
-          max: 1,
-          time: 30000,
-          errors: ['time']
-        })
-        .then(message => {
-          message = message.first();
-          var score = 0;
-          if (fs.existsSync(`userScore/${message.author.id}`)) {
-            fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
-              score = Number(data);
-              if (err) {
-                console.log(err);
-              }
-            });
-          } else {
-            fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-          }
-          var predicted = "unsure";
-          if (data[questionNum].tossup_format === "Multiple Choice") {
-            if (message.content.charAt(0).toLowerCase() === data[questionNum].tossup_answer.charAt(0).toLowerCase()) {
-              predicted = "correct";
-            } else {
-              predicted = "incorrect";
-            }
-          } else {
-              if (message.content.toLowerCase() === data[questionNum].tossup_answer.toLowerCase()) {
-                  predicted = "correct";
-              } else {
-                  predicted = "incorrect";
-              }
-          }
-          message.channel.send(`Correct answer: **${data[questionNum].tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`);
-          message.react('✅');
-          message.react('❌');
-          const filter = (reaction, user) => {
-	          return ['❌', '✅'].includes(reaction.emoji.name) && user.id === message.author.id;
-          };
-          message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
-            .then(reaction => {
-              var reaction = reaction.first();
-              if (reaction.emoji.name === "❌") {
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice try! Your score is now ${score}`);
-              } else {
-                score += 4;
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice job! Your score is now ${score}`);
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-              }
-            })
-            .catch(collected => {
-              //message.channel.send("\n**REACTION TIMEOUT**");
-            })
-        })
-        .catch ((collected, error) => {
-          message.reply('\n**ANSWER TIMEOUT**');
-        })
-      })
-    }) 
-  }
-  if (message.content.toLowerCase() === "do be training chemistry") {
-    var author = message.author;
-    fetch("https://moose.lcsrc.org/subjects/chemistry.json")
-    .then(response => response.json())
-    .then(data => {
-      var questionNum = Math.floor(Math.random() * data.length);
-      console.log(`index ${questionNum} is ${data[questionNum]}`)
-      let filter = m => m.author.id === message.author.id;
-      message.reply(data[questionNum].tossup_question).then(() => {
-        message.channel.awaitMessages(filter, {
-          max: 1,
-          time: 30000,
-          errors: ['time']
-        })
-        .then(message => {
-          message = message.first();
-          var score = 0;
-          if (fs.existsSync(`userScore/${message.author.id}`)) {
-            fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
-              score = Number(data);
-              if (err) {
-                console.log(err);
-              }
-            });
-          } else {
-            fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-          }
-          var predicted = "unsure";
-          if (data[questionNum].tossup_format === "Multiple Choice") {
-            if (message.content.charAt(0).toLowerCase() === data[questionNum].tossup_answer.charAt(0).toLowerCase()) {
-              predicted = "correct";
-            } else {
-              predicted = "incorrect";
-            }
-          } else {
-              if (message.content.toLowerCase() === data[questionNum].tossup_answer.toLowerCase()) {
-                  predicted = "correct";
-              } else {
-                  predicted = "incorrect";
-              }
-          }
-          message.channel.send(`Correct answer: **${data[questionNum].tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`);
-          message.react('✅');
-          message.react('❌');
-          const filter = (reaction, user) => {
-	          return ['❌', '✅'].includes(reaction.emoji.name) && user.id === message.author.id;
-          };
-          message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
-            .then(reaction => {
-              var reaction = reaction.first();
-              if (reaction.emoji.name === "❌") {
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice try! Your score is now ${score}`);
-              } else {
-                score += 4;
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice job! Your score is now ${score}`);
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-              }
-            })
-            .catch(collected => {
-              //message.channel.send("\n**REACTION TIMEOUT**");
-            })
-        })
-        .catch ((collected, error) => {
-          message.reply('\n**ANSWER TIMEOUT**');
-        })
-      })
-    }) 
-  }
-  if (message.content.toLowerCase() === "do be training biology") {
-    var author = message.author;
-    fetch("https://moose.lcsrc.org/subjects/biology.json")
-    .then(response => response.json())
-    .then(data => {
-      var questionNum = Math.floor(Math.random() * data.length);
-      console.log(`index ${questionNum} is ${data[questionNum]}`)
-      let filter = m => m.author.id === message.author.id;
-      message.reply(data[questionNum].tossup_question).then(() => {
-        message.channel.awaitMessages(filter, {
-          max: 1,
-          time: 30000,
-          errors: ['time']
-        })
-        .then(message => {
-          message = message.first();
-          var score = 0;
-          if (fs.existsSync(`userScore/${message.author.id}`)) {
-            fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
-              score = Number(data);
-              if (err) {
-                console.log(err);
-              }
-            });
-          } else {
-            fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-          }
-          var predicted = "unsure";
-          if (data[questionNum].tossup_format === "Multiple Choice") {
-            if (message.content.charAt(0).toLowerCase() === data[questionNum].tossup_answer.charAt(0).toLowerCase()) {
-              predicted = "correct";
-            } else {
-              predicted = "incorrect";
-            }
-          } else {
-              if (message.content.toLowerCase() === data[questionNum].tossup_answer.toLowerCase()) {
-                  predicted = "correct";
-              } else {
-                  predicted = "incorrect";
-              }
-          }
-          message.channel.send(`Correct answer: **${data[questionNum].tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`);
-          message.react('✅');
-          message.react('❌');
-          const filter = (reaction, user) => {
-	          return ['❌', '✅'].includes(reaction.emoji.name) && user.id === message.author.id;
-          };
-          message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
-            .then(reaction => {
-              var reaction = reaction.first();
-              if (reaction.emoji.name === "❌") {
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice try! Your score is now ${score}`);
-              } else {
-                score += 4;
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice job! Your score is now ${score}`);
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-              }
-            })
-            .catch(collected => {
-              //message.channel.send("\n**REACTION TIMEOUT**");
-            })
-        })
-        .catch ((collected, error) => {
-          message.reply('\n**ANSWER TIMEOUT**');
-        })
-      })
-    }) 
-  }
-  if (message.content.toLowerCase() === "do be training math") {
-    var author = message.author;
-    fetch("https://moose.lcsrc.org/subjects/math.json")
-    .then(response => response.json())
-    .then(data => {
-      var questionNum = Math.floor(Math.random() * data.length);
-      console.log(`index ${questionNum} is ${data[questionNum]}`)
-      let filter = m => m.author.id === message.author.id;
-      message.reply(data[questionNum].tossup_question).then(() => {
-        message.channel.awaitMessages(filter, {
-          max: 1,
-          time: 30000,
-          errors: ['time']
-        })
-        .then(message => {
-          message = message.first();
-          var score = 0;
-          if (fs.existsSync(`userScore/${message.author.id}`)) {
-            fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
-              score = Number(data);
-              if (err) {
-                console.log(err);
-              }
-            });
-          } else {
-            fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-          }
-          var predicted = "unsure";
-          if (data[questionNum].tossup_format === "Multiple Choice") {
-            if (message.content.charAt(0).toLowerCase() === data[questionNum].tossup_answer.charAt(0).toLowerCase()) {
-              predicted = "correct";
-            } else {
-              predicted = "incorrect";
-            }
-          } else {
-              if (message.content.toLowerCase() === data[questionNum].tossup_answer.toLowerCase()) {
-                  predicted = "correct";
-              } else {
-                  predicted = "incorrect";
-              }
-          }
-          message.channel.send(`Correct answer: **${data[questionNum].tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`);
-          message.react('✅');
-          message.react('❌');
-          const filter = (reaction, user) => {
-	          return ['❌', '✅'].includes(reaction.emoji.name) && user.id === message.author.id;
-          };
-          message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
-            .then(reaction => {
-              var reaction = reaction.first();
-              if (reaction.emoji.name === "❌") {
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice try! Your score is now ${score}`);
-              } else {
-                score += 4;
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-                message.reply(`nice job! Your score is now ${score}`);
-                fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
-              }
-            })
-            .catch(collected => {
-              //message.channel.send("\n**REACTION TIMEOUT**");
-            })
-        })
-        .catch ((collected, error) => {
-          message.reply('\n**ANSWER TIMEOUT**');
-        })
-      })
-    }) 
+    }
   }
 });
 
 client.login(process.argv[2]).catch(error => console.log(error));
-
