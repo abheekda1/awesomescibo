@@ -5,6 +5,7 @@ import { execSync } from 'child_process';
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 import fetch from 'node-fetch';
 import * as fs from 'fs';
+import * as path from 'path';
 
 var hits = 0;
 
@@ -30,7 +31,6 @@ client.on('guildCreate', guild => {
 });
 
 client.on('message', async message => {
-
   if (message.content.startsWith("do be announcing") && message.author.id === process.argv[3]) {
     var announcement = message.content.substring(17);
     client.guilds.cache.forEach((guild) => {
@@ -405,6 +405,26 @@ client.on('message', async message => {
         })
       })
     }
+  }
+  if (message.content.toLowerCase() === "do be top") {
+    let messageContent = '';
+    let scores = [];
+
+    const directoryPath = path.join('userScore');
+    fs.readdir(directoryPath, function (err, files) {
+      if (err) {
+          return console.log('Unable to scan directory: ' + err);
+      } 
+      files.forEach(function (file) {
+          scores.push(`${fs.readFileSync('userScore/' + file, 'utf8')}|<@${file}>`)
+      });
+      var scoresFormatted = scores.sort(function(a, b){return b.split('|')[0] - a.split('|')[0]});
+      for (var i = 0; i < 10; i++) {
+        var currentScore = scoresFormatted[i].split('|');
+        messageContent += `${currentScore[1]}: ${currentScore[0]}\n\n`;
+      }
+      message.channel.send(new Discord.MessageEmbed().setTitle('Top Ten!').setDescription(messageContent)); 
+    });
   }
 });
 
