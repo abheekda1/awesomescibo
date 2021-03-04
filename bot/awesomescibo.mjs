@@ -311,7 +311,6 @@ client.on('message', async message => {
       })
     } else {
       var subject = message.content.substring(15);
-      console.log("Subject is:", subject);
       var subjectURL;
       switch (subject) {
         case 'astro':
@@ -341,7 +340,6 @@ client.on('message', async message => {
       .then(response => response.json())
       .then(data => {
         var questionNum = Math.floor(Math.random() * data.length);
-        console.log(`index ${questionNum} is ${data[questionNum]}`)
         let filter = m => m.author.id === message.author.id;
         message.reply(data[questionNum].tossup_question).then(() => {
           message.channel.awaitMessages(filter, {
