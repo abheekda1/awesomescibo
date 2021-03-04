@@ -36,8 +36,8 @@ client.on('message', async message => {
     client.guilds.cache.forEach((guild) => {
       var channel = guild.channels.cache.find(channel => channel.name === 'general');
       if (channel) {
-        if (channel.type = "text") {
-          channel.send(announcement);
+        if (channel.type === "text") {
+          channel.send(announcement).catch(console.error);
         }
       }
     });
@@ -47,7 +47,7 @@ client.on('message', async message => {
     fs.writeFile('numhits.txt', hits.toString(), (error) => { if (error) { console.log(error); } });
   }
   if (message.content.toLowerCase() === ("do be helping")) {
-    message.channel.send(new Discord.MessageEmbed().setTitle("Help").setDescription("`do be helping`: display this help message\n`do be roundgen html`: send a round to the channel\n`do be roundgen html dm`: dm a round to you\n`do be roundgen pdf`: send a pdf round to the channel\n`do be roundgen pdf dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of rounds generated\n`do be servers`: send the number of servers this bot is a part of\n`do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo (please star!)"));
+    message.channel.send(new Discord.MessageEmbed().setTitle("Help").setDescription("`do be helping`: display this help message\n`do be roundgen html`: send a round to the channel\n`do be roundgen html dm`: dm a round to you\n`do be roundgen pdf`: send a pdf round to the channel\n`do be roundgen pdf dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of rounds generated\n`do be servers`: send the number of servers this bot is a part of\n`do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess\n`do be top`: list cross-server top 10 players\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)"));
 
   }
   if (message.content.toLowerCase() === ("do be roundgen html dm")) {
