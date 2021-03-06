@@ -7,7 +7,7 @@ import fetch from 'node-fetch';
 import * as fs from 'fs';
 import * as path from 'path';
 
-var hits = 0;
+let hits = 0;
 
 if (fs.existsSync('numhits.txt')) {
   fs.readFile('numhits.txt', 'utf8', function (err, data) {
@@ -32,9 +32,9 @@ client.on('guildCreate', guild => {
 
 client.on('message', async message => {
   if (message.content.startsWith("do be announcing") && message.author.id === process.argv[3]) {
-    var announcement = message.content.substring(17);
+    const announcement = message.content.substring(17);
     client.guilds.cache.forEach((guild) => {
-      var channel = guild.channels.cache.find(channel => channel.name === 'general');
+      const channel = guild.channels.cache.find(channel => channel.name === 'general');
       if (channel) {
         if (channel.type === "text") {
           channel.send(announcement).catch(console.error);
@@ -52,18 +52,18 @@ client.on('message', async message => {
   }
   if (message.content.toLowerCase() === ("do be roundgen html dm")) {
     fs.writeFile('round.html', "<h1>Here's your round!</h1>", (error) => { if (error) { console.log(error); } });
-    var person = client.users.cache.get(message.author.id);
-    var i;
+    const person = client.users.cache.get(message.author.id);
+    const i;
     let generatingMsg = await message.channel.send("Generating...");
     for (i = 1; i < 26; i++) {
-      var tossup_question;
-      var question_category;
-      var tossup_format;
-      var tossup_answer;
-      var bonus_question;
-      var bonus_format;
-      var bonus_answer;
-      var htmlContent = "";
+      const tossup_question;
+      const question_category;
+      const tossup_format;
+      const tossup_answer;
+      const bonus_question;
+      const bonus_format;
+      const bonus_answer;
+      const htmlContent = "";
       await fetch('https://scibowldb.com/api/questions/random')
         .then(response => response.json())
         .then(data => {
@@ -86,17 +86,17 @@ client.on('message', async message => {
   }
   if (message.content.toLowerCase() === ("do be roundgen html")) {
     fs.writeFile('round.html', "<h1>Here's your round!</h1>", (error) => { if (error) { console.log(error); } });
-    var i;
+    let i;
     let generatingMsg = await message.channel.send("Generating...");
     for (i = 1; i < 26; i++) {
-      var tossup_question;
-      var question_category;
-      var tossup_format;
-      var tossup_answer;
-      var bonus_question;
-      var bonus_format;
-      var bonus_answer;
-      var htmlContent = "";
+      const tossup_question;
+      const question_category;
+      const tossup_format;
+      const tossup_answer;
+      const bonus_question;
+      const bonus_format;
+      const bonus_answer;
+      const htmlContent = "";
       await fetch('https://scibowldb.com/api/questions/random')
         .then(response => response.json())
         .then(data => {
@@ -119,18 +119,18 @@ client.on('message', async message => {
   }
   if (message.content.toLowerCase() === ("do be roundgen pdf dm")) {
     fs.writeFile('index.html', "<h1>Here's your round!</h1>", (error) => { if (error) { console.log(error); } });
-    var person = client.users.cache.get(message.author.id);
-    var i;
+    const person = client.users.cache.get(message.author.id);
+    let i;
     let generatingMsg = await message.channel.send("Generating...");
     for (i = 1; i < 26; i++) {
-      var tossup_question;
-      var question_category;
-      var tossup_format;
-      var tossup_answer;
-      var bonus_question;
-      var bonus_format;
-      var bonus_answer;
-      var htmlContent = "";
+      const tossup_question;
+      const question_category;
+      const tossup_format;
+      const tossup_answer;
+      const bonus_question;
+      const bonus_format;
+      const bonus_answer;
+      const htmlContent = "";
       await fetch('https://scibowldb.com/api/questions/random')
         .then(response => response.json())
         .then(data => {
@@ -148,24 +148,23 @@ client.on('message', async message => {
         });
     }
     generatingMsg.delete({ timeout: 1000 });
-    var output = execSync("curl --request POST --url http://localhost:3136/convert/html --header 'Content-Type: multipart/form-data' --form files=@index.html -o round.pdf", { encoding: 'utf-8' });
-    //console.log(output);
+    execSync("curl --request POST --url http://localhost:3136/convert/html --header 'Content-Type: multipart/form-data' --form files=@index.html -o round.pdf", { encoding: 'utf-8' });
     setTimeout(function () { person.send(new Discord.MessageEmbed().setTitle("Here's your round!").attachFiles("round.pdf")); }, 1000);
     hits++;
   }
   if (message.content.toLowerCase() === ("do be roundgen pdf")) {
     fs.writeFile('index.html', "<h1>Here's your round!</h1>", (error) => { if (error) { console.log(error); } });
-    var i;
+    let i;
     let generatingMsg = await message.channel.send("Generating...");
     for (i = 1; i < 26; i++) {
-      var tossup_question;
-      var question_category;
-      var tossup_format;
-      var tossup_answer;
-      var bonus_question;
-      var bonus_format;
-      var bonus_answer;
-      var htmlContent = "";
+      const tossup_question;
+      const question_category;
+      const tossup_format;
+      const tossup_answer;
+      const bonus_question;
+      const bonus_format;
+      const bonus_answer;
+      const htmlContent = "";
       await fetch('https://scibowldb.com/api/questions/random')
         .then(response => response.json())
         .then(data => {
@@ -183,15 +182,14 @@ client.on('message', async message => {
         });
     }
     generatingMsg.delete({ timeout: 1000 });
-    var output = execSync("curl --request POST --url http://localhost:3136/convert/html --header 'Content-Type: multipart/form-data' --form files=@index.html -o round.pdf", { encoding: 'utf-8' });
-    //console.log(output);
+    execSync("curl --request POST --url http://localhost:3136/convert/html --header 'Content-Type: multipart/form-data' --form files=@index.html -o round.pdf", { encoding: 'utf-8' });
     message.channel.send(new Discord.MessageEmbed().setTitle("Here's your round!").attachFiles("round.pdf"));
     hits++;
   }
   if (message.content.toLowerCase() === "do be scoring") {
-    var scoreA = 0;
-    var scoreB = 0;
-    let scoreboard = await message.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`)
+    let scoreA = 0;
+    let scoreB = 0;
+    const scoreboard = await message.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`)
       .then((scoreboard) => {
         const filter = m => m.content.includes('do be');
         const collector = message.channel.createMessageCollector(filter, { time: 1500000 });
@@ -231,19 +229,12 @@ client.on('message', async message => {
     await fetch("http://api.open-notify.org/iss-now.json")
       .then(request => request.json())
       .then(data => {
-        //var astros = '';
-        //for (let i = 0; i < data.people.length; i++) {
-        //  console.log(data.people[i]);
-        //  astros += `${data.people[i]}\n`;
-        //}
-        message.channel.send(new Discord.MessageEmbed().setTitle("The current location of the ISS!").setImage(`https://api.mapbox.com/styles/v1/mapbox/light-v10/static/pin-s+000(${data.iss_position.longitude},${data.iss_position.latitude})/-87.0186,20,1/1000x1000?access_token=pk.eyJ1IjoiYWRhd2Vzb21lZ3V5IiwiYSI6ImNrbGpuaWdrYzJ0bGYydXBja2xsNmd2YTcifQ.Ude0UFOf9lFcQ-3BANWY5A`).setURL('https://spotthestation.nasa.gov/tracking_map.cfm')/*.addFields(
-                    { name: 'Current inhabitants', value: `${astros}` }
-                )*/);
+        message.channel.send(new Discord.MessageEmbed().setTitle("The current location of the ISS!").setImage(`https://api.mapbox.com/styles/v1/mapbox/light-v10/static/pin-s+000(${data.iss_position.longitude},${data.iss_position.latitude})/-87.0186,20,1/1000x1000?access_token=pk.eyJ1IjoiYWRhd2Vzb21lZ3V5IiwiYSI6ImNrbGpuaWdrYzJ0bGYydXBja2xsNmd2YTcifQ.Ude0UFOf9lFcQ-3BANWY5A`).setURL('https://spotthestation.nasa.gov/tracking_map.cfm');
       });
   }
   if (message.content.startsWith("do be training")) {
     if (message.content === "do be training") {
-      var author = message.author;
+      const author = message.author;
       fetch("https://scibowldb.com/api/questions/random")
       .then(response => response.json())
       .then(data => {
@@ -256,7 +247,7 @@ client.on('message', async message => {
           })
           .then(message => {
             message = message.first();
-            var score = 0;
+            let score = 0;
             if (fs.existsSync(`userScore/${message.author.id}`)) {
               fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
                 score = Number(data);
@@ -267,7 +258,7 @@ client.on('message', async message => {
             } else {
               fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
             }
-            var predicted = "unsure";
+            let predicted = "unsure";
             if (data.question.tossup_format === "Multiple Choice") {
               if (message.content.charAt(0).toLowerCase() === data.question.tossup_answer.charAt(0).toLowerCase()) {
                 predicted = "correct";
@@ -289,7 +280,7 @@ client.on('message', async message => {
             };
             message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
               .then(reaction => {
-                var reaction = reaction.first();
+                const reaction = reaction.first();
                 if (reaction.emoji.name === "❌") {
                   fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
                   message.reply(`nice try! Your score is now ${score}`);
@@ -301,7 +292,6 @@ client.on('message', async message => {
                 }
               })
               .catch(collected => {
-                //message.channel.send("\n**REACTION TIMEOUT**");
               })
           })
           .catch ((collected, error) => {
@@ -310,8 +300,8 @@ client.on('message', async message => {
         })
       })
     } else {
-      var subject = message.content.substring(15);
-      var subjectURL;
+      const subject = message.content.substring(15);
+      let subjectURL;
       switch (subject) {
         case 'astro':
           subjectURL = `https://moose.lcsrc.org/subjects/astronomy.json`;
@@ -335,11 +325,11 @@ client.on('message', async message => {
           subjectURL = `https://scibowldb.com/api/questions/random`;
           break;
       }
-      var author = message.author;
+      const author = message.author;
       fetch(subjectURL)
       .then(response => response.json())
       .then(data => {
-        var questionNum = Math.floor(Math.random() * data.length);
+        const questionNum = Math.floor(Math.random() * data.length);
         let filter = m => m.author.id === message.author.id;
         message.reply(data[questionNum].tossup_question).then(() => {
           message.channel.awaitMessages(filter, {
@@ -349,7 +339,7 @@ client.on('message', async message => {
           })
           .then(message => {
             message = message.first();
-            var score = 0;
+            let score = 0;
             if (fs.existsSync(`userScore/${message.author.id}`)) {
               fs.readFile(`userScore/${message.author.id}`, 'utf8', function (err, data) {
                 score = Number(data);
@@ -360,7 +350,7 @@ client.on('message', async message => {
             } else {
               fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
             }
-            var predicted = "unsure";
+            let predicted = "unsure";
             if (data[questionNum].tossup_format === "Multiple Choice") {
               if (message.content.charAt(0).toLowerCase() === data[questionNum].tossup_answer.charAt(0).toLowerCase()) {
                 predicted = "correct";
@@ -382,7 +372,7 @@ client.on('message', async message => {
             };
             message.awaitReactions(filter, { max: 1, time: 600000, errors: ['time'] })
               .then(reaction => {
-                var reaction = reaction.first();
+                const reaction = reaction.first();
                 if (reaction.emoji.name === "❌") {
                   fs.writeFile(`userScore/${message.author.id}`, score.toString(), (error) => { if (error) { console.log(error); } });
                   message.reply(`nice try! Your score is now ${score}`);
@@ -394,7 +384,6 @@ client.on('message', async message => {
                 }
               })
               .catch(collected => {
-                //message.channel.send("\n**REACTION TIMEOUT**");
               })
           })
           .catch ((collected, error) => {
@@ -412,16 +401,16 @@ client.on('message', async message => {
     fs.readdir(directoryPath, function (err, files) {
       if (err) {
           return console.log('Unable to scan directory: ' + err);
-      } 
+      }
       files.forEach(function (file) {
           scores.push(`${fs.readFileSync('userScore/' + file, 'utf8')}|<@${file}>`)
       });
-      var scoresFormatted = scores.sort(function(a, b){return b.split('|')[0] - a.split('|')[0]});
-      for (var i = 0; i < 10; i++) {
-        var currentScore = scoresFormatted[i].split('|');
+      const scoresFormatted = scores.sort(function(a, b){return b.split('|')[0] - a.split('|')[0]});
+      for (let i = 0; i < 10; i++) {
+        const currentScore = scoresFormatted[i].split('|');
         messageContent += `${currentScore[1]}: ${currentScore[0]}\n\n`;
       }
-      message.channel.send(new Discord.MessageEmbed().setTitle('Top Ten!').setDescription(messageContent)); 
+      message.channel.send(new Discord.MessageEmbed().setTitle('Top Ten!').setDescription(messageContent));
     });
   }
 });

@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "discord.js": "^12.5.1",
+    "eslint": "^7.21.0",
     "fs": "^0.0.1-security",
     "node-fetch": "^2.6.1"
   },
