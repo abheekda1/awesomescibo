@@ -314,18 +314,24 @@ client.on('message', async message => {
       var subjectURL;
       switch (subject) {
         case 'astro':
+        case 'astronomy':
           subjectURL = `https://moose.lcsrc.org/subjects/astronomy.json`;
           break;
         case 'bio':
+        case 'biology':
           subjectURL = `https://moose.lcsrc.org/subjects/biology.json`;
           break;
         case 'ess':
+        case 'earth science':
+        case 'es':
           subjectURL = `https://moose.lcsrc.org/subjects/ess.json`;
           break;
         case 'chem':
+        case 'chemistry':
           subjectURL = `https://moose.lcsrc.org/subjects/chemistry.json`;
           break;
         case 'phys':
+        case 'physics':
           subjectURL = `https://moose.lcsrc.org/subjects/physics.json`;
           break;
         case 'math':
