@@ -28,7 +28,7 @@ Please see [the wiki](https://github.com/ADawesomeguy/AwesomeSciBo/wiki/contribu
 Please see [the wiki](https://github.com/ADawesomeguy/AwesomeSciBo/wiki/installation) install page.
 
 ## Usage
-To get started, run the command `do be helping` to get a list of commands. The more helpful commands will be the ones that generate packets, which are `do be roundgen pdf/html` and `do be roundgen pdf/html dm`.
+To get started, run the command `do be helping` to get a list of commands. The more helpful commands will be the ones that generate packets, which are `do be roundgen pdf/html` and `do be roundgen pdf/html dm`. Another command of the bot is generating random questions to solve which can be done by `do be training` or `do be training topic`, and view the leaderboard with `do be top`. 
 
 > Note: if you plan to use PDF files, you must have `gotenberg` installed and running at `localhost:3136` (or change the `awesomescibo.mjs` script to point to a different location). You can find more info about that [here](https://github.com/thecodingmachine/gotenberg).
 
