@@ -331,6 +331,9 @@ client.on('message', async message => {
         case 'math':
           subjectURL = `https://moose.lcsrc.org/subjects/math.json`;
           break;
+        case 'energy':
+          subjectURL = `https://moose.lcsrc.org/subjects/energy.json`;
+          break;
         default:
           subjectURL = `https://scibowldb.com/api/questions/random`;
           break;
