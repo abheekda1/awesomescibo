@@ -182,7 +182,8 @@ client.on('message', async message => {
             subjectURL = `https://moose.lcsrc.org/subjects/energy.json`;
             break;
           default:
-            subjectURL = `https://scibowldb.com/api/questions/random`;
+            message.channel.send("Not a valid subject!");
+            return;
             break;
         }
         const author = message.author;
