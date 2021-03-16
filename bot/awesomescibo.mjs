@@ -37,7 +37,6 @@ client.on('message', async message => {
   }
 
   const formattedMessage = message.content.toLowerCase().replace(/\s+/g, '');
-  console.log(formattedMessage)
   if (formattedMessage.startsWith("dobe")) {
     switch (formattedMessage) {
       case 'dobehits':
