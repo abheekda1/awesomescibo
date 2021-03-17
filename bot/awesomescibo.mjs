@@ -369,7 +369,7 @@ client.on('message', async message => {
       files.forEach(function (file) {
           scores.push(`${fs.readFileSync('userScore/' + file, 'utf8')}|<@${file}>`)
       });
-      const scoresFodrmatted = scores.sort(function(a, b){return b.split('|')[0] - a.split('|')[0]});
+      const scoresFormatted = scores.sort(function(a, b){return b.split('|')[0] - a.split('|')[0]});
       if (scores.length < 10) {
         message.channel.send("Not enough scores yet!");
         return;
