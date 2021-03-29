@@ -27,7 +27,7 @@ client.once('ready', () => {
 });
 
 client.on('guildCreate', guild => {
-  guild.channels.cache.find(channel => channel.name === 'general').send("'Sup, I'm the AwesomeSciBo bot!");
+  guild.channels.cache.find(channel => channel.name === 'general' && channel.type === 'text').send("'Sup, I'm the AwesomeSciBo bot!").catch(console.error);
 });
 
 client.on('message', async message => {
@@ -251,6 +251,7 @@ client.on('message', async message => {
             })
           })
         })
+	.catch(console.error);
       }
     } else {
       if (formattedMessage.startsWith("dobescoring" || "dobetraining")) {
@@ -298,10 +299,12 @@ client.on('message', async message => {
           fs.appendFile('index.html', htmlContent, (error) => { if (error) { console.log(error); } });
         });
     }
-    generatingMsg.delete({ timeout: 100 });
-    execSync("curl --request POST --url http://localhost:3136/convert/html --header 'Content-Type: multipart/form-data' --form files=@index.html -o round.pdf", { encoding: 'utf-8' });
+    if (generatingMsg) {
+      generatingMsg.delete({ timeout: 100 }).catch(console.error);
+    }
+    execSync("curl --request POST --url https://localhost:3136/convert/html --header 'Content-Type: multipart/form-data' --form files=@index.html -o round.pdf", { encoding: 'utf-8' });
     if (isDM) {
-      client.users.cache.get(message.author.id).send(new Discord.MessageEmbed().setTitle("Here's your round!").attachFiles("round.pdf"));
+      client.users.cache.get(message.author.id).send(new Discord.MessageEmbed().setTitle("Here's your round!").attachFiles("round.pdf")).catch(() => message.reply("Unable to DM you! Make sure DMs from server members are allowed."));
     } else {
       message.channel.send(new Discord.MessageEmbed().setTitle("Here's your round!").attachFiles("round.pdf"));
     }
@@ -317,23 +320,23 @@ client.on('message', async message => {
         const collector = message.channel.createMessageCollector(filter, { time: 1500000 });
         collector.on('collect', m => {
           if (m.content.toLowerCase() === "do be scoring a 4") {
-            m.delete({ timeout: 1000 });
+            m.delete({ timeout: 1000 }).catch(console.error);
             scoreA += 4;
             scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
           } else if (m.content.toLowerCase() === "do be scoring a 10") {
-            m.delete({ timeout: 1000 });
+            m.delete({ timeout: 1000 }).catch(console.error);
             scoreA += 10;
             scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
           } else if (m.content.toLowerCase() === "do be scoring b 4") {
-            m.delete({ timeout: 1000 });
+            m.delete({ timeout: 1000 }).catch(console.error);
             scoreB += 4;
             scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
           } else if (m.content.toLowerCase() === "do be scoring b 10") {
-            m.delete({ timeout: 1000 });
+            m.delete({ timeout: 1000 }).catch(console.error);
             scoreB += 10;
             scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
           } else if (m.content === "do be scoring stop") {
-            m.delete({ timeout: 1000 });
+            m.delete({ timeout: 1000 }).catch(console.error);
             scoreboard.delete({ timeout: 1000 });
             m.channel.send(`**FINAL SCORE:**\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
             collector.stop();
