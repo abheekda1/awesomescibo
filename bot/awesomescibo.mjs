@@ -5,12 +5,11 @@ import { execSync } from 'child_process';
 import fetch from 'node-fetch';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as commands from './commands';
+import * as commands from './commands.js';
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
 let hits = 0;
-const helpMessage = "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be roundgen dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of rounds generated\n`do be servers`: send the number of servers this bot is a part of\n`do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
 
 if (fs.existsSync('numhits.txt')) {
     fs.readFile('numhits.txt', 'utf8', function (err, data) {
@@ -42,34 +41,34 @@ client.on('message', async message => {
     if (formattedMessage.startsWith("dobe")) {
         switch (formattedMessage) {
             case 'dobehits':
-                commands.checkHits();
+                commands.checkHits(message, hits);
                 break;
             case 'dobehelping':
-                commands.sendHelpMessage();
+                commands.sendHelpMessage(message);
                 break;
             case 'doberoundgen':
-                commands.generateRound(false);
+                commands.generateRound(message, false);
                 break;
             case 'doberoundgendm':
-                commands.generateRound(true);
+                commands.generateRound(message, true);
                 break;
             case 'dobescoring':
-                commands.startScoring();
+                commands.startScoring(message);
                 break;
             case 'dobetop':
-                commands.showLeaderboard();
+                commands.showLeaderboard(message);
                 break;
             case 'dobehappy':
-                commands.dontWorryBeHappy();
+                commands.dontWorryBeHappy(message);
                 break;
             case 'dobeservers':
-                commands.showServerNumber();
+                commands.showServerNumber(message);
                 break;
             case 'dobeiss':
-                commands.showIssLocation();
+                commands.showIssLocation(message);
                 break;
             default:
-                commands.otherCommands();
+                commands.otherCommands(message);
         }
     }
 });

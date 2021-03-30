@@ -1,13 +1,20 @@
-async function checkHits() {
+const Discord = require('discord.js');
+const fetch = require('node-fetch');
+const fs = require('fs');
+const child_process = require('child_process');
+
+const helpMessage = "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be roundgen dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n`do be hits`: send the number of rounds generated\n`do be servers`: send the number of servers this bot is a part of\n`do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
+
+async function checkHits(message, hits) {
     message.channel.send(hits);
     fs.writeFile('numhits.txt', hits.toString(), (error) => { if (error) { console.log(error); } });
 }
 
-async function sendHelpMessage() {
+async function sendHelpMessage(message) {
     message.channel.send(new Discord.MessageEmbed().setTitle("Help").setDescription(helpMessage));
 }
 
-async function generateRound(isDM) {
+async function generateRound(message, isDM) {
     fs.writeFile('index.html', "<h1>Here's your round!</h1>", (error) => { if (error) { console.log(error); } });
     let i;
     let generatingMsg = await message.channel.send("Generating...");
@@ -39,7 +46,7 @@ async function generateRound(isDM) {
     if (generatingMsg) {
         generatingMsg.delete({ timeout: 100 }).catch(console.error);
     }
-    execSync("curl --request POST --url https://localhost:3136/convert/html --header 'Content-Type: multipart/form-data' --form files=@index.html -o round.pdf", { encoding: 'utf-8' });
+    child_process.execSync("curl --request POST --url https://localhost:3136/convert/html --header 'Content-Type: multipart/form-data' --form files=@index.html -o round.pdf", { encoding: 'utf-8' });
     if (isDM) {
         client.users.cache.get(message.author.id).send(new Discord.MessageEmbed().setTitle("Here's your round!").attachFiles("round.pdf")).catch(() => message.reply("Unable to DM you! Make sure DMs from server members are allowed."));
     } else {
@@ -48,7 +55,82 @@ async function generateRound(isDM) {
     hits++;
 }
 
-async function otherCommands() {
+async function startScoring(message) {
+    let scoreA = 0;
+    let scoreB = 0;
+    const scoreboard = await message.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`)
+        .then((scoreboard) => {
+            const filter = m => m.content.includes('do be');
+            const collector = message.channel.createMessageCollector(filter, { time: 1500000 });
+            collector.on('collect', m => {
+                if (m.content.toLowerCase() === "do be scoring a 4") {
+                    m.delete({ timeout: 1000 }).catch(console.error);
+                    scoreA += 4;
+                    scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
+                } else if (m.content.toLowerCase() === "do be scoring a 10") {
+                    m.delete({ timeout: 1000 }).catch(console.error);
+                    scoreA += 10;
+                    scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
+                } else if (m.content.toLowerCase() === "do be scoring b 4") {
+                    m.delete({ timeout: 1000 }).catch(console.error);
+                    scoreB += 4;
+                    scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
+                } else if (m.content.toLowerCase() === "do be scoring b 10") {
+                    m.delete({ timeout: 1000 }).catch(console.error);
+                    scoreB += 10;
+                    scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
+                } else if (m.content === "do be scoring stop") {
+                    m.delete({ timeout: 1000 }).catch(console.error);
+                    scoreboard.delete({ timeout: 1000 });
+                    m.channel.send(`**FINAL SCORE:**\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
+                    collector.stop();
+                }
+            });
+        })
+}
+
+async function dontWorryBeHappy(message) {
+    message.channel.send(new Discord.MessageEmbed().setTitle(`Don't Worry Be Happy!`).setImage("https://media.giphy.com/media/7OKC8ZpTT0PVm/giphy.gif").setURL("https://youtu.be/d-diB65scQU"));
+}
+
+async function showServerNumber(message) {
+    message.channel.send(client.guilds.cache.size);
+}
+
+async function showIssLocation(message) {
+    await fetch("http://api.open-notify.org/iss-now.json")
+        .then(request => request.json())
+        .then(data => {
+            message.channel.send(new Discord.MessageEmbed().setTitle("The current location of the ISS!").setImage(`https://api.mapbox.com/styles/v1/mapbox/light-v10/static/pin-s+000(${data.iss_position.longitude},${data.iss_position.latitude})/-87.0186,20,1/1000x1000?access_token=pk.eyJ1IjoiYWRhd2Vzb21lZ3V5IiwiYSI6ImNrbGpuaWdrYzJ0bGYydXBja2xsNmd2YTcifQ.Ude0UFOf9lFcQ-3BANWY5A`).setURL('https://spotthestation.nasa.gov/tracking_map.cfm'));
+        });
+}
+
+async function showLeaderboard(message) {
+    let messageContent = '';
+    let scores = [];
+
+    const directoryPath = path.join('userScore');
+    fs.readdir(directoryPath, function (err, files) {
+        if (err) {
+            return console.log('Unable to scan directory: ' + err);
+        }
+        files.forEach(function (file) {
+            scores.push(`${fs.readFileSync('userScore/' + file, 'utf8')}|<@${file}>`)
+        });
+        const scoresFormatted = scores.sort(function (a, b) { return b.split('|')[0] - a.split('|')[0] });
+        if (scores.length < 10) {
+            message.channel.send("Not enough scores yet!");
+            return;
+        }
+        for (let i = 0; i < 10; i++) {
+            const currentScore = scoresFormatted[i].split('|');
+            messageContent += `${currentScore[1]}: ${currentScore[0]}\n\n`;
+        }
+        message.channel.send(new Discord.MessageEmbed().setTitle('Top Ten!').setDescription(messageContent));
+    });
+}
+
+async function otherCommands(message) {
     if (message.content.toLowerCase().startsWith("do be announcing") && message.author.id === process.argv[3]) {
         const announcement = message.content.substring(17);
         client.guilds.cache.forEach((guild) => {
@@ -121,7 +203,7 @@ async function otherCommands() {
                                     .catch(collected => {
                                     })
                             })
-                            .catch((collected, error) => {
+                            .catch((collected) => {
                                 message.reply('\n**ANSWER TIMEOUT**');
                             })
                     })
@@ -238,79 +320,4 @@ async function otherCommands() {
     }
 }
 
-async function startScoring() {
-    let scoreA = 0;
-    let scoreB = 0;
-    const scoreboard = await message.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`)
-        .then((scoreboard) => {
-            const filter = m => m.content.includes('do be');
-            const collector = message.channel.createMessageCollector(filter, { time: 1500000 });
-            collector.on('collect', m => {
-                if (m.content.toLowerCase() === "do be scoring a 4") {
-                    m.delete({ timeout: 1000 }).catch(console.error);
-                    scoreA += 4;
-                    scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
-                } else if (m.content.toLowerCase() === "do be scoring a 10") {
-                    m.delete({ timeout: 1000 }).catch(console.error);
-                    scoreA += 10;
-                    scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
-                } else if (m.content.toLowerCase() === "do be scoring b 4") {
-                    m.delete({ timeout: 1000 }).catch(console.error);
-                    scoreB += 4;
-                    scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
-                } else if (m.content.toLowerCase() === "do be scoring b 10") {
-                    m.delete({ timeout: 1000 }).catch(console.error);
-                    scoreB += 10;
-                    scoreboard.channel.send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
-                } else if (m.content === "do be scoring stop") {
-                    m.delete({ timeout: 1000 }).catch(console.error);
-                    scoreboard.delete({ timeout: 1000 });
-                    m.channel.send(`**FINAL SCORE:**\nTeam A: ${scoreA}\nTeam B: ${scoreB}`);
-                    collector.stop();
-                }
-            });
-        })
-}
-
-async function dontWorryBeHappy() {
-    message.channel.send(new Discord.MessageEmbed().setTitle(`Don't Worry Be Happy!`).setImage("https://media.giphy.com/media/7OKC8ZpTT0PVm/giphy.gif").setURL("https://youtu.be/d-diB65scQU"));
-}
-
-async function showServerNumber() {
-    message.channel.send(client.guilds.cache.size);
-}
-
-async function showIssLocation() {
-    await fetch("http://api.open-notify.org/iss-now.json")
-        .then(request => request.json())
-        .then(data => {
-            message.channel.send(new Discord.MessageEmbed().setTitle("The current location of the ISS!").setImage(`https://api.mapbox.com/styles/v1/mapbox/light-v10/static/pin-s+000(${data.iss_position.longitude},${data.iss_position.latitude})/-87.0186,20,1/1000x1000?access_token=pk.eyJ1IjoiYWRhd2Vzb21lZ3V5IiwiYSI6ImNrbGpuaWdrYzJ0bGYydXBja2xsNmd2YTcifQ.Ude0UFOf9lFcQ-3BANWY5A`).setURL('https://spotthestation.nasa.gov/tracking_map.cfm'));
-        });
-}
-
-async function showLeaderboard() {
-    let messageContent = '';
-    let scores = [];
-
-    const directoryPath = path.join('userScore');
-    fs.readdir(directoryPath, function (err, files) {
-        if (err) {
-            return console.log('Unable to scan directory: ' + err);
-        }
-        files.forEach(function (file) {
-            scores.push(`${fs.readFileSync('userScore/' + file, 'utf8')}|<@${file}>`)
-        });
-        const scoresFormatted = scores.sort(function (a, b) { return b.split('|')[0] - a.split('|')[0] });
-        if (scores.length < 10) {
-            message.channel.send("Not enough scores yet!");
-            return;
-        }
-        for (let i = 0; i < 10; i++) {
-            const currentScore = scoresFormatted[i].split('|');
-            messageContent += `${currentScore[1]}: ${currentScore[0]}\n\n`;
-        }
-        message.channel.send(new Discord.MessageEmbed().setTitle('Top Ten!').setDescription(messageContent));
-    });
-}
-
-module.exports = {}
+module.exports = { checkHits, sendHelpMessage, generateRound, startScoring, dontWorryBeHappy, showServerNumber, showIssLocation, showLeaderboard, otherCommands }
