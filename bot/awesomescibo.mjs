@@ -23,7 +23,7 @@ if (fs.existsSync('numhits.txt')) {
 
 client.once('ready', () => {
   console.log(client.user.username);
-  client.user.setActivity("for \"do be helping\" | add me to your own server: adat.link/awscibo", { type: "WATCHING" });
+  client.user.setActivity("for \"do be helping\" | Add me to your own server: adat.link/awscibo", { type: "WATCHING" });
 });
 
 client.on('guildCreate', guild => {
