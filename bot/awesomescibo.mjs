@@ -443,5 +443,5 @@ client.on("message", async (message) => {
 });
 
 client
-  .login("TOKEN HERE")
+  .login(process.env.TOKEN)
   .catch((error) => console.log(error));
