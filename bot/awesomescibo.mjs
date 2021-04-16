@@ -11,16 +11,19 @@ import * as path from "path";
 import axios from "axios";
 import userScore from "./mongooseModels/mongooseUserScoreModel.js";
 import {} from 'dotenv/config.js';
+import mongoose from "mongoose";
 
 const helpMessage =
   "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be roundgen dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
 
 client.once("ready", () => {
-  console.log(client.user.username);
-  client.user.setActivity(
-    'for "do be helping" | Add me to your own server: adat.link/awscibo',
-    { type: "WATCHING" }
-  );
+  mongoose.connect(process.env.MONGO_URI, {useUnifiedTopology: true, useNewUrlParser: true}).then(() => {
+    console.log(client.user.username);
+    client.user.setActivity(
+      'for "do be helping" | Add me to your own server: adat.link/awscibo',
+      { type: "WATCHING" }
+    )
+    }).catch(err => console.log(err))
 });
 
 client.on("guildCreate", (guild) => {
@@ -34,6 +37,8 @@ client.on("message", async (message) => {
   if (message.author.bot) {
     return;
   }
+
+
 
   const formattedMessage = message.content.toLowerCase().replace(/\s+/g, "");
   if (formattedMessage.startsWith("dobe")) {
@@ -75,7 +80,7 @@ client.on("message", async (message) => {
       const announcement = message.content.substring(17);
       client.guilds.cache.forEach((guild) => {
         const channel = guild.channels.cache.find(
-          (channel) => channel.name === "general"
+          (channelGeneral) => channelGeneral.name === "general"
         );
         if (channel) {
           if (channel.type === "text") {
@@ -97,8 +102,8 @@ client.on("message", async (message) => {
                 errors: ["time"],
               });
             })
-            .then((message) => {
-              const responseAuthorID = message.first().author.id;
+            .then(resMessage => {
+              const responseAuthorID = resMessage.first().author.id;
             });
         });
       } else {
@@ -135,7 +140,6 @@ client.on("message", async (message) => {
           default:
             message.channel.send("Not a valid subject!");
             return;
-            break;
         }
         const authorId = message.author.id;
         fetch(subjectURL)
@@ -152,9 +156,9 @@ client.on("message", async (message) => {
                 })
                 .then((answerMsg) => {
                   answerMsg = answerMsg.first();
-                  let score =
-                    userScore.findOne({ authorID: authorId }).select("score") ||
-                    0;
+                  const userDocScore = userScore.findOne({authorID: authorId}).select("score");
+                  let score = userDocScore || 0;
+
                   let predicted = null;
                   if (data[questionNum].tossup_format === "Multiple Choice") {
                     if (
@@ -195,7 +199,7 @@ client.on("message", async (message) => {
                     .then(async (userReaction) => {
                       const reaction = userReaction.first();
                       if (reaction.emoji.name === "❌") {
-                        answerMsg.reply(`nice try! Your score is now ${score}`);
+                        answerMsg.reply(`nice try! Your score is now ${score.toString()}`);
                       } else {
                         score += 4;
                         if (score == 4) {
@@ -220,7 +224,7 @@ client.on("message", async (message) => {
                           doc.save();
                         }
 
-                        answerMsg.reply(`nice job! Your score is now ${score}`);
+                        answerMsg.reply(`nice job! Your score is now ${score.toString()}`);
                       }
                     })
                     .catch((collected) => {});
