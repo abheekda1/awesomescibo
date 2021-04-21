@@ -5,4 +5,6 @@ round.html
 round.md
 round.pdf
 bot/README.md
-.eslintrc.json
+.eslintrc
+.json
+.env

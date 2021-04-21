@@ -12,7 +12,8 @@
     "awscibo": "./awesomescibo.mjs"
   },
   "scripts": {
-    "test": "node awesomescibo.mjs randomtoken"
+    "test": "node awesomescibo.mjs randomtoken",
+    "start": "nodemon awesomescibo.mjs"
   },
   "keywords": [
     "discord",
