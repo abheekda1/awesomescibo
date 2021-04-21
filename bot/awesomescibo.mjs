@@ -13,7 +13,9 @@ import {} from "dotenv/config.js";
 import mongoose from "mongoose";
 
 const helpMessage =
-  "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be roundgen dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\nSource Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
+  "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be roundgen dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
+
+let answeredPreviousMessage = true;
 
 client.once("ready", () => {
   mongoose
@@ -92,6 +94,11 @@ async function otherCommands(message) {
       }
     });
   } else if (message.content.toLowerCase().startsWith("do be training")) {
+    if (!answeredPreviousMessage) {
+      return message.reply(
+        "You haven't reacted to your previous question. Please react to that before requesting another question! "
+      );
+    }
     const authorId = message.author.id;
     let score;
     userScore
@@ -120,7 +127,7 @@ async function otherCommands(message) {
             .then((answerMsg) => {
               answerMsg = answerMsg.first();
               let predicted = null;
-
+              answeredPreviousMessage = false;
               if (data.question.tossup_format === "Multiple Choice") {
                 if (
                   answerMsg.content.charAt(0).toLowerCase() ===
@@ -140,6 +147,7 @@ async function otherCommands(message) {
                   predicted = "incorrect";
                 }
               }
+
               answerMsg.channel.send(
                 `Correct answer: **${data.question.tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`
               );
@@ -159,6 +167,7 @@ async function otherCommands(message) {
                 })
                 .then((userReaction) => {
                   const reaction = userReaction.first();
+                  answeredPreviousMessage = true;
                   if (reaction.emoji.name === "❌") {
                     updateScore(false, score, authorId).then((msgToReply) =>
                       answerMsg.reply(msgToReply)
@@ -274,7 +283,7 @@ async function otherCommands(message) {
                       );
                     }
                   })
-                  .catch((collected) => {});
+                  .catch((collected) => {}); // Reaction message filter
               })
               .catch((collected, error) => {
                 message.reply("\n**ANSWER TIMEOUT**");
@@ -284,13 +293,14 @@ async function otherCommands(message) {
         .catch(console.error);
     }
   } else {
+    // Not any of the commands supported
     message.channel.send(
       "That didn't quite make sense! Please use `do be helping` to see the available commands."
     );
   }
 }
 
-async function sendHelpMessage(message) {
+function sendHelpMessage(message) {
   message.channel.send(
     new Discord.MessageEmbed().setTitle("Help").setDescription(helpMessage)
   );
@@ -394,24 +404,28 @@ async function startScoring(message) {
       });
       collector.on("collect", (m) => {
         if (m.content.toLowerCase() === "do be scoring a 4") {
+          // A team gets toss-up
           m.delete({ timeout: 1000 }).catch(console.error);
           scoreA += 4;
           scoreboard.channel.send(
             `Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
           );
         } else if (m.content.toLowerCase() === "do be scoring a 10") {
+          // A team gets bonus
           m.delete({ timeout: 1000 }).catch(console.error);
           scoreA += 10;
           scoreboard.channel.send(
             `Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
           );
         } else if (m.content.toLowerCase() === "do be scoring b 4") {
+          // B team gets toss up
           m.delete({ timeout: 1000 }).catch(console.error);
           scoreB += 4;
           scoreboard.channel.send(
             `Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
           );
         } else if (m.content.toLowerCase() === "do be scoring b 10") {
+          // B team gets bonus
           m.delete({ timeout: 1000 }).catch(console.error);
           scoreB += 10;
           scoreboard.channel.send(
@@ -429,7 +443,7 @@ async function startScoring(message) {
     });
 }
 
-async function dontWorryBeHappy(message) {
+function dontWorryBeHappy(message) {
   message.channel.send(
     new Discord.MessageEmbed()
       .setTitle(`Don't Worry Be Happy!`)
@@ -438,7 +452,7 @@ async function dontWorryBeHappy(message) {
   );
 }
 
-async function showServerNumber(message) {
+function showServerNumber(message) {
   message.channel.send(client.guilds.cache.size);
 }
 
@@ -457,11 +471,11 @@ async function showIssLocation(message) {
     });
 }
 
-async function showLeaderboard(message) {
+function showLeaderboard(message) {
   let messageContent = "";
   userScore
     .find({})
-    .sort({ score: -1 })
+    .sort({ score: -1 }) // Sort by descending order
     .exec((err, obj) => {
       if (err) {
         console.log(err);
@@ -469,13 +483,14 @@ async function showLeaderboard(message) {
           "Uh oh! :( There was an internal error. Please try again."
         );
       }
-      if (obj.length < 2) {
+      if (obj.length < 10) {
+        // Need at least 10 scores for top 10
         return message.reply(
           `There are only ${obj.length} users, we need at least 10!`
         );
       }
-      for (let i = 0; i < 2; i++) {
-        messageContent += `${i + 1}: <@${obj[i].authorID}>: ${obj[i].score}\n`;
+      for (let i = 0; i < 10; i++) {
+        messageContent += `${i + 1}: <@${obj[i].authorID}>: ${obj[i].score}\n`; // Loop through each user and add their name and score to leaderboard content
       }
       message.channel.send(
         new Discord.MessageEmbed()
@@ -483,8 +498,15 @@ async function showLeaderboard(message) {
           .setDescription(messageContent)
       );
     });
+}
 
-  console.log(messageContent);
+function aboutMessage(message) {
+  message.channel.send(
+    new Discord.MessageEmbed().setTitle("Contributors: ").setDescription(`
+        <@745063586422063214>  
+        <@650525101048987649>
+      `) // Add more contributors here, first one is Abheek, second one is Tejas
+  );
 }
 
 client.on("message", async (message) => {
@@ -492,34 +514,39 @@ client.on("message", async (message) => {
     return;
   }
 
-  const formattedMessage = message.content.toLowerCase().replace(/\s+/g, "");
+  const formattedMessage = message.content.toLowerCase().replace(" ", "");
   if (formattedMessage.startsWith("dobe")) {
+    // Bot prefix is "do be"
     switch (formattedMessage) {
-      case "dobehelping":
+      case "dobehelping": // Display help message
         sendHelpMessage(message);
         break;
-      case "doberoundgen":
+      case "doberoundgen": // Generate round publicly
         generateRound(message, false);
         break;
-      case "doberoundgendm":
+      case "doberoundgendm": // Generate round through DM
         generateRound(message, true);
         break;
-      case "dobescoring":
+      case "dobescoring": // Start scoring
         startScoring(message);
         break;
-      case "dobetop":
+      case "dobetop": // Top 10 scores
         showLeaderboard(message);
         break;
-      case "dobehappy":
+      case "dobehappy": // Send happy message
         dontWorryBeHappy(message);
         break;
-      case "dobeservers":
+      case "dobeservers": // Shows number of servers bot is in
         showServerNumber(message);
         break;
-      case "dobeiss":
+      case "dobeiss": // Show location of ISS
         showIssLocation(message);
         break;
+      case "dobeabout": // Show about message of bot
+        aboutMessage(message);
+        break;
       default:
+        // Do be training
         otherCommands(message);
     }
   }
