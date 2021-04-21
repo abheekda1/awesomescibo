@@ -15,8 +15,6 @@ import mongoose from "mongoose";
 const helpMessage =
   "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be roundgen dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
 
-let answeredPreviousMessage = true;
-
 client.once("ready", () => {
   mongoose
     .connect(process.env.MONGO_URI, {
@@ -94,11 +92,6 @@ async function otherCommands(message) {
       }
     });
   } else if (message.content.toLowerCase().startsWith("do be training")) {
-    if (!answeredPreviousMessage) {
-      return message.reply(
-        "You haven't reacted to your previous question. Please react to that before requesting another question! "
-      );
-    }
     const authorId = message.author.id;
     let score;
     userScore
@@ -127,7 +120,7 @@ async function otherCommands(message) {
             .then((answerMsg) => {
               answerMsg = answerMsg.first();
               let predicted = null;
-              answeredPreviousMessage = false;
+
               if (data.question.tossup_format === "Multiple Choice") {
                 if (
                   answerMsg.content.charAt(0).toLowerCase() ===
@@ -167,7 +160,7 @@ async function otherCommands(message) {
                 })
                 .then((userReaction) => {
                   const reaction = userReaction.first();
-                  answeredPreviousMessage = true;
+
                   if (reaction.emoji.name === "❌") {
                     updateScore(false, score, authorId).then((msgToReply) =>
                       answerMsg.reply(msgToReply)
