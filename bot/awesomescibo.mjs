@@ -11,6 +11,7 @@ import axios from "axios";
 import userScore from "./mongooseModels/mongooseUserScoreModel.js";
 import {} from "dotenv/config.js";
 import mongoose from "mongoose";
+import config from ('./config.json')
 
 const helpMessage =
   "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be roundgen dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
@@ -47,7 +48,7 @@ client.on("guildCreate", (guild) => {
 });
 
 function getSubjectUrl(subject) {
-  return `https://moose.lcsrc.org/subjects/${subject}.json`;
+  return `${config.subjectURL}${subject}.json`;
 }
 
 async function updateScore(isCorrect, score, authorId) {
@@ -365,7 +366,7 @@ async function generateRound(message, isDM) {
     generatingMsg.delete({ timeout: 100 }).catch(console.error);
   }
   execSync(
-    "curl --request POST --url https://localhost:3136/convert/html --header 'Content-Type: multipart/form-data' --form files=@index.html -o round.pdf",
+    `curl --request POST --url ${config.gotenbergURL} --header 'Content-Type: multipart/form-data' --form files=@index.html -o round.pdf`,
     { encoding: "utf-8" }
   );
   if (isDM) {
