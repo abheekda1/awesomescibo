@@ -16,13 +16,15 @@ const helpMessage =
   "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be roundgen dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
 
 client.once("ready", () => {
+  // Connect to MongoDB using mongoose
   mongoose
     .connect(process.env.MONGO_URI, {
       useUnifiedTopology: true,
       useNewUrlParser: true,
     })
     .then(() => {
-      console.log(client.user.username);
+      // Log client tag and set status
+      console.log(`Logged in as: ${client.user.username}!`);
       client.user.setActivity(
         'for "do be helping" | Add me to your own server: adat.link/awscibo',
         { type: "WATCHING" }
@@ -35,6 +37,7 @@ client.on("guildCreate", (guild) => {
   guild.channels.cache
     .find(
       (channel) =>
+        // Find channel by name
         channel.name === process.env.WELCOME_CHANNEL && channel.type === "text"
     )
     .send("'Sup, I'm the AwesomeSciBo bot!")
@@ -496,7 +499,7 @@ function showLeaderboard(message) {
 function aboutMessage(message) {
   message.channel.send(
     new Discord.MessageEmbed().setTitle("Contributors: ").setDescription(`
-        <@745063586422063214>  
+        <@745063586422063214>
         <@650525101048987649>
       `) // Add more contributors here, first one is Abheek, second one is Tejas
   );
