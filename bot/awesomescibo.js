@@ -338,15 +338,15 @@ async function generateRound(message) {
             htmlContent: finalizedHTML,
             requestedBy: message.author.id,
           });
-          newGeneratedRound.save((err, round) =>
+          newGeneratedRound.save((err, round) => {
             if (err) {
               console.log(err);
               return;
             }
             message.channel.fetch(generatingMessage.id).edit(`https://api.adawesome.tech/round/${round._id.toString()}`);
-          );
-        }
       });
+    }
+    });
   }
 }
 
