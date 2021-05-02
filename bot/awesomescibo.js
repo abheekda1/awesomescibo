@@ -343,7 +343,10 @@ async function generateRound(message) {
               console.log(err);
               return;
             }
-            message.channel.fetch(generatingMessage.id).edit(`https://api.adawesome.tech/round/${round._id.toString()}`);
+            message.channel.messages.fetch(generatingMessage.id)
+            .then(message => {
+              message.edit(`https://api.adawesome.tech/round/${round._id.toString()}`);
+            });
       });
     }
     });
