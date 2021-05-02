@@ -365,15 +365,13 @@ async function generateRound(message) {
             ? console.log("Error creating saving generated round content")
             : console.log("Sucessfully created new entry for the generated round")
         );
-  }
+  });
   if (generatingMsg) {
     generatingMsg.delete({ timeout: 100 }).catch(console.error);
   }
-  execSync(
   message.channel.send(
     new Discord.MessageEmbed()
-      .setTitle("Here's your round!")
-      .attachFiles("round.pdf")
+      .setTitle("Done?");
   );
 }
 
