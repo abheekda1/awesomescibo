@@ -349,7 +349,8 @@ async function generateRound(message) {
             msg.edit(`${message.author}, here's your round: https://api.adawesome.tech/round/${round._id.toString()}`);
           });
         });
-      }
+      });
+    }
 
 async function startScoring(message) {
   let scoreA = 0;
