@@ -6,7 +6,6 @@ const client = new Discord.Client({
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
 const fetch = require("node-fetch");
-const fs =  require("fs");
 const axios = require("axios");
 const userScore = require("./mongooseModels/mongooseUserScoreModel.js");
 const generatedRound = require("./mongooseModels/mongooseGeneratedRoundModel.js");
