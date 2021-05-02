@@ -469,7 +469,7 @@ function aboutMessage(message) {
 }
 
 async function userRounds(message) {
-  let rounds = await generatedRound.find({ requestedBy: message.author.id});
+  let rounds = await generatedRound.find({ requestedBy: message.author.id });
   let finalMessage = "";
   if (!rounds) {
     message.reply("you haven't requested any rounds!");
@@ -491,6 +491,13 @@ async function userRounds(message) {
     .setTimestamp();
 
   message.channel.send(roundsEmbed);
+}
+
+async function hits(message) {
+  let totalCount = await generatedRound.count({});
+  let userCount = await generatedRound.count({ requestedBy: message.author.id });
+
+  message.channel.send(`Total Hits: ${totalCount}\nYour Hits: ${userCount}`);
 }
 
 client.on("message", async (message) => {
@@ -531,6 +538,9 @@ client.on("message", async (message) => {
         break;
       case "dobemyrounds":
         userRounds(message);
+        break;
+      case "dobehits":
+        hits(message);
         break;
       default:
         // Do be training
