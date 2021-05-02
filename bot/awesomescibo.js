@@ -71,7 +71,6 @@ async function updateScore(isCorrect, score, authorId) {
       });
       doc.score = doc.score + 4;
       doc.save();
-      console.log("Succesfully updated score.");
     }
 
     return `Great job! Your score is now ${score}.`;
