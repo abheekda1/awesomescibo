@@ -333,8 +333,8 @@ async function generateRound(message) {
         bonus_question = data.question.bonus_question;
         bonus_answer = data.question.bonus_answer;
         bonus_format = data.question.bonus_format;
-        htmlContent = `<br><br><p style="text-align: center;"><strong>TOSS-UP</strong></p>\n<br>` + `${i}) <strong>${question_category}</strong>` + " " + `<em>${tossup_format}</em>` + " " + tossup_question + "<br><br>" + "<strong>ANSWER:</strong> " + tossup_answer + "<br>";
-        htmlContent += `<br><br><p style="text-align: center;"><strong>BONUS</strong></p>\n<br>` + `${i}) <strong>${question_category}</strong>` + " " + `<em>${bonus_format}</em>` + " " + bonus_question + "<br><br>" + "<strong>ANSWER:</strong> " + bonus_answer + "<br><br><hr><br>";
+        htmlContent = `<br><br><h3 style="text-align: center;"><strong>TOSS-UP</strong></h3>\n<br>` + `${i}) <strong>${question_category}</strong>` + " " + `<em>${tossup_format}</em>` + " " + tossup_question + "<br><br>" + "<strong>ANSWER:</strong> " + tossup_answer + "<br>";
+        htmlContent += `<br><br><h3 style="text-align: center;"><strong>BONUS</strong></h3>\n<br>` + `${i}) <strong>${question_category}</strong>` + " " + `<em>${bonus_format}</em>` + " " + bonus_question + "<br><br>" + "<strong>ANSWER:</strong> " + bonus_answer + "<br><br><hr><br>";
         htmlContent = htmlContent.replace(/\n/g, "<br>");
         finalizedHTML += htmlContent;
         if (i === 25) {
