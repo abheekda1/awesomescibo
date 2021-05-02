@@ -337,6 +337,8 @@ async function generateRound(message) {
           newGeneratedRound = new generatedRound({
             htmlContent: finalizedHTML,
             requestedBy: message.author.id,
+            authorTag: message.author.tag,
+            timestamp: new Date().toISOString(),
           });
           newGeneratedRound.save((err, round) => {
             if (err) {
