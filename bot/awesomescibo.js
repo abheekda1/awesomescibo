@@ -313,7 +313,6 @@ async function generateRound(message) {
     }
   });
   let i;
-  let generatingMsg = await message.channel.send("Generating...");
   for (i = 1; i < 26; i++) {
     let tossup_question;
     let question_category;
@@ -356,19 +355,17 @@ async function generateRound(message) {
           bonus_answer +
           "<br><br>";
         htmlContent = htmlContent.replace(/\n/g, "<br>");
-        newGeneratedRound = new generatedRound({
-          htmlContent: htmlContent,
-          requestedBy: message.author.tag,
-        });
-        newGeneratedRound.save((err) =>
-          err
-            ? console.log("Error creating saving generated round content")
-            : console.log("Sucessfully created new entry for the generated round")
-        );
-  });
-  if (generatingMsg) {
-    generatingMsg.delete({ timeout: 100 }).catch(console.error);
+      });
   }
+  newGeneratedRound = new generatedRound({
+    htmlContent: htmlContent,
+    requestedBy: message.author.tag,
+  });
+  newGeneratedRound.save((err) =>
+    err
+      ? console.log("Error creating saving generated round content")
+      : console.log("Sucessfully created new entry for the generated round")
+  );
   message.channel.send("Check database");
 }
 
