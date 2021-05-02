@@ -17,20 +17,22 @@ const helpMessage =
 
 client.once("ready", () => {
   // Connect to MongoDB using mongoose
-  mongoose
-    .connect(process.env.MONGO_URI, {
-      useUnifiedTopology: true,
-      useNewUrlParser: true,
-    })
-    .then(() => {
-      // Log client tag and set status
-      console.log(`Logged in as: ${client.user.username}!`);
-      client.user.setActivity(
-        'for "do be helping" | Add me to your own server: adat.link/awscibo',
-        { type: "WATCHING" }
-      );
-    })
-    .catch((err) => console.log(err));
+  if (!process.env.CI) {
+    mongoose
+      .connect(process.env.MONGO_URI, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+      })
+      .then(() => {
+        // Log client tag and set status
+        console.log(`Logged in as: ${client.user.username}!`);
+        client.user.setActivity(
+          'for "do be helping" | Add me to your own server: adat.link/awscibo',
+          { type: "WATCHING" }
+        );
+      })
+      .catch((err) => console.log(err));
+    }
 });
 
 client.on("guildCreate", (guild) => {
