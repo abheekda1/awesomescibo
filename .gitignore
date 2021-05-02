@@ -8,3 +8,5 @@ bot/README.md
 .eslintrc
 .json
 .env
+userScore
+config.json

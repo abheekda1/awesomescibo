@@ -10,13 +10,13 @@
   },
   "name": "awscibo",
   "version": "0.4.1",
-  "main": "awesomescibo.mjs",
+  "main": "awesomescibo.js",
   "bin": {
-    "awscibo": "./awesomescibo.mjs"
+    "awscibo": "./awesomescibo.js"
   },
   "scripts": {
-    "test": "node awesomescibo.mjs randomtoken",
-    "start": "nodemon awesomescibo.mjs"
+    "test": "node awesomescibo.js randomtoken",
+    "start": "nodemon awesomescibo.js"
   },
   "keywords": [
     "discord",
