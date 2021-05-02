@@ -355,17 +355,19 @@ async function generateRound(message) {
           bonus_answer +
           "<br><br>";
         htmlContent = htmlContent.replace(/\n/g, "<br>");
+        if (i === 25) {
+          newGeneratedRound = new generatedRound({
+            htmlContent: htmlContent,
+            requestedBy: message.author.tag,
+          });
+          newGeneratedRound.save((err) =>
+            err
+              ? console.log("Error creating saving generated round content")
+              : console.log("Sucessfully created new entry for the generated round")
+          );
+        }
       });
   }
-  newGeneratedRound = new generatedRound({
-    htmlContent: htmlContent,
-    requestedBy: message.author.tag,
-  });
-  newGeneratedRound.save((err) =>
-    err
-      ? console.log("Error creating saving generated round content")
-      : console.log("Sucessfully created new entry for the generated round")
-  );
   message.channel.send("Check database");
 }
 
