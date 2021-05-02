@@ -344,9 +344,9 @@ async function generateRound(message) {
               return;
             }
             message.channel.messages.fetch(generatingMessage.id)
-            .then(message => {
-              const msg = message.first();
-              msg.edit(`${msg.author}, here's your round: https://api.adawesome.tech/round/${round._id.toString()}`);
+            .then(generatingMessage => {
+              const msg = generatingMessage.first();
+              msg.edit(`${message.author}, here's your round: https://api.adawesome.tech/round/${round._id.toString()}`);
             });
       });
     }
