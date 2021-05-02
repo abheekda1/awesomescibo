@@ -484,10 +484,15 @@ async function userRounds(message) {
   }
 
   rounds.forEach(async (item, index) => {
-    finalMessage += `[${index}. ${item.split("T")[0]}](https://api.adawesome.tech/round/${item._id.toString()})\n`;
+    finalMessage += `${index + 1}. [${item.timestamp.split("T")[0]}](https://api.adawesome.tech/round/${item._id.toString()})\n`;
   });
 
-  message.channel.send(finalMessage);
+  const roundsEmbed = new Discord.MessageEmbed()
+    .setTitle(`Rounds requested by ${message.author.tag}`)
+    .setDescription(finalMessage)
+    .setTimestamp();
+
+  message.channel.send(roundsEmbed);
 }
 
 client.on("message", async (message) => {
@@ -527,7 +532,8 @@ client.on("message", async (message) => {
         aboutMessage(message);
         break;
       case "dobemyrounds":
-        usersRounds(message);
+        userRounds(message);
+        break;
       default:
         // Do be training
         otherCommands(message);
