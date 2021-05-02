@@ -9,11 +9,13 @@ const fetch = require("node-fetch");
 const fs =  require("fs");
 const axios = require("axios");
 const userScore = require("./mongooseModels/mongooseUserScoreModel.js");
+const generatedRound = require("./mongooseModels/mongooseGeneratedRoundModel.js");
 const mongoose = require("mongoose");
-const config = require("./config.json");
+let config = {};
+process.env.CI ? config = require("./config.default.json") : config = require("./config.json")
 
 const helpMessage =
-  "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be roundgen dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
+  "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
 
 client.once("ready", () => {
   // Connect to MongoDB using mongoose
@@ -304,7 +306,7 @@ function sendHelpMessage(message) {
   );
 }
 
-async function generateRound(message, isDM) {
+async function generateRound(message) {
   fs.writeFile("index.html", "<h1>Here's your round!</h1>", (error) => {
     if (error) {
       console.log(error);
@@ -354,40 +356,25 @@ async function generateRound(message, isDM) {
           bonus_answer +
           "<br><br>";
         htmlContent = htmlContent.replace(/\n/g, "<br>");
-        fs.appendFile("index.html", htmlContent, (error) => {
-          if (error) {
-            console.log(error);
-          }
+        newGeneratedRound = new generatedRound({
+          htmlContent: htmlContent,
+          requestedBy: message.author.tag,
         });
-      });
+        newGeneratedRound.save((err) =>
+          err
+            ? console.log("Error creating saving generated round content")
+            : console.log("Sucessfully created new entry for the generated round")
+        );
   }
   if (generatingMsg) {
     generatingMsg.delete({ timeout: 100 }).catch(console.error);
   }
   execSync(
-    `curl --request POST --url ${config.gotenbergURL} --header 'Content-Type: multipart/form-data' --form files=@index.html -o round.pdf`,
-    { encoding: "utf-8" }
+  message.channel.send(
+    new Discord.MessageEmbed()
+      .setTitle("Here's your round!")
+      .attachFiles("round.pdf")
   );
-  if (isDM) {
-    client.users.cache
-      .get(message.author.id)
-      .send(
-        new Discord.MessageEmbed()
-          .setTitle("Here's your round!")
-          .attachFiles("round.pdf")
-      )
-      .catch(() =>
-        message.reply(
-          "Unable to DM you! Make sure DMs from server members are allowed."
-        )
-      );
-  } else {
-    message.channel.send(
-      new Discord.MessageEmbed()
-        .setTitle("Here's your round!")
-        .attachFiles("round.pdf")
-    );
-  }
 }
 
 async function startScoring(message) {
