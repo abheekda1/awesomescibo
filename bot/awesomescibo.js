@@ -339,10 +339,10 @@ async function generateRound(message) {
             requestedBy: message.author.id,
           });
           newGeneratedRound.save((err, round) =>
-            err
-              ? console.log("Error creating saving generated round content")
-              : console.log("Sucessfully created new entry for the generated round")
-
+            if (err) {
+              console.log(err);
+              return;
+            }
             message.channel.fetch(generatingMessage.id).edit(`https://api.adawesome.tech/round/${round._id.toString()}`);
           );
         }
