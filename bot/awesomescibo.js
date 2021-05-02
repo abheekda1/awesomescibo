@@ -313,6 +313,7 @@ async function generateRound(message) {
     }
   });
   let i;
+  let finalizedHTML = "";
   for (i = 1; i < 26; i++) {
     let tossup_question;
     let question_category;
@@ -321,7 +322,6 @@ async function generateRound(message) {
     let bonus_question;
     let bonus_format;
     let bonus_answer;
-    let finalizedHTML = "";
     let htmlContent = "";
     await fetch("https://scibowldb.com/api/questions/random")
       .then((response) => response.json())
