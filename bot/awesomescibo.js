@@ -494,8 +494,8 @@ async function userRounds(message) {
 }
 
 async function hits(message) {
-  let totalCount = await generatedRound.count({});
-  let userCount = await generatedRound.count({ requestedBy: message.author.id });
+  let totalCount = await generatedRound.countDocuments({});
+  let userCount = await generatedRound.countDocuments({ requestedBy: message.author.id });
 
   message.channel.send(`Total Hits: ${totalCount}\nYour Hits: ${userCount}`);
 }
