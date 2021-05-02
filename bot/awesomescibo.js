@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 
-import * as Discord from "discord.js";
-import { execSync } from "child_process";
+const Discord = require("discord.js");
+const execSync = require("child_process").execSync;
 const client = new Discord.Client({
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
-import fetch from "node-fetch";
-import * as fs from "fs";
-import axios from "axios";
-import userScore from "./mongooseModels/mongooseUserScoreModel.js";
-import {} from "dotenv/config.js";
-import mongoose from "mongoose";
-import config from ('./config.json')
+const fetch = require("node-fetch");
+const fs =  require("fs");
+const axios = require("axios");
+const userScore = require("./mongooseModels/mongooseUserScoreModel.js");
+const mongoose = require("mongoose");
+const config = require("./config.json");
 
 const helpMessage =
   "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be roundgen dm`: dm a pdf round to you\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
@@ -513,7 +512,7 @@ client.on("message", async (message) => {
     return;
   }
 
-  const formattedMessage = message.content.toLowerCase().replace(" ", "");
+  const formattedMessage = message.content.toLowerCase().replace(/ /g, "");
   if (formattedMessage.startsWith("dobe")) {
     // Bot prefix is "do be"
     switch (formattedMessage) {
