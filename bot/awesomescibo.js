@@ -471,6 +471,25 @@ function aboutMessage(message) {
   );
 }
 
+async function userRounds(message) {
+  let rounds = await generatedRound.find({ requestedBy: message.author.id});
+  let finalMessage = "";
+  if (!rounds) {
+    message.reply("you haven't requested any rounds!");
+    return;
+  }
+
+  if (rounds.length > 5) {
+    let rounds = rounds.slice(0, 5);
+  }
+
+  rounds.forEach(async (item, index) => {
+    finalMessage += `[${index}. ${item.split("T")[0]}](https://api.adawesome.tech/round/${item._id.toString()})\n`;
+  });
+
+  message.channel.send(finalMessage);
+}
+
 client.on("message", async (message) => {
   if (message.author.bot) {
     return;
@@ -507,6 +526,8 @@ client.on("message", async (message) => {
       case "dobeabout": // Show about message of bot
         aboutMessage(message);
         break;
+      case "dobemyrounds":
+        usersRounds(message);
       default:
         // Do be training
         otherCommands(message);
