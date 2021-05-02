@@ -316,7 +316,7 @@ async function generateRound(message) {
     let bonus_format;
     let bonus_answer;
     let htmlContent = "";
-    await axios.post("https://scibowldb.com/api/questions", { categories: ["BIOLOGY", "PHYSICS", "EARTH AND SPACE", "ASTRONOMY", "MATH"] })
+    await axios.post("https://scibowldb.com/api/questions", { categories: ["BIOLOGY", "PHYSICS", "CHEMISTRY", "EARTH AND SPACE", "ASTRONOMY", "MATH"] })
       .then((response) => {
         for (i = 1; i < 26; i++) {
             data = response.data.questions[Math.floor(Math.random() * response.data.questions.length)];
