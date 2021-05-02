@@ -369,10 +369,7 @@ async function generateRound(message) {
   if (generatingMsg) {
     generatingMsg.delete({ timeout: 100 }).catch(console.error);
   }
-  message.channel.send(
-    new Discord.MessageEmbed()
-      .setTitle("Done?");
-  );
+  message.channel.send("Check database");
 }
 
 async function startScoring(message) {
