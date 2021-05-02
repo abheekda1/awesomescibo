@@ -321,6 +321,7 @@ async function generateRound(message) {
     let bonus_question;
     let bonus_format;
     let bonus_answer;
+    let finalizedHTML = "";
     let htmlContent = "";
     await fetch("https://scibowldb.com/api/questions/random")
       .then((response) => response.json())
@@ -355,10 +356,11 @@ async function generateRound(message) {
           bonus_answer +
           "<br><br>";
         htmlContent = htmlContent.replace(/\n/g, "<br>");
+        finalizedHTML += htmlContent;
         if (i === 25) {
           newGeneratedRound = new generatedRound({
-            htmlContent: htmlContent,
-            requestedBy: message.author.tag,
+            htmlContent: finalizedHTML,
+            requestedBy: message.author.id,
           });
           newGeneratedRound.save((err) =>
             err
