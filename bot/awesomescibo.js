@@ -488,7 +488,7 @@ async function userRounds(message) {
   });
 
   const roundsEmbed = new Discord.MessageEmbed()
-    .setTitle(`Rounds requested by ${message.author.tag}`)
+    .setTitle(`Last 5 rounds requested by ${message.author.tag}`)
     .setDescription(finalMessage)
     .setTimestamp();
 
