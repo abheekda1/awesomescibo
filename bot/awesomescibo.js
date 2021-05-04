@@ -175,7 +175,7 @@ async function otherCommands(message) {
                     );
                   }
                 });
-            });
+            }).catch(console.error);
         });
       });
     } else {
