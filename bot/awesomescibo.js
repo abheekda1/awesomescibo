@@ -477,7 +477,7 @@ async function userRounds(message) {
   }
 
   if (rounds.length > 5) {
-    let rounds = rounds.slice(0, 5);
+    rounds = rounds.slice(0, 5);
   }
 
   rounds.forEach(async (item, index) => {
