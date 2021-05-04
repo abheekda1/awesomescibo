@@ -462,8 +462,8 @@ function showLeaderboard(message) {
 function aboutMessage(message) {
   message.channel.send(
     new Discord.MessageEmbed().setTitle("Contributors: ").setDescription(`
-        <@745063586422063214>
-        <@650525101048987649>
+        <@745063586422063214> [ADawesomeguy#2235]
+        <@650525101048987649> [tEjAs#8127]
       `) // Add more contributors here, first one is Abheek, second one is Tejas
   );
 }
