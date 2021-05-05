@@ -280,7 +280,7 @@ async function otherCommands(message) {
                       );
                     }
                   })
-                  .catch((collected) => {}); // Reaction message filter
+                  .catch(console.error); // Reaction message filter
               })
               .catch((collected, error) => {
                 message.reply("\n**ANSWER TIMEOUT**");
@@ -505,8 +505,11 @@ client.on("message", async (message) => {
     return;
   }
 
+  // Temporary logging purposes
+
   const formattedMessage = message.content.toLowerCase().replace(/ /g, "");
   if (formattedMessage.startsWith("dobe")) {
+    console.log(`${message.author.tag} > ${message.content}`);
     // Bot prefix is "do be"
     switch (formattedMessage) {
       case "dobehelping": // Display help message
