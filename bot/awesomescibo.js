@@ -198,7 +198,7 @@ async function otherCommands(message) {
           break;
         case "chem":
         case "chemistry":
-          subjectURL = getSubjectUrl("astronomy");
+          subjectURL = getSubjectUrl("chemistry");
           break;
         case "phys":
         case "physics":
