@@ -9,6 +9,7 @@ const axios = require("axios");
 const userScore = require("./mongooseModels/mongooseUserScoreModel.js");
 const generatedRound = require("./mongooseModels/mongooseGeneratedRoundModel.js");
 const mongoose = require("mongoose");
+const gitlog = require("gitlog").default;
 
 const helpMessage =
   "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
@@ -429,6 +430,20 @@ async function hits(message) {
   message.channel.send(`Total Hits: ${totalCount}\nYour Hits: ${userCount}`);
 }
 
+async function changelog(message) {
+  let parentFolder = __dirname.split("/");
+  parentFolder.pop();
+  parentFolder = parentFolder.join("/");
+
+  const commits = gitlog({
+    repo: parentFolder,
+    number: 20,
+    fields: ["hash", "abbrevHash", "subject", "authorName", "authorDateRel"],
+  });
+
+  console.log(commits);
+}
+
 client.on("message", async (message) => {
   if (message.author.bot) {
     return;
@@ -470,6 +485,9 @@ client.on("message", async (message) => {
         break;
       case "dobehits":
         hits(message);
+        break;
+      case "dobechangelog":
+        changelog(message);
         break;
       default:
         // Do be training

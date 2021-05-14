@@ -2,6 +2,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
+    "gitlog": "^4.0.4",
     "mongoose": "^5.12.4"
   },
   "devDependencies": {
