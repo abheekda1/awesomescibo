@@ -184,28 +184,30 @@ async function otherCommands(message) {
                     answerMsg.reply(msgToReply)
                   );
                 } else {
-                  answerMsg.react("<:override:842778128966615060>");
-                  answerMsg.channel.send(
+                  const overrideMsg = answerMsg.channel.send(
                     `It seems your answer was incorrect. The correct answer was **\`${data.tossup_answer}\`**. Please react with "<:override:842778128966615060>" to override your answer if you think you got it right.`
-                  );
-                  const filter = (reaction, user) => {
-                    return (
-                      ["override"].includes(reaction.emoji.name) &&
-                      user.id === answerMsg.author.id
-                    );
-                  };
-                  answerMsg
-                    .awaitReactions(filter, {
-                      max: 1,
-                      time: 600000,
-                      errors: ["time"],
-                    })
-                    .then((userReaction) => {
-                      updateScore(true, score, authorId).then((msgToReply) =>
-                        answerMsg.reply(msgToReply)
+                  )
+                  .then(overrideMsg => {
+                    overrideMsg.react("<:override:842778128966615060>");
+                    const filter = (reaction, user) => {
+                      return (
+                        ["override"].includes(reaction.emoji.name) &&
+                        user.id === answerMsg.author.id
                       );
-                    });
-                  }
+                    };
+                    overrideMsg
+                      .awaitReactions(filter, {
+                        max: 1,
+                        time: 600000,
+                        errors: ["time"],
+                      })
+                      .then((userReaction) => {
+                        updateScore(true, score, authorId).then((msgToReply) =>
+                          answerMsg.reply(msgToReply)
+                        );
+                      });
+                  })
+                }
               })
               .catch(console.error);
           });
