@@ -398,7 +398,7 @@ function aboutMessage(message) {
 }
 
 async function userRounds(message) {
-  let rounds = await generatedRound.find({ requestedBy: message.author.id });
+  let rounds = await generatedRound.find({ requestedBy: message.author.id }).sort({ timestamp: -1 });
   let finalMessage = "";
   if (!rounds) {
     message.reply("you haven't requested any rounds!");
@@ -445,10 +445,7 @@ client.on("message", async (message) => {
         sendHelpMessage(message);
         break;
       case "doberoundgen": // Generate round publicly
-        generateRound(message, false);
-        break;
-      case "doberoundgendm": // Generate round through DM
-        generateRound(message, true);
+        generateRound(message);
         break;
       case "dobescoring": // Start scoring
         startScoring(message);
