@@ -9,8 +9,6 @@ const axios = require("axios");
 const userScore = require("./mongooseModels/mongooseUserScoreModel.js");
 const generatedRound = require("./mongooseModels/mongooseGeneratedRoundModel.js");
 const mongoose = require("mongoose");
-let config = {};
-process.env.CI ? config = require("./config.default.json") : config = require("./config.json")
 
 const helpMessage =
   "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
@@ -45,10 +43,6 @@ client.on("guildCreate", (guild) => {
     .send("'Sup, I'm the AwesomeSciBo bot!")
     .catch(console.error);
 });
-
-function getSubjectUrl(subject) {
-  return `${config.subjectURL}${subject}.json`;
-}
 
 async function updateScore(isCorrect, score, authorId) {
   if (!isCorrect) {
@@ -180,35 +174,35 @@ async function otherCommands(message) {
       });
     } else {
       const subject = message.content.substring(15);
-      let subjectURL;
+      let categoryArray = [];
 
       switch (subject) {
         case "astro":
         case "astronomy":
-          subjectURL = getSubjectUrl("astronomy");
+          categoryArray = ["ASTRONOMY"]
           break;
         case "bio":
         case "biology":
-          subjectURL = getSubjectUrl("biology");
+          categoryArray = ["BIOLOGY"];
           break;
         case "ess":
         case "earth science":
         case "es":
-          subjectURL = getSubjectUrl("ess");
+          categoryArray = ["EARTH SCIENCE"];
           break;
         case "chem":
         case "chemistry":
-          subjectURL = getSubjectUrl("chemistry");
+          categoryArray = ["CHEMISTRY"];
           break;
         case "phys":
         case "physics":
-          subjectURL = getSubjectUrl("physics");
+          categoryArray = ["PHYSICS"];
           break;
         case "math":
-          subjectURL = getSubjectUrl("math");
+          categoryArray = ["MATH"];
           break;
         case "energy":
-          subjectURL = getSubjectUrl("energy");
+          categoryArray = ["ENERGY"];
           break;
         default:
           message.channel.send("Not a valid subject!");
@@ -216,12 +210,11 @@ async function otherCommands(message) {
       }
 
       axios
-        .get(subjectURL)
+        .post("https://scibowldb.com/api/questions", { categories: categoryArray })
         .then((res) => {
-          const data = res.data;
-          const questionNum = Math.floor(Math.random() * data.length);
+          data = res.data.questions[Math.floor(Math.random() * res.data.questions.length)];
           const messageFilter = (m) => m.author.id === authorId;
-          message.reply(data[questionNum].tossup_question).then(() => {
+          message.reply(data.tossup_question).then(() => {
             message.channel
               .awaitMessages(messageFilter, {
                 max: 1,
@@ -232,10 +225,10 @@ async function otherCommands(message) {
                 answerMsg = answerMsg.first();
 
                 let predicted = null;
-                if (data[questionNum].tossup_format === "Multiple Choice") {
+                if (data.tossup_format === "Multiple Choice") {
                   if (
                     answerMsg.content.charAt(0).toLowerCase() ===
-                    data[questionNum].tossup_answer.charAt(0).toLowerCase()
+                    data.tossup_answer.charAt(0).toLowerCase()
                   ) {
                     predicted = "correct";
                   } else {
@@ -244,7 +237,7 @@ async function otherCommands(message) {
                 } else {
                   if (
                     answerMsg.content.toLowerCase() ===
-                    data[questionNum].tossup_answer.toLowerCase()
+                    data.tossup_answer.toLowerCase()
                   ) {
                     predicted = "correct";
                   } else {
@@ -252,7 +245,7 @@ async function otherCommands(message) {
                   }
                 }
                 answerMsg.channel.send(
-                  `Correct answer: **${data[questionNum].tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`
+                  `Correct answer: **${data.tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`
                 );
                 answerMsg.react("✅");
                 answerMsg.react("❌");
