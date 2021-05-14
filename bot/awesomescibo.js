@@ -3,7 +3,7 @@
 const Discord = require("discord.js");
 const Intents = Discord.Intents;
 const client = new Discord.Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+  intents: [],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
 const fetch = require("node-fetch");
