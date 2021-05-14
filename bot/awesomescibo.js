@@ -184,13 +184,13 @@ async function otherCommands(message) {
                     answerMsg.reply(msgToReply)
                   );
                 } else {
-                  answerMsg.react("♻️");
+                  answerMsg.react("override");
                   answerMsg.channel.send(
-                    `It seems your answer was incorrect. The correct answer was **\`${data.tossup_answer}\`**. Please react with "♻️" to override your answer if you think you got it right.`
+                    `It seems your answer was incorrect. The correct answer was **\`${data.tossup_answer}\`**. Please react with "<:override:842778128966615060>" to override your answer if you think you got it right.`
                   );
                   const filter = (reaction, user) => {
                     return (
-                      ["♻️"].includes(reaction.emoji.name) &&
+                      ["override"].includes(reaction.emoji.name) &&
                       user.id === answerMsg.author.id
                     );
                   };
