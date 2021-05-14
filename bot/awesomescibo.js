@@ -46,7 +46,7 @@ client.on("guildCreate", (guild) => {
 
 async function updateScore(isCorrect, score, authorId) {
   if (!isCorrect) {
-    return `Nice try! Your score is still ${score}.`;
+    return `nice try! Your score is still ${score}.`;
   } else {
     score += 4;
     if (score == 4) {
@@ -67,7 +67,7 @@ async function updateScore(isCorrect, score, authorId) {
       doc.save();
     }
 
-    return `Great job! Your score is now ${score}.`;
+    return `great job! Your score is now ${score}.`;
   }
 }
 
@@ -104,79 +104,13 @@ async function otherCommands(message) {
           console.log(err);
         }
       });
-    if (message.content === "do be training") {
-      axios.get("https://scibowldb.com/api/questions/random").then((res) => {
-        const data = res.data;
-        const messageAuthorFilter = (m) => m.author.id === message.author.id;
-        message.reply(data.question.tossup_question).then(() => {
-          message.channel
-            .awaitMessages(messageAuthorFilter, {
-              max: 1,
-              time: 30000,
-              errors: ["time"],
-            })
-            .then((answerMsg) => {
-              answerMsg = answerMsg.first();
-              let predicted = null;
-
-              if (data.question.tossup_format === "Multiple Choice") {
-                if (
-                  answerMsg.content.charAt(0).toLowerCase() ===
-                  data.question.tossup_answer.charAt(0).toLowerCase()
-                ) {
-                  predicted = "correct";
-                } else {
-                  predicted = "incorrect";
-                }
-              } else {
-                if (
-                  answerMsg.content.toLowerCase() ===
-                  data.question.tossup_answer.toLowerCase()
-                ) {
-                  predicted = "correct";
-                } else {
-                  predicted = "incorrect";
-                }
-              }
-
-              answerMsg.channel.send(
-                `Correct answer: **${data.question.tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`
-              );
-              answerMsg.react("✅");
-              answerMsg.react("❌");
-              const filter = (reaction, user) => {
-                return (
-                  ["❌", "✅"].includes(reaction.emoji.name) &&
-                  user.id === answerMsg.author.id
-                );
-              };
-              answerMsg
-                .awaitReactions(filter, {
-                  max: 1,
-                  time: 600000,
-                  errors: ["time"],
-                })
-                .then((userReaction) => {
-                  const reaction = userReaction.first();
-
-                  if (reaction.emoji.name === "❌") {
-                    updateScore(false, score, authorId).then((msgToReply) =>
-                      answerMsg.reply(msgToReply)
-                    );
-                  } else {
-                    updateScore(true, score, authorId).then((msgToReply) =>
-                      answerMsg.reply(msgToReply)
-                    );
-                  }
-                });
-            }).catch(console.error);
-        });
-      });
-    } else {
       const subject = message.content.substring(15);
       let categoryArray = [];
 
       switch (subject) {
+        case "":
+          categoryArray = ["BIOLOGY", "PHYSICS", "CHEMISTRY", "EARTH AND SPACE", "ASTRONOMY", "MATH"];
+          break;
         case "astro":
         case "astronomy":
           categoryArray = ["ASTRONOMY"]
@@ -210,9 +144,9 @@ async function otherCommands(message) {
       }
 
       axios
-        .post("https://scibowldb.com/api/questions", { categories: categoryArray })
+        .post("https://scibowldb.com/api/questions/random", { categories: categoryArray })
         .then((res) => {
-          data = res.data.questions[Math.floor(Math.random() * res.data.questions.length)];
+          data = res.data.question;
           const messageFilter = (m) => m.author.id === authorId;
           message.reply(data.tossup_question).then(() => {
             message.channel
@@ -244,44 +178,39 @@ async function otherCommands(message) {
                     predicted = "incorrect";
                   }
                 }
-                answerMsg.channel.send(
-                  `Correct answer: **${data.tossup_answer}**. Predicted: **${predicted}**. Please react to your answer!`
-                );
-                answerMsg.react("✅");
-                answerMsg.react("❌");
-                const reactionFilter = (reaction, user) => {
-                  return (
-                    ["❌", "✅"].includes(reaction.emoji.name) &&
-                    user.id === answerMsg.author.id
+
+                if (predicted === "correct") {
+                  updateScore(true, score, authorId).then((msgToReply) =>
+                    answerMsg.reply(msgToReply)
                   );
-                };
-                answerMsg
-                  .awaitReactions(reactionFilter, {
-                    max: 1,
-                    time: 600000,
-                    errors: ["time"],
-                  })
-                  .then(async (userReaction) => {
-                    const reaction = userReaction.first();
-                    if (reaction.emoji.name == "❌") {
-                      updateScore(false, score, authorId).then((msgToReply) =>
-                        answerMsg.reply(msgToReply)
-                      );
-                    } else {
+                } else {
+                  answerMsg.react("♻️");
+                  answerMsg.channel.send(
+                    `It seems your answer was incorrect. The correct answer was **\`${data.tossup_answer}\`**. Please react with "♻️" to override your answer if you think you got it right.`
+                  );
+                  const filter = (reaction, user) => {
+                    return (
+                      ["♻️"].includes(reaction.emoji.name) &&
+                      user.id === answerMsg.author.id
+                    );
+                  };
+                  answerMsg
+                    .awaitReactions(filter, {
+                      max: 1,
+                      time: 600000,
+                      errors: ["time"],
+                    })
+                    .then((userReaction) => {
                       updateScore(true, score, authorId).then((msgToReply) =>
                         answerMsg.reply(msgToReply)
                       );
-                    }
-                  })
-                  .catch(console.error); // Reaction message filter
+                    });
+                  }
               })
-              .catch((collected, error) => {
-                message.reply("\n**ANSWER TIMEOUT**");
-              });
+              .catch(console.error);
           });
         })
         .catch(console.error);
-    }
   } else {
     // Not any of the commands supported
     message.channel.send(
