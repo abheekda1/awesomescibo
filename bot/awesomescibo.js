@@ -447,7 +447,7 @@ async function changelog(message) {
   .setTimestamp();
 
   commits.forEach(commit => {
-    changelogEmbed.addField(commit.abbrevHash, `> \`Hash:\`${commit.hash}\n> \`Subject:\`${commit.subject}\n> \`Author:\`${commit.authorName}\n> \`Date:\`${commit.authorDateRel}\n> \`Link\`: [\`GitHub\`](https://github.com/ADawesomeguy/AwesomeSciBo/commit/${commit.hash})\n`);
+    changelogEmbed.addField(commit.abbrevHash, `> \`Hash:\`${commit.hash}\n> \`Subject:\`${commit.subject}\n> \`Author:\`${commit.authorName}\n> \`Date:\`${commit.authorDateRel}\n> \`Link\`: [GitHub](https://github.com/ADawesomeguy/AwesomeSciBo/commit/${commit.hash})\n`);
   });
 
   message.channel.send(changelogEmbed);
