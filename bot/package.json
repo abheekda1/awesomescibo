@@ -5,6 +5,7 @@
     "dotenv": "^8.2.0",
     "eslint": "^7.21.0",
     "fs": "^0.0.1-security",
+    "gitlog": "^4.0.4",
     "mongoose": "^5.12.5",
     "node-fetch": "^2.6.1"
   },
