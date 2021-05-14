@@ -186,7 +186,7 @@ async function otherCommands(message) {
                 } else {
                   const overrideEmbed = new Discord.MessageEmbed()
                   .setAuthor(answerMsg.author.tag, answerMsg.author.displayAvatarURL())
-                  .setField("Correct answer", `\`${data.tossup_answer}\``)
+                  .addField("Correct answer", `\`${data.tossup_answer}\``)
                   .setDescription(`It seems your answer was incorrect. Please react with <:override:842778128966615060> to override your answer if you think you got it right.`)
                   .setTimestamp();
                   const overrideMsg = answerMsg.channel.send(
