@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 const Discord = require("discord.js");
+const Intents = Discord.Intents;
 const client = new Discord.Client({
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
 const fetch = require("node-fetch");
@@ -15,6 +17,30 @@ const helpMessage =
   "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
 
 client.once("ready", () => {
+  // Register slash command
+  const commandData = [
+    {
+      "name": "train",
+      "description": "sends a single training question to be answered",
+      "options": [
+        {
+          "type": 3,
+          "name": "subject",
+          "description": "optional subject to be used as a filter",
+          "default": false,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "help",
+      "description": "replies with a help message explaining what the bot can do"
+    }
+  ]
+  commandData.forEach(commandData => {
+    client.application.commands.create(commandData);
+  })
+
   // Connect to MongoDB using mongoose
   if (!process.env.CI) {
     mongoose
@@ -47,7 +73,7 @@ client.on("guildCreate", (guild) => {
 
 async function updateScore(isCorrect, score, authorId) {
   if (!isCorrect) {
-    return `nice try! Your score is still ${score}.`;
+    return `Nice try! Your score is still ${score}.`;
   } else {
     score += 4;
     if (score == 4) {
@@ -68,167 +94,143 @@ async function updateScore(isCorrect, score, authorId) {
       doc.save();
     }
 
-    return `great job! Your score is now ${score}.`;
+    return `Great job! Your score is now ${score}.`;
   }
 }
 
-async function otherCommands(message) {
-  if (
-    message.content.toLowerCase().startsWith("do be announcing") &&
-    (message.author.id === process.env.ABHEEK_USER_ID ||
-      message.author.id === process.env.TEJAS_USER_ID)
-  ) {
-    const announcement = message.content.substring(17);
-    client.guilds.cache.forEach((guild) => {
-      const channel = guild.channels.cache.find(
-        (channelGeneral) =>
-          channelGeneral.name === process.env.ANNOUNCING_CHANNEL
-      );
-      if (channel) {
-        if (channel.type === "text") {
-          channel.send(announcement).catch(console.error);
-        }
+function training(subject, interaction) {
+  const authorId = interaction.member.user.id;
+  let score;
+  userScore
+    .findOne({ authorID: authorId })
+    .lean()
+    .then((obj, err) => {
+      if (!obj) {
+        score = 0;
+      } else if (obj) {
+        score = obj.score;
+      } else {
+        console.log(err);
       }
     });
-  } else if (message.content.toLowerCase().startsWith("do be training")) {
-    const authorId = message.author.id;
-    let score;
-    userScore
-      .findOne({ authorID: authorId })
-      .lean()
-      .then((obj, err) => {
-        if (!obj) {
-          score = 0;
-        } else if (obj) {
-          score = obj.score;
-        } else {
-          console.log(err);
-        }
-      });
-      const subject = message.content.substring(15);
-      let categoryArray = [];
 
-      switch (subject) {
-        case "":
-          categoryArray = ["BIOLOGY", "PHYSICS", "CHEMISTRY", "EARTH AND SPACE", "ASTRONOMY", "MATH"];
-          break;
-        case "astro":
-        case "astronomy":
-          categoryArray = ["ASTRONOMY"]
-          break;
-        case "bio":
-        case "biology":
-          categoryArray = ["BIOLOGY"];
-          break;
-        case "ess":
-        case "earth science":
-        case "es":
-          categoryArray = ["EARTH SCIENCE"];
-          break;
-        case "chem":
-        case "chemistry":
-          categoryArray = ["CHEMISTRY"];
-          break;
-        case "phys":
-        case "physics":
-          categoryArray = ["PHYSICS"];
-          break;
-        case "math":
-          categoryArray = ["MATH"];
-          break;
-        case "energy":
-          categoryArray = ["ENERGY"];
-          break;
-        default:
-          message.channel.send("Not a valid subject!");
-          return;
-      }
+    let categoryArray = [];
 
-      axios
-        .post("https://scibowldb.com/api/questions/random", { categories: categoryArray })
-        .then((res) => {
-          data = res.data.question;
-          const messageFilter = (m) => m.author.id === authorId;
-          message.reply(data.tossup_question).then(() => {
-            message.channel
-              .awaitMessages(messageFilter, {
-                max: 1,
-                time: 30000,
-                errors: ["time"],
-              })
-              .then((answerMsg) => {
-                answerMsg = answerMsg.first();
+    switch (subject) {
+      case null:
+        categoryArray = ["BIOLOGY", "PHYSICS", "CHEMISTRY", "EARTH AND SPACE", "ASTRONOMY", "MATH"];
+        break;
+      case "astro":
+      case "astronomy":
+        categoryArray = ["ASTRONOMY"]
+        break;
+      case "bio":
+      case "biology":
+        categoryArray = ["BIOLOGY"];
+        break;
+      case "ess":
+      case "earth science":
+      case "es":
+        categoryArray = ["EARTH SCIENCE"];
+        break;
+      case "chem":
+      case "chemistry":
+        categoryArray = ["CHEMISTRY"];
+        break;
+      case "phys":
+      case "physics":
+        categoryArray = ["PHYSICS"];
+        break;
+      case "math":
+        categoryArray = ["MATH"];
+        break;
+      case "energy":
+        categoryArray = ["ENERGY"];
+        break;
+      default:
+        interaction.reply("Not a valid subject!");
+        return;
+    }
 
-                let predicted = null;
-                if (data.tossup_format === "Multiple Choice") {
-                  if (
-                    answerMsg.content.charAt(0).toLowerCase() ===
-                    data.tossup_answer.charAt(0).toLowerCase()
-                  ) {
-                    predicted = "correct";
-                  } else {
-                    predicted = "incorrect";
-                  }
+    axios
+      .post("https://scibowldb.com/api/questions/random", { categories: categoryArray })
+      .then((res) => {
+        data = res.data.question;
+        const messageFilter = (m) => m.author.id === authorId;
+        interaction.reply(data.tossup_question).then(() => {
+          interaction.channel
+            .awaitMessages(messageFilter, {
+              max: 1,
+              time: 30000,
+              errors: ["time"],
+            })
+            .then((answerMsg) => {
+              answerMsg = answerMsg.first();
+
+              let predicted = null;
+              if (data.tossup_format === "Multiple Choice") {
+                if (
+                  answerMsg.content.charAt(0).toLowerCase() ===
+                  data.tossup_answer.charAt(0).toLowerCase()
+                ) {
+                  predicted = "correct";
                 } else {
-                  if (
-                    answerMsg.content.toLowerCase() ===
-                    data.tossup_answer.toLowerCase()
-                  ) {
-                    predicted = "correct";
-                  } else {
-                    predicted = "incorrect";
-                  }
+                  predicted = "incorrect";
                 }
-
-                if (predicted === "correct") {
-                  updateScore(true, score, authorId).then((msgToReply) =>
-                    answerMsg.reply(msgToReply)
-                  );
+              } else {
+                if (
+                  answerMsg.content.toLowerCase() ===
+                  data.tossup_answer.toLowerCase()
+                ) {
+                  predicted = "correct";
                 } else {
-                  const overrideEmbed = new Discord.MessageEmbed()
-                  .setAuthor(answerMsg.author.tag, answerMsg.author.displayAvatarURL())
-                  .addField("Correct answer", `\`${data.tossup_answer}\``)
-                  .setDescription(`It seems your answer was incorrect. Please react with <:override:842778128966615060> to override your answer if you think you got it right.`)
-                  .setTimestamp();
-                  const overrideMsg = answerMsg.channel.send(
-                    overrideEmbed
-                  )
-                  .then(overrideMsg => {
-                    overrideMsg.react("<:override:842778128966615060>");
-                    const filter = (reaction, user) => {
-                      return (
-                        ["override"].includes(reaction.emoji.name) &&
-                        user.id === answerMsg.author.id
+                  predicted = "incorrect";
+                }
+              }
+
+              if (predicted === "correct") {
+                updateScore(true, score, authorId).then((msgToReply) =>
+                  answerMsg.reply(msgToReply)
+                );
+              } else {
+                const overrideEmbed = new Discord.MessageEmbed()
+                .setAuthor(answerMsg.author.tag, answerMsg.author.displayAvatarURL())
+                .addField("Correct answer", `\`${data.tossup_answer}\``)
+                .setDescription(`It seems your answer was incorrect. Please react with <:override:842778128966615060> to override your answer if you think you got it right.`)
+                .setTimestamp();
+                const overrideMsg = answerMsg.channel.send(
+                  overrideEmbed
+                )
+                .then(overrideMsg => {
+                  overrideMsg.react("<:override:842778128966615060>");
+                  const filter = (reaction, user) => {
+                    return (
+                      ["override"].includes(reaction.emoji.name) &&
+                      user.id === answerMsg.author.id
+                    );
+                  };
+                  overrideMsg
+                    .awaitReactions(filter, {
+                      max: 1,
+                      time: 600000,
+                      errors: ["time"],
+                    })
+                    .then((userReaction) => {
+                      updateScore(true, score, authorId).then((msgToReply) =>
+                        answerMsg.reply(msgToReply)
                       );
-                    };
-                    overrideMsg
-                      .awaitReactions(filter, {
-                        max: 1,
-                        time: 600000,
-                        errors: ["time"],
-                      })
-                      .then((userReaction) => {
-                        updateScore(true, score, authorId).then((msgToReply) =>
-                          answerMsg.reply(msgToReply)
-                        );
-                      });
-                  })
-                }
-              })
-              .catch(console.error);
-          });
-        })
-        .catch(console.error);
-  } else {
-    // Not any of the commands supported
-    message.channel.send(
-      "That didn't quite make sense! Please use `do be helping` to see the available commands."
-    );
-  }
-}
+                    });
+                })
+              }
+            })
+            .catch(console.error);
+        });
+      })
+      .catch(console.error);
+    }
 
-function sendHelpMessage(message) {
-  message.channel.send(
+function sendHelpMessage(interaction) {
+  interaction.reply(
     new Discord.MessageEmbed().setTitle("Help").setDescription(helpMessage)
   );
 }
@@ -402,7 +404,7 @@ async function userRounds(message) {
   let rounds = await generatedRound.find({ requestedBy: message.author.id }).sort({ timestamp: -1 });
   let finalMessage = "";
   if (!rounds) {
-    message.reply("you haven't requested any rounds!");
+    message.reply("You haven't requested any rounds!");
     return;
   }
 
@@ -457,17 +459,10 @@ client.on("message", async (message) => {
   if (message.author.bot) {
     return;
   }
-
-  // Temporary logging purposes
-
   const formattedMessage = message.content.toLowerCase().replace(/ /g, "");
   if (formattedMessage.startsWith("dobe")) {
-    console.log(`${message.author.tag} > ${message.content}`);
     // Bot prefix is "do be"
     switch (formattedMessage) {
-      case "dobehelping": // Display help message
-        sendHelpMessage(message);
-        break;
       case "doberoundgen": // Generate round publicly
         generateRound(message);
         break;
@@ -504,6 +499,20 @@ client.on("message", async (message) => {
     }
   }
 });
+
+client.on("interaction", interaction => {
+  // If the interaction isn't a slash command, return
+  if (!interaction.isCommand()) return;
+
+  switch(interaction.commandName) {
+    case "help":
+      sendHelpMessage(interaction);
+      break;
+    case "train":
+      training(interaction.options[0] ? interaction.options[0].value : null, interaction);
+      break;
+  }
+})
 
 client
   .login(process.env.TOKEN)
