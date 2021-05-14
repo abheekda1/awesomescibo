@@ -437,11 +437,20 @@ async function changelog(message) {
 
   const commits = gitlog({
     repo: parentFolder,
-    number: 20,
+    number: 5,
     fields: ["hash", "abbrevHash", "subject", "authorName", "authorDateRel"],
   });
 
-  console.log(commits);
+  const changelogEmbed = new Discord.MessageEmbed()
+  .setAuthor(message.author.tag, message.author.displayAvatarURL())
+  .setTitle("Changelog")
+  .setTimestamp();
+
+  commits.forEach(commit => {
+    changelogEmbed.addField(commit.abbrevHash, `> \`Hash:\`${commit.hash}\n> \`Subject:\`${commit.subject}\n> \`Author:\`${commit.authorName}\n> \`Date:\`${commit.authorDateRel}\n`);
+  });
+
+  message.channel.send(changelogEmbed);
 }
 
 client.on("message", async (message) => {
