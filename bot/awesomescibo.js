@@ -185,7 +185,7 @@ async function otherCommands(message) {
                   );
                 } else {
                   const overrideMsg = answerMsg.channel.send(
-                    `It seems your answer was incorrect. The correct answer was **\`${data.tossup_answer}\`**. Please react with "<:override:842778128966615060>" to override your answer if you think you got it right.`
+                    `It seems your answer was incorrect. The correct answer was **\`${data.tossup_answer}\`**. Please react with <:override:842778128966615060> to override your answer if you think you got it right.`
                   )
                   .then(overrideMsg => {
                     overrideMsg.react("<:override:842778128966615060>");
