@@ -38,7 +38,7 @@ client.once("ready", () => {
     }
   ]
   commandData.forEach(commandData => {
-    client.application.commands.create(commandData);
+    client.application.commands.set(commandData);
   })
 
   // Connect to MongoDB using mongoose
