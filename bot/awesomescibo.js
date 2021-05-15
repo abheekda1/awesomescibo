@@ -21,7 +21,7 @@ client.once("ready", () => {
   const commandData = [
     {
       "name": "train",
-      "description": "sends a single training question to be answered",
+      "description": "Sends a single training question to be answered",
       "options": [
         {
           "type": 3,
@@ -34,7 +34,7 @@ client.once("ready", () => {
     },
     {
       "name": "help",
-      "description": "replies with a help message explaining what the bot can do"
+      "description": "Replies with a help message explaining what the bot can do"
     }
   ]
   commandData.forEach(commandData => {
