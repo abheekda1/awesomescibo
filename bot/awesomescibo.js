@@ -158,8 +158,7 @@ function training(subject, interaction) {
         data = res.data.question;
         const messageFilter = (m) => m.author.id === authorId;
         interaction.reply(data.tossup_question).then(() => {
-          interaction.channel
-            .awaitMessages(messageFilter, {
+          interaction.channel.awaitMessages(messageFilter, {
               max: 1,
               time: 30000,
               errors: ["time"],
