@@ -17,8 +17,7 @@ const helpMessage =
   "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
 
 client.once("ready", () => {
-  // Register slash command
-  const commandData = [
+  client.application.commands.set([
     {
       "name": "train",
       "description": "Sends a single training question to be answered",
@@ -43,11 +42,8 @@ client.once("ready", () => {
     {
       "name": "round list",
       "description": "Lists your 5 most recently generated rounds with links"
-    }
-  ]
-  //commandData.forEach(commandData => {
-    client.application.commands.set(commandData);
-  //})
+    },
+  ]);
 
   // Connect to MongoDB using mongoose
   if (!process.env.CI) {
