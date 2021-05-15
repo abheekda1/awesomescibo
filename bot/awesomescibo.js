@@ -3,6 +3,7 @@
 const Discord = require("discord.js");
 const client = new Discord.Client({
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
+  intents: ["GUILDS", "GUILD_MESSAGES"]
 });
 const fetch = require("node-fetch");
 const axios = require("axios");
