@@ -3,7 +3,7 @@
 const Discord = require("discord.js");
 const Intents = Discord.Intents;
 const client = new Discord.Client({
-  intents: [],
+  intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS"],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
 const fetch = require("node-fetch");
@@ -158,8 +158,6 @@ function training(subject, interaction) {
         data = res.data.question;
         const messageFilter = (m) => m.author.id === authorId;
         interaction.reply(data.tossup_question).then(() => {
-          console.log(interaction);
-          console.log(interaction.channel);
           interaction.channel.awaitMessages(messageFilter, {
               max: 1,
               time: 30000,
