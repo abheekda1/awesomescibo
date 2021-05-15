@@ -3,7 +3,7 @@
 const Discord = require("discord.js");
 const Intents = Discord.Intents;
 const client = new Discord.Client({
-  intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS", "GUILD_MEMBERS", "GUILD_PRESENCES"],
+  intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS"/*, "GUILD_MEMBERS", "GUILD_PRESENCES"*/],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
 const fetch = require("node-fetch");
@@ -99,7 +99,7 @@ async function updateScore(isCorrect, score, authorId) {
 }
 
 function training(subject, interaction) {
-  const authorId = interaction.member.user.id;
+  const authorId = interaction.user.id;
   let score;
   userScore
     .findOne({ authorID: authorId })
