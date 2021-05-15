@@ -45,9 +45,9 @@ client.once("ready", () => {
       "description": "Lists your 5 most recently generated rounds with links"
     }
   ]
-  commandData.forEach(commandData => {
+  //commandData.forEach(commandData => {
     client.application.commands.set(commandData);
-  })
+  //})
 
   // Connect to MongoDB using mongoose
   if (!process.env.CI) {
