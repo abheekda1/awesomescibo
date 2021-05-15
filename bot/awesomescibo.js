@@ -494,9 +494,6 @@ client.on("message", async (message) => {
       case "dobechangelog":
         changelog(message);
         break;
-      default:
-        // Do be training
-        otherCommands(message);
     }
   }
 });
