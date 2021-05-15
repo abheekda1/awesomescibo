@@ -36,13 +36,22 @@ client.once("ready", () => {
       "description": "Replies with a help message explaining what the bot can do"
     },
     {
-      "name": "round generate",
-      "description": "Generates a round with randomized questions from https://scibowldb.com/"
-    },
-    {
-      "name": "round list",
-      "description": "Lists your 5 most recently generated rounds with links"
-    },
+      "name": "round",
+      "options": [
+        {
+          "type": 1,
+          "name": "generate",
+          "description": "Generates a round with randomized questions from https://scibowldb.com/",
+          "options": []
+        },
+        {
+          "type": 1,
+          "name": "list",
+          "description": "Lists your 5 most recently generated rounds with links",
+          "options": []
+        }
+      ],
+    }
   ]);
 
   // Connect to MongoDB using mongoose
