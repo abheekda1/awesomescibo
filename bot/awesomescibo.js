@@ -404,7 +404,7 @@ async function rounds(action, interaction) {
               console.log(err);
               return;
             }
-            interaction.reply(`Here's your round: https://api.adawesome.tech/round/${round._id.toString()}`);
+            interaction.reply(`Here's your round: https://api.adawesome.tech/round/${round._id.toString()}`, { ephemeral: true });
           });
         });
   } else if (action === "list"){
