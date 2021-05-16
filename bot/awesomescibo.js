@@ -235,21 +235,17 @@ function training(subject, interaction) {
                   overrideMsg
                     .awaitReactions(filter, {
                       max: 1,
-                      time: 600000,
-                      errors: ["time"],
                     })
                     .then((userReaction) => {
                       updateScore(true, score, authorId).then((msgToReply) =>
                         answerMsg.reply(msgToReply)
                       );
-                    });
-                })
+                    }).catch(console.error);
+                }).catch(console.error);
               }
-            })
-            .catch(console.error);
-        });
-      })
-      .catch(console.error);
+            }).catch(interaction.editReply("Sorry, the question timed out waiting for an answer."));
+        }).catch(console.error);
+      }).catch(interaction.reply("Sorry, there was a problem fetching the question. Please try again!"));
     }
 
 function sendHelpMessage(interaction) {
