@@ -454,7 +454,7 @@ async function hits(message) {
   message.channel.send(`Total Hits: ${totalCount}\nYour Hits: ${userCount}`);
 }
 
-async function changelog(message) {
+async function changelog(interaction) {
   let parentFolder = __dirname.split("/");
   parentFolder.pop();
   parentFolder = parentFolder.join("/");
@@ -466,7 +466,7 @@ async function changelog(message) {
   });
 
   const changelogEmbed = new Discord.MessageEmbed()
-  .setAuthor(message.author.tag, message.author.displayAvatarURL())
+  .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
   .setTitle("Changelog")
   .setTimestamp();
 
@@ -474,7 +474,7 @@ async function changelog(message) {
     changelogEmbed.addField(commit.abbrevHash, `> \`Hash:\`${commit.hash}\n> \`Subject:\`${commit.subject}\n> \`Author:\`${commit.authorName}\n> \`Date:\`${commit.authorDateRel}\n> \`Link\`: [GitHub](https://github.com/ADawesomeguy/AwesomeSciBo/commit/${commit.hash})\n`);
   });
 
-  message.channel.send(changelogEmbed);
+  interaction.reply(changelogEmbed);
 }
 
 client.on("message", async (message) => {
@@ -499,9 +499,6 @@ client.on("message", async (message) => {
         break;
       case "dobeabout": // Show about message of bot
         aboutMessage(message);
-        break;
-      case "dobechangelog":
-        changelog(message);
         break;
     }
   }
