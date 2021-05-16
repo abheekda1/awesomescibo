@@ -441,7 +441,7 @@ async function rounds(action, interaction) {
     });
   } else if (action === "hit"){
     let totalCount = await generatedRound.countDocuments({});
-    let userCount = await generatedRound.countDocuments({ requestedBy: interaction.author.id });
+    let userCount = await generatedRound.countDocuments({ requestedBy: interaction.user.id });
 
     interaction.reply(`Total Hits: ${totalCount}\nYour Hits: ${userCount}`);
   }
