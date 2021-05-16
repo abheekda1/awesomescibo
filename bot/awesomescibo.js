@@ -243,9 +243,9 @@ function training(subject, interaction) {
                     }).catch(console.error);
                 }).catch(console.error);
               }
-            }).catch(error => if (error) interaction.editReply("Sorry, the question timed out waiting for an answer."));
+            }).catch(error => { if (error) interaction.editReply("Sorry, the question timed out waiting for an answer.") });
         }).catch(console.error);
-      }).catch(error => if (error) interaction.reply("Sorry, there was a problem fetching the question. Please try again!"));
+      }).catch(error => { if (error) interaction.reply("Sorry, there was a problem fetching the question. Please try again!") });
     }
 
 function sendHelpMessage(interaction) {
