@@ -209,7 +209,7 @@ function training(subject, interaction) {
       .then((res) => {
         data = res.data.question;
         const messageFilter = (m) => m.author.id === authorId;
-        interaction.reply(data.tossup_question).then(() => {
+        interaction.reply(data.tossup_question + `\n\n||Source: ${data.uri}||`).then(() => {
           interaction.channel.awaitMessages(messageFilter, {
               max: 1,
               time: 120000,
