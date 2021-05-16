@@ -429,8 +429,8 @@ async function rounds(action, interaction) {
     });
 
     const roundsEmbed = new Discord.MessageEmbed()
-      .setAuthor(message.author.tag, message.author.displayAvatarURL())
-      .setTitle(`Last 5 rounds requested by ${message.author.tag}`)
+      .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
+      .setTitle(`Last 5 rounds requested by ${interaction.user.tag}`)
       .setDescription(finalMessage)
       .setTimestamp();
 
