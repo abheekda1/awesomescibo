@@ -25,7 +25,7 @@ client.once("ready", () => {
         {
           "type": 3,
           "name": "subject",
-          "description": "optional subject to be used as a filter",
+          "description": "Optional subject to be used as a filter",
           "default": false,
           "required": false
         }
