@@ -426,6 +426,8 @@ async function about(action, interaction) {
     .addField("Servers", client.guilds.cache.size, true)
     .addField("Training Users", await userScore.countDocuments({}))
     .setTimestamp();
+
+    interaction.reply(aboutBotEmbed);
   }
 }
 
