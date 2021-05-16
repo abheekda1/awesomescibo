@@ -336,11 +336,11 @@ function showServerNumber(message) {
   message.channel.send(client.guilds.cache.size);
 }
 
-async function showIssLocation(message) {
+async function showIssLocation(interaction) {
   await fetch("http://api.open-notify.org/iss-now.json")
     .then((request) => request.json())
     .then((data) => {
-      message.channel.send(
+      interaction.reply(
         new Discord.MessageEmbed()
           .setTitle("The current location of the ISS!")
           .setImage(
@@ -348,7 +348,7 @@ async function showIssLocation(message) {
           )
           .setURL("https://spotthestation.nasa.gov/tracking_map.cfm")
       );
-    });
+    }).catch(error => { if (error) interaction.editReply("Unable to fetch data. Please try again!") });
 }
 
 function showLeaderboard(interaction) {
@@ -488,14 +488,6 @@ async function rounds(action, interaction) {
   }
 }
 
-async function hits(message) {
-  let totalCount = await generatedRound.countDocuments({});
-  let userCount = await generatedRound.countDocuments({ requestedBy: message.author.id });
-
-  message.channel.send(`Total Hits: ${totalCount}\nYour Hits: ${userCount}`);
-}
-
-
 client.on("message", async (message) => {
   if (message.author.bot) {
     return;
@@ -539,6 +531,10 @@ client.on("interaction", interaction => {
       break;
     case "about":
       about(interaction.options[0].name, interaction);
+      break;
+    case "iss":
+      showIssLocation(interaction);
+      break;
   }
 })
 
