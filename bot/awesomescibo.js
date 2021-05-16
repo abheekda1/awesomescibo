@@ -69,13 +69,19 @@ client.once("ready", () => {
         {
           "type": 1,
           "name": "contributors",
-          "description": "List contributors to the AwesomeSciBo bot",
+          "description": "Lists contributors to the AwesomeSciBo bot",
           "options": []
         },
         {
           "type": 1,
           "name": "changelog",
           "description": "Lists the 5 most recent changes in a \"git log\" type format",
+          "options": []
+        },
+        {
+          "type": 1,
+          "name": "bot",
+          "description": "Lists information about AwesomeSciBo",
           "options": []
         }
       ],
@@ -384,7 +390,7 @@ function showLeaderboard(interaction) {
     });
 }
 
-function about(action, interaction) {
+async function about(action, interaction) {
   if (action === "contributors") {
     interaction.reply(
       new Discord.MessageEmbed().setTitle("Contributors: ").setDescription(`
@@ -413,6 +419,13 @@ function about(action, interaction) {
     });
 
     interaction.reply(changelogEmbed);
+  } else if (action === "bot") {
+    const aboutBotEmbed = new Discord.MessageEmbed()
+    .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
+    .setTitle("About AwesomeSciBo")
+    .addField("Servers", client.guilds.cache.size, true)
+    .addField("Training Users", await userScore.countDocuments({}))
+    .setTimestamp();
   }
 }
 
