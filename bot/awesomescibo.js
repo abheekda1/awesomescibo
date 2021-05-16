@@ -62,6 +62,24 @@ client.once("ready", () => {
     {
       "name": "top",
       "description": "Lists top ten scores across servers (server specific leaderboard WIP)"
+    },
+    {
+      "name": "about",
+      "options": [
+        {
+          "type": 1,
+          "name": "contributors",
+          "description": "List contributors to the AwesomeSciBo bot",
+          "options": []
+        },
+        {
+          "type": 1,
+          "name": "changelog",
+          "description": "Lists the 5 most recent changes in a \"git log\" type format",
+          "options": []
+        }
+      ],
+      "description": "Commands regarding the creation/development of the bot"
     }
   ]);
 
@@ -362,13 +380,36 @@ function showLeaderboard(interaction) {
     });
 }
 
-function aboutMessage(message) {
-  message.channel.send(
-    new Discord.MessageEmbed().setTitle("Contributors: ").setDescription(`
-        <@745063586422063214> [ADawesomeguy#2235]
-        <@650525101048987649> [tEjAs#8127]
-      `) // Add more contributors here, first one is Abheek, second one is Tejas
-  );
+function about(action, interaction) {
+  if (action === "contributors") {
+    interaction.reply(
+      new Discord.MessageEmbed().setTitle("Contributors: ").setDescription(`
+          <@745063586422063214> [ADawesomeguy#2235]
+          <@650525101048987649> [tEjAs#8127]
+        `) // Add more contributors here, first one is Abheek, second one is Tejas
+    );
+  } else if (action === "changelog") {
+    let parentFolder = __dirname.split("/");
+    parentFolder.pop();
+    parentFolder = parentFolder.join("/");
+
+    const commits = gitlog({
+      repo: parentFolder,
+      number: 5,
+      fields: ["hash", "abbrevHash", "subject", "authorName", "authorDateRel"],
+    });
+
+    const changelogEmbed = new Discord.MessageEmbed()
+    .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
+    .setTitle("Changelog")
+    .setTimestamp();
+
+    commits.forEach(commit => {
+      changelogEmbed.addField(commit.abbrevHash, `> \`Hash:\`${commit.hash}\n> \`Subject:\`${commit.subject}\n> \`Author:\`${commit.authorName}\n> \`Date:\`${commit.authorDateRel}\n> \`Link\`: [GitHub](https://github.com/ADawesomeguy/AwesomeSciBo/commit/${commit.hash})\n`);
+    });
+
+    interaction.reply(changelogEmbed);
+  }
 }
 
 async function rounds(action, interaction) {
@@ -454,28 +495,6 @@ async function hits(message) {
   message.channel.send(`Total Hits: ${totalCount}\nYour Hits: ${userCount}`);
 }
 
-async function changelog(interaction) {
-  let parentFolder = __dirname.split("/");
-  parentFolder.pop();
-  parentFolder = parentFolder.join("/");
-
-  const commits = gitlog({
-    repo: parentFolder,
-    number: 5,
-    fields: ["hash", "abbrevHash", "subject", "authorName", "authorDateRel"],
-  });
-
-  const changelogEmbed = new Discord.MessageEmbed()
-  .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
-  .setTitle("Changelog")
-  .setTimestamp();
-
-  commits.forEach(commit => {
-    changelogEmbed.addField(commit.abbrevHash, `> \`Hash:\`${commit.hash}\n> \`Subject:\`${commit.subject}\n> \`Author:\`${commit.authorName}\n> \`Date:\`${commit.authorDateRel}\n> \`Link\`: [GitHub](https://github.com/ADawesomeguy/AwesomeSciBo/commit/${commit.hash})\n`);
-  });
-
-  interaction.reply(changelogEmbed);
-}
 
 client.on("message", async (message) => {
   if (message.author.bot) {
@@ -496,9 +515,6 @@ client.on("message", async (message) => {
         break;
       case "dobeiss": // Show location of ISS
         showIssLocation(message);
-        break;
-      case "dobeabout": // Show about message of bot
-        aboutMessage(message);
         break;
     }
   }
@@ -521,6 +537,8 @@ client.on("interaction", interaction => {
     case "top":
       showLeaderboard(interaction);
       break;
+    case "about":
+      about(interaction.options[0].name, interaction);
   }
 })
 
