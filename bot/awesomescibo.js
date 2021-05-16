@@ -434,7 +434,10 @@ async function rounds(action, interaction) {
       .setDescription(finalMessage)
       .setTimestamp();
 
-    interaction.reply(roundsEmbed, { ephemeral: true });
+    interaction.reply({
+      embeds: [roundsEmbed],
+      ephemeral: true
+    });
   }
 }
 
