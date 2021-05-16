@@ -396,8 +396,8 @@ async function rounds(action, interaction) {
           }
           newGeneratedRound = new generatedRound({
             htmlContent: finalizedHTML,
-            requestedBy: interaction.author.id,
-            authorTag: interaction.author.tag,
+            requestedBy: interaction.user.id,
+            authorTag: interaction.user.tag,
             timestamp: new Date().toISOString(),
           });
           newGeneratedRound.save((err, round) => {
