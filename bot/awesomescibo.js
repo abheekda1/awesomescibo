@@ -212,7 +212,7 @@ function training(subject, interaction) {
         interaction.reply(data.tossup_question).then(() => {
           interaction.channel.awaitMessages(messageFilter, {
               max: 1,
-              time: 30000,
+              time: 120000,
               errors: ["time"],
             })
             .then((answerMsg) => {
