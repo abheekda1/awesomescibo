@@ -516,7 +516,7 @@ client.on("interaction", interaction => {
       training(interaction.options[0] ? interaction.options[0].value : null, interaction);
       break;
     case "rounds":
-      generateRound(interaction);
+      rounds(interaction.options[0].name, interaction);
       break;
   }
 })
