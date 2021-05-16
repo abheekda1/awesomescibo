@@ -433,6 +433,11 @@ async function rounds(action, interaction) {
       embeds: [roundsEmbed],
       ephemeral: true
     });
+  } else if (action === "hit"){
+    let totalCount = await generatedRound.countDocuments({});
+    let userCount = await generatedRound.countDocuments({ requestedBy: interaction.author.id });
+
+    interaction.reply(`Total Hits: ${totalCount}\nYour Hits: ${userCount}`);
   }
 }
 
@@ -491,9 +496,6 @@ client.on("message", async (message) => {
         break;
       case "dobeabout": // Show about message of bot
         aboutMessage(message);
-        break;
-      case "dobehits":
-        hits(message);
         break;
       case "dobechangelog":
         changelog(message);
