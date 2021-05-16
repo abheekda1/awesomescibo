@@ -408,7 +408,7 @@ async function rounds(action, interaction) {
             interaction.channel.messages.fetch(generatingMessage.id)
             .then(generatingMessage => {
               const msg = generatingMessage.first();
-              msg.edit(`${message.author}, here's your round: https://api.adawesome.tech/round/${round._id.toString()}`);
+              msg.edit(`Here's your round: https://api.adawesome.tech/round/${round._id.toString()}`);
             });
           });
         });
