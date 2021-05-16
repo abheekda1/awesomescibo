@@ -80,6 +80,10 @@ client.once("ready", () => {
         }
       ],
       "description": "Commands regarding the creation/development of the bot"
+    },
+    {
+      "name": "iss",
+      "description": "Shows the location of the ISS on a map as well as all of the current astronauts within it"
     }
   ]);
 
@@ -504,9 +508,6 @@ client.on("message", async (message) => {
         break;
       case "dobeservers": // Shows number of servers bot is in
         showServerNumber(message);
-        break;
-      case "dobeiss": // Show location of ISS
-        showIssLocation(message);
         break;
     }
   }
