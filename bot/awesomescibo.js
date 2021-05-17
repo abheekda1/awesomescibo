@@ -393,10 +393,10 @@ function showLeaderboard(interaction) {
 async function about(action, interaction) {
   if (action === "contributors") {
     interaction.reply(
-      new Discord.MessageEmbed().setTitle("Contributors: ").setDescription(`
-          <@745063586422063214> [ADawesomeguy#2235]
-          <@650525101048987649> [tEjAs#8127]
-        `) // Add more contributors here, first one is Abheek, second one is Tejas
+      new Discord.MessageEmbed().setTitle("Contributors")
+      .addField("Creator", `<@745063586422063214> [ADawesomeguy#2235]`, true)
+      .addField("Contributors", `<@650525101048987649> [tEjAs#8127]\n<@426864344463048705> [tetrident#9396]`, true) // Add more contributors here, first one is Abheek, second one is Tejas
+      .setTimestamp();
     );
   } else if (action === "changelog") {
     let parentFolder = __dirname.split("/");
@@ -424,7 +424,7 @@ async function about(action, interaction) {
     .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
     .setTitle("About AwesomeSciBo")
     .addField("Servers", client.guilds.cache.size, true)
-    .addField("Training Users", await userScore.countDocuments({}))
+    .addField("Training Users", await userScore.countDocuments({}), true)
     .setTimestamp();
 
     interaction.reply(aboutBotEmbed);
