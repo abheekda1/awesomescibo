@@ -123,7 +123,7 @@ client.on("guildCreate", (guild) => {
         channel.name === "general" && channel.type === "text"
     )
     if (welcomeChannel) {
-      welcomeChannel.send("'Sup, I'm the AwesomeSciBo bot! Use `/help` to learn more about me!");
+      welcomeChannel.send("'Sup, I'm the AwesomeSciBo bot! Use `/help` to learn more about me!")
       .catch(console.error);
     }
 });
