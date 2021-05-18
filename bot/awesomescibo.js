@@ -113,14 +113,16 @@ client.once("ready", () => {
 });
 
 client.on("guildCreate", (guild) => {
-  guild.channels.cache
+  const welcomeChannel = guild.channels.cache
     .find(
       (channel) =>
         // Find channel by name
-        channel.name === process.env.WELCOME_CHANNEL && channel.type === "text"
+        channel.name === "general" && channel.type === "text"
     )
-    .send("'Sup, I'm the AwesomeSciBo bot!")
-    .catch(console.error);
+    if (welcomeChannel) {
+      welcomeChannel.send("'Sup, I'm the AwesomeSciBo bot!")
+      .catch(console.error);
+    }
 });
 
 async function updateScore(isCorrect, score, authorId) {
@@ -396,7 +398,7 @@ async function about(action, interaction) {
       new Discord.MessageEmbed().setTitle("Contributors")
       .addField("Creator", `<@745063586422063214> [ADawesomeguy#2235]`, true)
       .addField("Contributors", `<@650525101048987649> [tEjAs#8127]\n<@426864344463048705> [tetrident#9396]`, true) // Add more contributors here, first one is Abheek, second one is Tejas
-      .setTimestamp();
+      .setTimestamp()
     );
   } else if (action === "changelog") {
     let parentFolder = __dirname.split("/");
