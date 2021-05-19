@@ -115,7 +115,7 @@ client.once("ready", () => {
 });
 
 client.on("guildCreate", (guild) => {
-  guild.commands.set(slashCommands);
+  //guild.commands.set(slashCommands);
   const welcomeChannel = guild.channels.cache
     .find(
       (channel) =>
