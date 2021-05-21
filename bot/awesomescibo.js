@@ -512,27 +512,6 @@ async function rounds(action, interaction) {
   }
 }
 
-client.on("message", async (message) => {
-  if (message.author.bot) {
-    return;
-  }
-  const formattedMessage = message.content.toLowerCase().replace(/ /g, "");
-  if (formattedMessage.startsWith("dobe")) {
-    // Bot prefix is "do be"
-    switch (formattedMessage) {
-      case "dobescoring": // Start scoring
-        startScoring(message);
-        break;
-      case "dobehappy": // Send happy message
-        dontWorryBeHappy(message);
-        break;
-      case "dobeservers": // Shows number of servers bot is in
-        showServerNumber(message);
-        break;
-    }
-  }
-});
-
 client.on("interaction", interaction => {
   // If the interaction isn't a slash command, return
   if (!interaction.isCommand()) return;
