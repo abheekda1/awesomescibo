@@ -10,3 +10,4 @@ bot/README.md
 .env
 userScore
 config.json
+.DS_Store
