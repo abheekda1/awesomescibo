@@ -13,8 +13,7 @@ const generatedRound = require("./mongooseModels/mongooseGeneratedRoundModel.js"
 const mongoose = require("mongoose");
 const gitlog = require("gitlog").default;
 
-const helpMessage =
-  "`do be helping`: display this help message\n`do be roundgen`: send a pdf round to the channel\n`do be scoring`: start a scoring session\n > `do be scoring (a/b)(4/10)`: add points to Team A or Team B\n > `do be scoring stop`: end scoring session and post final points\n > `do be servers`: send the number of servers this bot is a part of\n > `do be iss`: show the current location of the International Space Station\n`do be training`: send a quick practice problem (you **must** react to your answer, or the bot will yell at you)\n > subject options: astro, phys, chem, math, bio, ess, energy\n`do be top`: list cross-server top 10 players\n `do be about`: List people who contributed to this bot\n Source Code: https://github.com/ADawesomeguy/AwesomeSciBo (don't forget to star!)";
+const helpMessage = "AwesomeSciBo has migrated to using slash commands! You can take a look at the different commands by typing `/` and clicking on the AwesomeSciBo icon."
 
 const slashCommands = [
   {
@@ -106,7 +105,7 @@ client.once("ready", () => {
         // Log client tag and set status
         console.log(`Logged in as: ${client.user.username}!`);
         client.user.setActivity(
-          'for "do be helping" | Add me to your own server: adat.link/awscibo',
+          'for "/helping" | Add me to your own server: adat.link/awscibo',
           { type: "WATCHING" }
         );
       })
@@ -282,9 +281,8 @@ function training(subject, interaction) {
     }
 
 function sendHelpMessage(interaction) {
-  interaction.reply(
-    new Discord.MessageEmbed().setTitle("Help").setDescription(helpMessage)
-  );
+  const helpEmbed = new Discord.MessageEmbed().setDescription(helpMessage).setColor("ffffff");
+  interaction.reply(helpEmbed);
 }
 
 async function startScoring(message) {
@@ -298,35 +296,35 @@ async function startScoring(message) {
         time: 1500000,
       });
       collector.on("collect", (m) => {
-        if (m.content.toLowerCase() === "do be scoring a 4") {
+        if (m.content.toLowerCase() === "/scoring a 4") {
           // A team gets toss-up
           m.delete({ timeout: 1000 }).catch(console.error);
           scoreA += 4;
           scoreboard.channel.send(
             `Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
           );
-        } else if (m.content.toLowerCase() === "do be scoring a 10") {
+        } else if (m.content.toLowerCase() === "/scoring a 10") {
           // A team gets bonus
           m.delete({ timeout: 1000 }).catch(console.error);
           scoreA += 10;
           scoreboard.channel.send(
             `Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
           );
-        } else if (m.content.toLowerCase() === "do be scoring b 4") {
+        } else if (m.content.toLowerCase() === "/scoring b 4") {
           // B team gets toss up
           m.delete({ timeout: 1000 }).catch(console.error);
           scoreB += 4;
           scoreboard.channel.send(
             `Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
           );
-        } else if (m.content.toLowerCase() === "do be scoring b 10") {
+        } else if (m.content.toLowerCase() === "/scoring b 10") {
           // B team gets bonus
           m.delete({ timeout: 1000 }).catch(console.error);
           scoreB += 10;
           scoreboard.channel.send(
             `Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
           );
-        } else if (m.content === "do be scoring stop") {
+        } else if (m.content === "/scoring stop") {
           m.delete({ timeout: 1000 }).catch(console.error);
           scoreboard.delete({ timeout: 1000 });
           m.channel.send(
