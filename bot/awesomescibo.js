@@ -5,7 +5,6 @@ const Intents = Discord.Intents;
 const client = new Discord.Client({
   intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS"/*, "GUILD_MEMBERS", "GUILD_PRESENCES"*/],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
-  intents: ["GUILDS", "GUILD_MESSAGES"]
 });
 const fetch = require("node-fetch");
 const axios = require("axios");
@@ -106,7 +105,7 @@ client.once("ready", () => {
         // Log client tag and set status
         console.log(`Logged in as: ${client.user.username}!`);
         client.user.setActivity(
-          'for "/helping" | Add me to your own server: adat.link/awscibo',
+          'for /help | Add me to your own server: adat.link/awscibo',
           { type: "WATCHING" }
         );
       })
@@ -205,7 +204,11 @@ function training(subject, interaction) {
         categoryArray = ["ENERGY"];
         break;
       default:
-        interaction.reply("Not a valid subject!");
+        interaction.reply(
+          new Discord.MessageEmbed()
+          .setDescription("<:red_x:816791117671825409> Not a valid subject!")
+          .setColor("#ffffff")
+        );
         return;
     }
 
@@ -213,6 +216,7 @@ function training(subject, interaction) {
       .post("https://scibowldb.com/api/questions/random", { categories: categoryArray })
       .then((res) => {
         data = res.data.question;
+        console.log(`${interaction.user.tag} -- ${data.tossup_question} -- ${data.tossup_answer}\n`);
         const messageFilter = (m) => m.author.id === authorId;
         interaction.reply(data.tossup_question + `\n\n||Source: ${data.uri}||`).then(() => {
           interaction.channel.awaitMessages(messageFilter, {
@@ -253,6 +257,7 @@ function training(subject, interaction) {
                 .setAuthor(answerMsg.author.tag, answerMsg.author.displayAvatarURL())
                 .addField("Correct answer", `\`${data.tossup_answer}\``)
                 .setDescription(`It seems your answer was incorrect. Please react with <:override:842778128966615060> to override your answer if you think you got it right.`)
+                .setColor("#ffffff")
                 .setTimestamp();
                 const overrideMsg = answerMsg.channel.send(
                   overrideEmbed
@@ -343,6 +348,7 @@ function dontWorryBeHappy(message) {
       .setTitle(`Don't Worry Be Happy!`)
       .setImage("https://media.giphy.com/media/7OKC8ZpTT0PVm/giphy.gif")
       .setURL("https://youtu.be/d-diB65scQU")
+      .setColor("#ffffff")
   );
 }
 
@@ -361,6 +367,7 @@ async function showIssLocation(interaction) {
             `https://api.mapbox.com/styles/v1/mapbox/light-v10/static/pin-s+000(${data.iss_position.longitude},${data.iss_position.latitude})/-87.0186,20,1/1000x1000?access_token=pk.eyJ1IjoiYWRhd2Vzb21lZ3V5IiwiYSI6ImNrbGpuaWdrYzJ0bGYydXBja2xsNmd2YTcifQ.Ude0UFOf9lFcQ-3BANWY5A`
           )
           .setURL("https://spotthestation.nasa.gov/tracking_map.cfm")
+          .setColor("#ffffff")
       );
     }).catch(error => { if (error) interaction.editReply("Unable to fetch data. Please try again!") });
 }
@@ -390,6 +397,7 @@ function showLeaderboard(interaction) {
         new Discord.MessageEmbed()
           .setTitle("Top Ten!")
           .setDescription(messageContent)
+          .setColor("#ffffff")
       );
     });
 }
@@ -398,9 +406,10 @@ async function about(action, interaction) {
   if (action === "contributors") {
     interaction.reply(
       new Discord.MessageEmbed().setTitle("Contributors")
-      .addField("Creator", `<@745063586422063214> [ADawesomeguy#2235]`, true)
+      .addField("Creator", `<@745063586422063214> [ADawesomeguy#3602]`, true)
       .addField("Contributors", `<@650525101048987649> [tEjAs#8127]\n<@426864344463048705> [tetrident#9396]`, true) // Add more contributors here, first one is Abheek, second one is Tejas
       .setTimestamp()
+      .setColor("#ffffff")
     );
   } else if (action === "changelog") {
     let parentFolder = __dirname.split("/");
@@ -416,6 +425,7 @@ async function about(action, interaction) {
     const changelogEmbed = new Discord.MessageEmbed()
     .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
     .setTitle("Changelog")
+    .setColor("#ffffff")
     .setTimestamp();
 
     commits.forEach(commit => {
