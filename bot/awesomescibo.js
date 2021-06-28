@@ -12,6 +12,7 @@ const userScore = require("./mongooseModels/mongooseUserScoreModel.js");
 const generatedRound = require("./mongooseModels/mongooseGeneratedRoundModel.js");
 const mongoose = require("mongoose");
 const gitlog = require("gitlog").default;
+const config = require("./config.json");
 
 const helpMessage = "AwesomeSciBo has migrated to using slash commands! You can take a look at the different commands by typing `/` and clicking on the AwesomeSciBo icon."
 
@@ -114,6 +115,12 @@ client.once("ready", () => {
 });
 
 client.on("guildCreate", (guild) => {
+  const topggAuthHeader = {
+    headers: {
+      'Authorization': config.topggauth
+    }
+  };
+  axios.post(`https://top.gg/api/bots/${client.user.id}/stats`, { server_count: client.guilds.cache.size }, topggAuthHeader);
   //guild.commands.set(slashCommands);
   const welcomeChannel = guild.channels.cache
     .find(
@@ -125,6 +132,15 @@ client.on("guildCreate", (guild) => {
       welcomeChannel.send("'Sup, I'm the AwesomeSciBo bot! Use `/help` to learn more about me!")
       .catch(console.error);
     }
+});
+
+client.on("guildDelete", guild => {
+  const topggAuthHeader = {
+    headers: {
+      'Authorization': config.topggauth
+    }
+  };
+  axios.post(`https://top.gg/api/bots/${client.user.id}/stats`, { server_count: client.guilds.cache.size }, topggAuthHeader);
 });
 
 async function updateScore(isCorrect, score, authorId) {
