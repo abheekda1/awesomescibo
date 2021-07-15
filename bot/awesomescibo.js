@@ -26,7 +26,37 @@ const slashCommands = [
         "name": "subject",
         "description": "Optional subject to be used as a filter",
         "default": false,
-        "required": false
+        "required": false,
+        "choices": [
+          {
+            "name": "astro",
+            "value": "astro",
+          },
+          {
+            "name": "bio",
+            "value": "bio",
+          },
+          {
+            "name": "ess",
+            "value": "ess",
+          },
+          {
+            "name": "chem",
+            "value": "chem",
+          },
+          {
+            "name": "phys",
+            "value": "phys",
+          },
+          {
+            "name": "math",
+            "value": "math",
+          },
+          {
+            "name": "energy",
+            "value": "energy",
+          }
+        ]
       }
     ]
   },
