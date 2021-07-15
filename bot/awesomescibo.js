@@ -150,7 +150,7 @@ client.on("guildCreate", (guild) => {
       'Authorization': config.topggauth
     }
   };
-  axios.post(`https://top.gg/api/bots/${client.user.id}/stats`, { server_count: client.guilds.cache.size }, topggAuthHeader);
+  axios.post(`https://top.gg/api/bots/${client.user.id}/stats`, { server_count: client.guilds.cache.size }, topggAuthHeader).then(response => { console.log(response); })
   //guild.commands.set(slashCommands);
   const welcomeChannel = guild.channels.cache
     .find(
@@ -200,7 +200,7 @@ async function updateScore(isCorrect, score, authorId) {
   }
 }
 
-function training(subject, interaction) {
+async function training(subject, interaction) {
   const authorId = interaction.user.id;
   let score;
   userScore
@@ -258,13 +258,14 @@ function training(subject, interaction) {
         return;
     }
 
+    console.log(categoryArray);
     axios
       .post("https://scibowldb.com/api/questions/random", { categories: categoryArray })
       .then((res) => {
         data = res.data.question;
         console.log(`${interaction.user.tag} -- ${data.tossup_question} -- ${data.tossup_answer}\n`);
         const messageFilter = (m) => m.author.id === authorId;
-        interaction.reply(data.tossup_question + `\n\n||Source: ${data.uri}||`).then(() => {
+        interaction.reply({ content: data.tossup_question + `\n\n||Source: ${data.uri}||` }).then(() => {
           interaction.channel.awaitMessages(messageFilter, {
               max: 1,
               time: 120000,
@@ -329,7 +330,7 @@ function training(subject, interaction) {
               }
             }).catch(error => { if (error) interaction.editReply("Sorry, the question timed out waiting for an answer.") });
         }).catch(console.error);
-      }).catch(error => { if (error) interaction.reply("Sorry, there was a problem fetching the question. Please try again!") });
+      }).catch(console.error);
     }
 
 function sendHelpMessage(interaction) {
@@ -567,7 +568,7 @@ async function rounds(action, interaction) {
   }
 }
 
-client.on("interaction", interaction => {
+client.on("interaction", async interaction => {
   // If the interaction isn't a slash command, return
   if (!interaction.isCommand()) return;
 
@@ -576,7 +577,7 @@ client.on("interaction", interaction => {
       sendHelpMessage(interaction);
       break;
     case "train":
-      training(interaction.options[0] ? interaction.options[0].value : null, interaction);
+      training(interaction.options.get("subject") ? interaction.options.get("subject").value : null, interaction);
       break;
     case "rounds":
       rounds(interaction.options[0].name, interaction);
