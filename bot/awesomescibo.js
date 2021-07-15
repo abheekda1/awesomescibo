@@ -115,10 +115,6 @@ const slashCommands = [
       }
     ],
     "description": "Commands regarding the creation/development of the bot"
-  },
-  {
-    "name": "iss",
-    "description": "Shows the location of the ISS on a map as well as all of the current astronauts within it"
   }
 ]
 
@@ -258,21 +254,20 @@ async function training(subject, interaction) {
         return;
     }
 
-    console.log(categoryArray);
     axios
       .post("https://scibowldb.com/api/questions/random", { categories: categoryArray })
       .then((res) => {
         data = res.data.question;
         console.log(`${interaction.user.tag} -- ${data.tossup_question} -- ${data.tossup_answer}\n`);
         const messageFilter = (m) => m.author.id === authorId;
-        interaction.reply({ content: data.tossup_question + `\n\n||Source: ${data.uri}||` }).then(() => {
-          interaction.channel.awaitMessages(messageFilter, {
-              max: 1,
-              time: 120000,
-              errors: ["time"],
+        interaction.reply({ content: data.tossup_question + `\n\n||Source: ${data.uri}||` })
+        .then(() => {
+          interaction.channel.awaitMessages({
+              messageFilter,
+              max: 1
             })
-            .then((answerMsg) => {
-              answerMsg = answerMsg.first();
+            .then(collected => {
+              answerMsg = collected.first();
 
               let predicted = null;
               if (data.tossup_format === "Multiple Choice") {
@@ -306,9 +301,9 @@ async function training(subject, interaction) {
                 .setDescription(`It seems your answer was incorrect. Please react with <:override:842778128966615060> to override your answer if you think you got it right.`)
                 .setColor("#ffffff")
                 .setTimestamp();
-                const overrideMsg = answerMsg.channel.send(
-                  overrideEmbed
-                )
+                const overrideMsg = answerMsg.channel.send({
+                  embeds: [overrideEmbed]
+                })
                 .then(overrideMsg => {
                   overrideMsg.react("<:override:842778128966615060>");
                   const filter = (reaction, user) => {
@@ -318,8 +313,9 @@ async function training(subject, interaction) {
                     );
                   };
                   overrideMsg
-                    .awaitReactions(filter, {
-                      max: 1,
+                    .awaitReactions({
+                      filter,
+                      max: 1
                     })
                     .then((userReaction) => {
                       updateScore(true, score, authorId).then((msgToReply) =>
@@ -328,14 +324,14 @@ async function training(subject, interaction) {
                     }).catch(console.error);
                 }).catch(console.error);
               }
-            }).catch(error => { if (error) interaction.editReply("Sorry, the question timed out waiting for an answer.") });
+            }).catch(console.error);
         }).catch(console.error);
       }).catch(console.error);
     }
 
 function sendHelpMessage(interaction) {
   const helpEmbed = new Discord.MessageEmbed().setDescription(helpMessage).setColor("ffffff");
-  interaction.reply(helpEmbed);
+  interaction.reply({ embeds: [helpEmbed] });
 }
 
 async function startScoring(message) {
@@ -401,22 +397,6 @@ function dontWorryBeHappy(message) {
 
 function showServerNumber(message) {
   message.channel.send(client.guilds.cache.size);
-}
-
-async function showIssLocation(interaction) {
-  await fetch("http://api.open-notify.org/iss-now.json")
-    .then((request) => request.json())
-    .then((data) => {
-      interaction.reply(
-        new Discord.MessageEmbed()
-          .setTitle("The current location of the ISS!")
-          .setImage(
-            `https://api.mapbox.com/styles/v1/mapbox/light-v10/static/pin-s+000(${data.iss_position.longitude},${data.iss_position.latitude})/-87.0186,20,1/1000x1000?access_token=pk.eyJ1IjoiYWRhd2Vzb21lZ3V5IiwiYSI6ImNrbGpuaWdrYzJ0bGYydXBja2xsNmd2YTcifQ.Ude0UFOf9lFcQ-3BANWY5A`
-          )
-          .setURL("https://spotthestation.nasa.gov/tracking_map.cfm")
-          .setColor("#ffffff")
-      );
-    }).catch(error => { if (error) interaction.editReply("Unable to fetch data. Please try again!") });
 }
 
 function showLeaderboard(interaction) {
@@ -568,7 +548,7 @@ async function rounds(action, interaction) {
   }
 }
 
-client.on("interaction", async interaction => {
+client.on("interactionCreate", async interaction => {
   // If the interaction isn't a slash command, return
   if (!interaction.isCommand()) return;
 
@@ -587,9 +567,6 @@ client.on("interaction", async interaction => {
       break;
     case "about":
       about(interaction.options[0].name, interaction);
-      break;
-    case "iss":
-      showIssLocation(interaction);
       break;
   }
 })
