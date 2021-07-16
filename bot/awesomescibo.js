@@ -431,13 +431,13 @@ function showLeaderboard(interaction) {
 
 async function about(action, interaction) {
   if (action === "contributors") {
-    interaction.reply(
-      new Discord.MessageEmbed().setTitle("Contributors")
+    const contributorEmbed = new Discord.MessageEmbed().setTitle("Contributors")
       .addField("Creator", `<@745063586422063214> [ADawesomeguy#3602]`, true)
       .addField("Contributors", `<@650525101048987649> [tEjAs#8127]\n<@426864344463048705> [tetrident#9396]`, true) // Add more contributors here, first one is Abheek, second one is Tejas
       .setTimestamp()
-      .setColor("#ffffff")
-    );
+      .setColor("#ffffff");
+
+    interaction.reply({ embeds: [contributorEmbed] });
   } else if (action === "changelog") {
     let parentFolder = __dirname.split("/");
     parentFolder.pop();
@@ -459,16 +459,18 @@ async function about(action, interaction) {
       changelogEmbed.addField(commit.abbrevHash, `> \`Hash:\`${commit.hash}\n> \`Subject:\`${commit.subject}\n> \`Author:\`${commit.authorName}\n> \`Date:\`${commit.authorDateRel}\n> \`Link\`: [GitHub](https://github.com/ADawesomeguy/AwesomeSciBo/commit/${commit.hash})\n`);
     });
 
-    interaction.reply(changelogEmbed);
+    interaction.reply({ embeds: [changelogEmbed] });
   } else if (action === "bot") {
+    await client.guilds.fetch();
+    const trainingDocuments = await userScore.countDocuments({});
     const aboutBotEmbed = new Discord.MessageEmbed()
     .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
     .setTitle("About AwesomeSciBo")
-    .addField("Servers", client.guilds.cache.size, true)
-    .addField("Training Users", await userScore.countDocuments({}), true)
+    .addField("Servers", `${client.guilds.cache.size}`, true)
+    .addField("Training Users", `${trainingDocuments}`, true)
     .setTimestamp();
 
-    interaction.reply(aboutBotEmbed);
+    interaction.reply({ embeds: [aboutBotEmbed] });
   }
 }
 
@@ -560,13 +562,13 @@ client.on("interactionCreate", async interaction => {
       training(interaction.options.get("subject") ? interaction.options.get("subject").value : null, interaction);
       break;
     case "rounds":
-      rounds(interaction.options[0].name, interaction);
+      rounds(interaction.options.first().name, interaction);
       break;
     case "top":
       showLeaderboard(interaction);
       break;
     case "about":
-      about(interaction.options[0].name, interaction);
+      about(interaction.options.first().name, interaction);
       break;
   }
 })
