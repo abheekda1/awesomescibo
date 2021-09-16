@@ -258,9 +258,10 @@ async function training(subject, interaction) {
       .post("https://scibowldb.com/api/questions/random", { categories: categoryArray })
       .then((res) => {
         data = res.data.question;
-        console.log(`${interaction.user.tag} -- ${data.tossup_question} -- ${data.tossup_answer}\n`);
+        const tossupQuestion = data.tossup_question;
+        const tossupAnswer = data.tossup_answer;
         const messageFilter = (m) => m.author.id === authorId;
-        interaction.reply({ content: data.tossup_question + `\n\n||Source: ${data.uri}||` })
+        interaction.reply({ content: tossupQuestion + `\n\n||Source: ${data.uri}||` })
         .then(() => {
           interaction.channel.awaitMessages({
               messageFilter,
@@ -273,7 +274,7 @@ async function training(subject, interaction) {
               if (data.tossup_format === "Multiple Choice") {
                 if (
                   answerMsg.content.charAt(0).toLowerCase() ===
-                  data.tossup_answer.charAt(0).toLowerCase()
+                  tossupAnswer.charAt(0).toLowerCase()
                 ) {
                   predicted = "correct";
                 } else {
@@ -282,7 +283,7 @@ async function training(subject, interaction) {
               } else {
                 if (
                   answerMsg.content.toLowerCase() ===
-                  data.tossup_answer.toLowerCase()
+                  tossupAnswer.toLowerCase()
                 ) {
                   predicted = "correct";
                 } else {
@@ -297,7 +298,7 @@ async function training(subject, interaction) {
               } else {
                 const overrideEmbed = new Discord.MessageEmbed()
                 .setAuthor(answerMsg.author.tag, answerMsg.author.displayAvatarURL())
-                .addField("Correct answer", `\`${data.tossup_answer}\``)
+                .addField("Correct answer", `\`${tossupAnswer}\``)
                 .setDescription(`It seems your answer was incorrect. Please react with <:override:842778128966615060> to override your answer if you think you got it right.`)
                 .setColor("#ffffff")
                 .setTimestamp();
@@ -420,12 +421,12 @@ function showLeaderboard(interaction) {
       for (let i = 0; i < 10; i++) {
         messageContent += `${i + 1}: <@${obj[i].authorID}>: ${obj[i].score}\n`; // Loop through each user and add their name and score to leaderboard content
       }
-      interaction.reply(
-        new Discord.MessageEmbed()
+      const leaderboardEmbed = new Discord.MessageEmbed()
           .setTitle("Top Ten!")
           .setDescription(messageContent)
           .setColor("#ffffff")
-      );
+
+      interaction.reply({ embeds: [leaderboardEmbed]  });
     });
 }
 
