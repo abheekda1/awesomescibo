@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+require('dotenv').config();
+
 const Discord = require("discord.js");
 const Intents = Discord.Intents;
 const client = new Discord.Client({
