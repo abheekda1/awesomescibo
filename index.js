@@ -134,7 +134,7 @@ client.once("ready", () => {
         // Log client tag and set status
         console.log(`Logged in as: ${client.user.username}!`);
         client.user.setActivity(
-          'for /help | Add me to your own server: adat.link/awscibo',
+          'for /help',
           { type: "WATCHING" }
         );
       })
