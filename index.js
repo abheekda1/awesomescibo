@@ -442,12 +442,10 @@ async function about(action, interaction) {
 
     interaction.reply({ embeds: [contributorEmbed] });
   } else if (action === "changelog") {
-    let parentFolder = __dirname.split("/");
-    parentFolder.pop();
-    parentFolder = parentFolder.join("/");
+    const gitRepoLocation = __dirname;
 
     const commits = gitlog({
-      repo: parentFolder,
+      repo: gitRepoLocation,
       number: 5,
       fields: ["hash", "abbrevHash", "subject", "authorName", "authorDateRel"],
     });
