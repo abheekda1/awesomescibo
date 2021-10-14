@@ -564,13 +564,13 @@ client.on("interactionCreate", async interaction => {
       training(interaction.options.get("subject") ? interaction.options.get("subject").value : null, interaction);
       break;
     case "rounds":
-      rounds(interaction.options.first().name, interaction);
+      rounds(interaction.options.getSubcommand(), interaction);
       break;
     case "top":
       showLeaderboard(interaction);
       break;
     case "about":
-      about(interaction.options.first().name, interaction);
+      about(interaction.options.getSubcommand(), interaction);
       break;
   }
 })
