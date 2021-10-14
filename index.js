@@ -15,6 +15,7 @@ const generatedRound = require("./mongooseModels/mongooseGeneratedRoundModel.js"
 const mongoose = require("mongoose");
 const gitlog = require("gitlog").default;
 const config = require("./config.json");
+const decode = require('html-entities').decode;
 
 const helpMessage = "AwesomeSciBo has migrated to using slash commands! You can take a look at the different commands by typing `/` and clicking on the AwesomeSciBo icon."
 
@@ -263,7 +264,7 @@ async function training(subject, interaction) {
         const tossupQuestion = data.tossup_question;
         const tossupAnswer = data.tossup_answer;
         const messageFilter = (m) => m.author.id === authorId;
-        interaction.reply({ content: tossupQuestion + `\n\n||Source: ${data.uri}||` })
+        interaction.reply({ content: decode(tossupQuestion) + `\n\n||Source: ${data.uri}||` })
         .then(() => {
           interaction.channel.awaitMessages({
               messageFilter,
