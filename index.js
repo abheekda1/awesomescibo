@@ -453,7 +453,7 @@ async function rounds(action, interaction) {
 
 async function result(interaction) {
   if (interaction.channel.id !== "930275699644825600") {
-    return interaction.reply("This command is unavailable outside of the designated channel.", { ephemeral: true });
+    return interaction.reply({ content: "This command is unavailable outside of the designated channel.", ephemeral: true });
   }
   const resultEmbed = new Discord.MessageEmbed();
   resultEmbed.setTitle(`${interaction.options.get('location').value} Regionals`);
