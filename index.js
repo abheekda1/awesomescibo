@@ -451,6 +451,23 @@ async function rounds(action, interaction) {
   }
 }
 
+async function result(interaction) {
+  if (interaction.channel.id !== "930275699644825600") {
+    return interaction.reply("This command is unavailable outside of the designated channel.", { ephemeral: true });
+  }
+  const resultEmbed = new Discord.MessageEmbed();
+  resultEmbed.setTitle(`${interaction.options.get('location').value} Regionals`);
+  resultEmbed.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL());
+  resultEmbed.addField("<a:winner:932137838592552960> Winner", `Congratulations to **${interaction.options.get("winner").value}**!`)
+  if (interaction.options.get("runner-up")) resultEmbed.addField("<:second:932138645601800252> Runners-Up", interaction.options.get("runner-up").value);
+  if (interaction.options.get("third-place")) resultEmbed.addField("<:third:932138645526315080> Third Place", interaction.options.get("third-place").value);
+  if (interaction.options.get("honorable-mentions")) resultEmbed.addField("🎖️ Honorable Mentions", interaction.options.get("honorable-mentions").value);
+  resultEmbed.setColor("#FFFFFF");
+  resultEmbed.setTimestamp();
+
+  await interaction.reply({ embeds: [resultEmbed] });
+}
+
 client.on("interactionCreate", async interaction => {
   // If the interaction isn't a slash command, return
   if (!interaction.isCommand()) return;
@@ -471,6 +488,8 @@ client.on("interactionCreate", async interaction => {
     case "about":
       about(interaction.options.getSubcommand(), interaction);
       break;
+    case "result":
+      result(interaction);
   }
 })
 
