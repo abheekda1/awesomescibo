@@ -12,3 +12,4 @@ userScore
 config.json
 .DS_Store
 update.sh
+.eslintrc.json
