@@ -12,31 +12,31 @@
         "choices": [
           {
             "name": "astro",
-            "value": "astro",
+            "value": "astro"
           },
           {
             "name": "bio",
-            "value": "bio",
+            "value": "bio"
           },
           {
             "name": "ess",
-            "value": "ess",
+            "value": "ess"
           },
           {
             "name": "chem",
-            "value": "chem",
+            "value": "chem"
           },
           {
             "name": "phys",
-            "value": "phys",
+            "value": "phys"
           },
           {
             "name": "math",
-            "value": "math",
+            "value": "math"
           },
           {
             "name": "energy",
-            "value": "energy",
+            "value": "energy"
           }
         ]
       }
@@ -97,5 +97,41 @@
       }
     ],
     "description": "Commands regarding the creation/development of the bot"
+  },
+  {
+    "name": "result",
+    "description": "The result of a regional",
+    "options": [
+      {
+        "type": "STRING",
+        "name": "location",
+        "description": "The location of the regional",
+        "required": true
+      },
+      {
+        "type": "STRING",
+        "name": "winner",
+        "description": "The advancing team from the regional",
+        "required": true
+      },
+      {
+        "type": "STRING",
+        "name": "runner-up",
+        "description": "The second-place team from the regional",
+        "required": false
+      },
+      {
+        "type": "STRING",
+        "name": "third-place",
+        "description": "The third-place team from the regional",
+        "required": false
+      },
+      {
+        "type": "STRING",
+        "name": "honorable-mentions",
+        "description": "Any extra teams to be mentioned or a space for technicalities to be explained",
+        "required": false
+      }
+    ]
   }
 ]
