@@ -3,7 +3,6 @@
     "axios": "^0.21.1",
     "discord.js": "^13.2.0",
     "dotenv": "^8.2.0",
-    "eslint": "^7.21.0",
     "fs": "^0.0.1-security",
     "gitlog": "^4.0.4",
     "html-entities": "^2.3.2",
@@ -12,13 +11,8 @@
   },
   "name": "awscibo",
   "version": "0.5.1",
-  "main": "awesomescibo.js",
-  "bin": {
-    "awscibo": "./awesomescibo.js"
-  },
   "scripts": {
-    "test": "node awesomescibo.js randomtoken",
-    "start": "nodemon awesomescibo.js"
+    "start": "node awesomescibo.js"
   },
   "keywords": [
     "discord",
@@ -28,5 +22,9 @@
   ],
   "author": "Abheek Dhawan&Tejas Chugh",
   "license": "Apache 2.0",
-  "description": "A simple Discord bot that automatically generates Science Bowl rounds using the ScibowlDB API!"
+  "description": "A simple Discord bot that automatically generates Science Bowl rounds using the ScibowlDB API!",
+  "devDependencies": {
+    "eslint": "^8.7.0",
+    "nodemon": "^2.0.15"
+  }
 }
