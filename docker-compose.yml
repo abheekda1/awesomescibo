@@ -1,0 +1,17 @@
+# Use root/example as user/password credentials
+version: '3.1'
+services:
+  mongo:
+    image: mongo:4.4
+    restart: always
+    ports:
+      - 27017:27017
+    volumes: 
+      - ./data:/data/db
+
+  awesomescibo:
+    image: abheekd/awesomescibo:latest
+    restart: unless-stopped
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/AWESOME?authSource=AWESOME&w=1"
+      TOKEN: "TOKEN"
