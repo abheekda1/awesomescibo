@@ -7,7 +7,7 @@
     "gitlog": "^4.0.4",
     "html-entities": "^2.3.2",
     "mongoose": "^5.12.5",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^3.1.1"
   },
   "name": "awscibo",
   "version": "0.5.1",
