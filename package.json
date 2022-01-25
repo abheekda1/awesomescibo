@@ -3,11 +3,9 @@
     "axios": "^0.21.1",
     "discord.js": "^13.2.0",
     "dotenv": "^8.2.0",
-    "fs": "^0.0.1-security",
     "gitlog": "^4.0.4",
     "html-entities": "^2.3.2",
-    "mongoose": "^5.12.5",
-    "node-fetch": "^3.1.1"
+    "mongoose": "^5.12.5"
   },
   "name": "awscibo",
   "version": "0.5.1",
@@ -21,7 +19,7 @@
     "discord.js"
   ],
   "author": "Abheek Dhawan&Tejas Chugh",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "description": "A simple Discord bot that automatically generates Science Bowl rounds using the ScibowlDB API!",
   "devDependencies": {
     "eslint": "^8.7.0",
