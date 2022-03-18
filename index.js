@@ -90,6 +90,20 @@ async function updateScore(isCorrect, score, authorId) {
 	}
 }
 
+async function parse(answer) {
+  if (" (ACCEPT: " in answer) {
+    var i = answer.indexOf(" (ACCEPT: ");
+    var answers = [];
+    answers.push(answer.slice(0, i));
+    answer = answer.slice(i, -1).split(", ");
+    answer.forEach(j => answers.push(j.toLowerCase()));
+    return answers;
+  } else {
+    return [answer.toLowerCase()];
+  }
+}
+
+
 async function training(subject, interaction) {
 	const authorId = interaction.user.id;
 	let score;
@@ -180,8 +194,7 @@ async function training(subject, interaction) {
 								}
 							}
 							else if (
-								answerMsg.content.toLowerCase() ===
-						tossupAnswer.toLowerCase()
+								answerMsg.content.toLowerCase() in parse(data.tossup_answer)
 							) {
 								predicted = 'correct';
 							}
