@@ -3,19 +3,19 @@
 require('dotenv').config();
 
 const Discord = require("discord.js");
-const Intents = Discord.Intents;
 const client = new Discord.Client({
   intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS"/*, "GUILD_MEMBERS", "GUILD_PRESENCES"*/],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
-const fetch = require("node-fetch");
 const axios = require("axios");
-const userScore = require("./mongooseModels/mongooseUserScoreModel.js");
-const generatedRound = require("./mongooseModels/mongooseGeneratedRoundModel.js");
 const mongoose = require("mongoose");
 const gitlog = require("gitlog").default;
-const config = require("./config.json");
 const decode = require('html-entities').decode;
+
+const userScore = require("./models/userScore");
+const generatedRound = require("./models/generateRound");
+
+const config = require("./config.json");
 
 const helpMessage = "AwesomeSciBo has migrated to using slash commands! You can take a look at the different commands by typing `/` and clicking on the AwesomeSciBo icon."
 const slashCommands = require('./slashCommands.json')
@@ -62,7 +62,7 @@ client.on("guildCreate", (guild) => {
     }
 });
 
-client.on("guildDelete", guild => {
+client.on("guildDelete", () => {
   const topggAuthHeader = {
     headers: {
       'Authorization': config.topggauth
@@ -204,7 +204,7 @@ async function training(subject, interaction) {
                 .setDescription(`It seems your answer was incorrect. Please react with <:override:842778128966615060> to override your answer if you think you got it right.`)
                 .setColor("#ffffff")
                 .setTimestamp();
-                const overrideMsg = answerMsg.channel.send({
+                answerMsg.channel.send({
                   embeds: [overrideEmbed]
                 })
                 .then(overrideMsg => {
@@ -220,7 +220,7 @@ async function training(subject, interaction) {
                       filter,
                       max: 1
                     })
-                    .then((userReaction) => {
+                    .then(() => {
                       updateScore(true, score, authorId).then((msgToReply) =>
                         answerMsg.reply(msgToReply)
                       );
@@ -235,71 +235,6 @@ async function training(subject, interaction) {
 function sendHelpMessage(interaction) {
   const helpEmbed = new Discord.MessageEmbed().setDescription(helpMessage).setColor("ffffff");
   interaction.reply({ embeds: [helpEmbed] });
-}
-
-async function startScoring(message) {
-  let scoreA = 0;
-  let scoreB = 0;
-  await message.channel
-    .send(`Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`)
-    .then((scoreboard) => {
-      const filter = (m) => m.content.includes("do be");
-      const collector = message.channel.createMessageCollector(filter, {
-        time: 1500000,
-      });
-      collector.on("collect", (m) => {
-        if (m.content.toLowerCase() === "/scoring a 4") {
-          // A team gets toss-up
-          m.delete({ timeout: 1000 }).catch(console.error);
-          scoreA += 4;
-          scoreboard.channel.send(
-            `Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
-          );
-        } else if (m.content.toLowerCase() === "/scoring a 10") {
-          // A team gets bonus
-          m.delete({ timeout: 1000 }).catch(console.error);
-          scoreA += 10;
-          scoreboard.channel.send(
-            `Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
-          );
-        } else if (m.content.toLowerCase() === "/scoring b 4") {
-          // B team gets toss up
-          m.delete({ timeout: 1000 }).catch(console.error);
-          scoreB += 4;
-          scoreboard.channel.send(
-            `Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
-          );
-        } else if (m.content.toLowerCase() === "/scoring b 10") {
-          // B team gets bonus
-          m.delete({ timeout: 1000 }).catch(console.error);
-          scoreB += 10;
-          scoreboard.channel.send(
-            `Here's the score:\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
-          );
-        } else if (m.content === "/scoring stop") {
-          m.delete({ timeout: 1000 }).catch(console.error);
-          scoreboard.delete({ timeout: 1000 });
-          m.channel.send(
-            `**FINAL SCORE:**\nTeam A: ${scoreA}\nTeam B: ${scoreB}`
-          );
-          collector.stop();
-        }
-      });
-    });
-}
-
-function dontWorryBeHappy(message) {
-  message.channel.send(
-    new Discord.MessageEmbed()
-      .setTitle(`Don't Worry Be Happy!`)
-      .setImage("https://media.giphy.com/media/7OKC8ZpTT0PVm/giphy.gif")
-      .setURL("https://youtu.be/d-diB65scQU")
-      .setColor("#ffffff")
-  );
-}
-
-function showServerNumber(message) {
-  message.channel.send(client.guilds.cache.size);
 }
 
 function showLeaderboard(interaction) {
@@ -379,44 +314,44 @@ async function rounds(action, interaction) {
   if (action === "generate") {
     let i;
     let finalizedHTML = '<html><head><link rel="preconnect" href="https://fonts.gstatic.com"><link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet"> </head><body style="width: 70%; margin-left: auto; margin-right: auto;"><h2 style="text-align: center; text-decoration: underline overline; padding: 7px;">ROUND GENERATED BY AWESOMESCIBO USING THE SCIBOWLDB API</h2>';
-      let tossup_question;
-      let question_category;
-      let tossup_format;
-      let tossup_answer;
-      let bonus_question;
-      let bonus_format;
-      let bonus_answer;
-      let htmlContent = "";
-      await axios.post("https://scibowldb.com/api/questions", { categories: ["BIOLOGY", "PHYSICS", "CHEMISTRY", "EARTH AND SPACE", "ASTRONOMY", "MATH"] })
-        .then((response) => {
-          for (i = 1; i < 26; i++) {
-              data = response.data.questions[Math.floor(Math.random() * response.data.questions.length)];
-              tossup_question = data.tossup_question;
-              tossup_answer = data.tossup_answer;
-              question_category = data.category;
-              tossup_format = data.tossup_format;
-              bonus_question = data.bonus_question;
-              bonus_answer = data.bonus_answer;
-              bonus_format = data.bonus_format;
-              htmlContent = `<br><br><h3 style="text-align: center;"><strong>TOSS-UP</strong></h3>\n<br>` + `${i}) <strong>${question_category}</strong>` + " " + `<em>${tossup_format}</em>` + " " + tossup_question + "<br><br>" + "<strong>ANSWER:</strong> " + tossup_answer + "<br>";
-              htmlContent += `<br><br><h3 style="text-align: center;"><strong>BONUS</strong></h3>\n<br>` + `${i}) <strong>${question_category}</strong>` + " " + `<em>${bonus_format}</em>` + " " + bonus_question + "<br><br>" + "<strong>ANSWER:</strong> " + bonus_answer + "<br><br><hr><br>";
-              htmlContent = htmlContent.replace(/\n/g, "<br>");
-              finalizedHTML += htmlContent;
-          }
-          newGeneratedRound = new generatedRound({
-            htmlContent: finalizedHTML,
-            requestedBy: interaction.user.id,
-            authorTag: interaction.user.tag,
-            timestamp: new Date().toISOString(),
-          });
-          newGeneratedRound.save((err, round) => {
-            if (err) {
-              console.log(err);
-              return;
-            }
-            interaction.reply(`Here's your round: https://api.adawesome.tech/round/${round._id.toString()}`, { ephemeral: true });
-          });
+    let tossup_question;
+    let question_category;
+    let tossup_format;
+    let tossup_answer;
+    let bonus_question;
+    let bonus_format;
+    let bonus_answer;
+    let htmlContent = "";
+    await axios.post("https://scibowldb.com/api/questions", { categories: ["BIOLOGY", "PHYSICS", "CHEMISTRY", "EARTH AND SPACE", "ASTRONOMY", "MATH"] })
+      .then((response) => {
+        for (i = 1; i < 26; i++) {
+            data = response.data.questions[Math.floor(Math.random() * response.data.questions.length)];
+            tossup_question = data.tossup_question;
+            tossup_answer = data.tossup_answer;
+            question_category = data.category;
+            tossup_format = data.tossup_format;
+            bonus_question = data.bonus_question;
+            bonus_answer = data.bonus_answer;
+            bonus_format = data.bonus_format;
+            htmlContent = `<br><br><h3 style="text-align: center;"><strong>TOSS-UP</strong></h3>\n<br>` + `${i}) <strong>${question_category}</strong>` + " " + `<em>${tossup_format}</em>` + " " + tossup_question + "<br><br>" + "<strong>ANSWER:</strong> " + tossup_answer + "<br>";
+            htmlContent += `<br><br><h3 style="text-align: center;"><strong>BONUS</strong></h3>\n<br>` + `${i}) <strong>${question_category}</strong>` + " " + `<em>${bonus_format}</em>` + " " + bonus_question + "<br><br>" + "<strong>ANSWER:</strong> " + bonus_answer + "<br><br><hr><br>";
+            htmlContent = htmlContent.replace(/\n/g, "<br>");
+            finalizedHTML += htmlContent;
+        }
+        newGeneratedRound = new generatedRound({
+          htmlContent: finalizedHTML,
+          requestedBy: interaction.user.id,
+          authorTag: interaction.user.tag,
+          timestamp: new Date().toISOString(),
         });
+        newGeneratedRound.save((err, round) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          interaction.reply(`Here's your round: https://api.adawesome.tech/round/${round._id.toString()}`, { ephemeral: true });
+        });
+      });
   } else if (action === "list"){
     let rounds = await generatedRound.find({ requestedBy: interaction.user.id }).sort({ timestamp: -1 });
     let finalMessage = "";
