@@ -5,13 +5,10 @@ round.html
 round.md
 round.pdf
 bot/README.md
-.eslintrc
 .json
 .env
 userScore
 config.json
 .DS_Store
-update.sh
-.eslintrc.json
 data/
 *.patch
