@@ -156,7 +156,7 @@ async function training(subject, interaction) {
 			const data = res.data.question;
 			const tossupQuestion = data.tossup_question;
 			const tossupAnswer = data.tossup_answer;
-			const messageFilter = (m) => m.author.id === authorId;
+			const messageFilter = message => message.author.id === interaction.author.id;
 			interaction.reply({ content: decode(tossupQuestion) + `\n\n||Source: ${data.uri}||` })
 				.then(() => {
 					interaction.channel.awaitMessages({
@@ -164,6 +164,7 @@ async function training(subject, interaction) {
 						max: 1,
 					})
 						.then(collected => {
+							console.log(collected.first());
 							const answerMsg = collected.first();
 
 							let predicted = null;
@@ -195,7 +196,7 @@ async function training(subject, interaction) {
 							}
 							else {
 								const overrideEmbed = new Discord.MessageEmbed()
-									.setAuthor(answerMsg.author.tag, answerMsg.author.displayAvatarURL())
+									.setAuthor({ name: answerMsg.author.tag, iconURL: answerMsg.author.displayAvatarURL() })
 									.addField('Correct answer', `\`${tossupAnswer}\``)
 									.setDescription('It seems your answer was incorrect. Please react with <:override:842778128966615060> to override your answer if you think you got it right.')
 									.setColor('#ffffff')
@@ -283,7 +284,7 @@ async function about(action, interaction) {
 		});
 
 		const changelogEmbed = new Discord.MessageEmbed()
-			.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
+			.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
 			.setTitle('Changelog')
 			.setColor('#ffffff')
 			.setTimestamp();
@@ -298,7 +299,7 @@ async function about(action, interaction) {
 		await client.guilds.fetch();
 		const trainingDocuments = await userScore.countDocuments({});
 		const aboutBotEmbed = new Discord.MessageEmbed()
-			.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
+			.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
 			.setTitle('About AwesomeSciBo')
 			.addField('Servers', `${client.guilds.cache.size}`, true)
 			.addField('Training Users', `${trainingDocuments}`, true)
@@ -370,7 +371,7 @@ async function rounds(action, interaction) {
 		});
 
 		const roundsListEmbed = new Discord.MessageEmbed()
-			.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
+			.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
 			.setTitle(`Last 5 roundsList requested by ${interaction.user.tag}`)
 			.setDescription(finalMessage)
 			.setTimestamp();
@@ -394,7 +395,7 @@ async function result(interaction) {
 	}
 	const resultEmbed = new Discord.MessageEmbed();
 	resultEmbed.setTitle(`${interaction.options.get('location').value} Regionals`);
-	resultEmbed.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL());
+	resultEmbed.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() });
 	resultEmbed.addField('<a:winner:932137838592552960> Winner', `Congratulations to **${interaction.options.get('winner').value}**!`);
 	if (interaction.options.get('runner-up')) resultEmbed.addField('<:second:932138645601800252> Runners-Up', interaction.options.get('runner-up').value);
 	if (interaction.options.get('third-place')) resultEmbed.addField('<:third:932138645526315080> Third Place', interaction.options.get('third-place').value);
