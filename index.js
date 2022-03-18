@@ -15,10 +15,11 @@ const decode = require('html-entities').decode;
 const userScore = require('./models/userScore');
 const generatedRound = require('./models/generateRound');
 
-const config = require('./config.json');
-
 const helpMessage = 'AwesomeSciBo has migrated to using slash commands! You can take a look at the different commands by typing `/` and clicking on the AwesomeSciBo icon.';
 const slashCommands = require('./slashCommands.json');
+const config = {
+	topggauth: process.env['TOPGGAUTH'],
+};
 
 client.once('ready', () => {
 	client.application.commands.set(slashCommands);
@@ -31,7 +32,7 @@ client.once('ready', () => {
 				useNewUrlParser: true,
 			})
 			.then(() => {
-			// Log client tag and set status
+				// Log client tag and set status
 				console.log(`Logged in as: ${client.user.username}!`);
 				client.user.setActivity(
 					'for /help',
