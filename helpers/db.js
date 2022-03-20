@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+const { log } = require('../helpers/log.js');
 const userScore = require('../models/userScore');
 
 module.exports = {
@@ -36,6 +37,8 @@ module.exports = {
 			.connect(mongoUri, {
 				useUnifiedTopology: true,
 				useNewUrlParser: true,
-			});
+			})
+			.then(() => log({ logger: 'db', content: `Connected to the database at ${mongoUri}!`, level: 'info' }))
+			.catch(err => log({ logger: 'db', content: `Failed to connect to the database at ${mongoUri}: ${err}`, level: 'fatal' }));
 	},
 };
