@@ -98,9 +98,10 @@ module.exports = {
 				const tossupQuestion = data.tossup_question;
 				const tossupAnswer = data.tossup_answer;
 				const answerarray = tossupAnswer.split(' (ACCEPT: ');
-				if (tossupAnswer.contains(' (ACCEPT: ')){}
-				else
-				{
+				if (tossupAnswer.contains(' (ACCEPT: ')){
+					
+				}
+				else{
 					answerarray[2] = null;
 				}
 				const messageFilter = message => message.author.id === interaction.author.id;
@@ -115,16 +116,14 @@ module.exports = {
 								answerarray[answerarray.length - 1] = answerarray[answerarray.length - 1].replace(')', '');
 								let predicted = null;
 								if (data.tossup_format === 'Multiple Choice') {
-									if (answerMsg.content.charAt(0).toLowerCase() === tossupAnswer.charAt(0).toLowerCase()) 
-									{
+									if (answerMsg.content.charAt(0).toLowerCase() === tossupAnswer.charAt(0).toLowerCase()) {
 										predicted = 'correct';
 									}
 									else {
 										predicted = 'incorrect';
 									}
 								}
-								else if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answerMsg.content.toLowerCase() === answerarray[2].toLowerCase())
-								{
+								else if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answerMsg.content.toLowerCase() === answerarray[2].toLowerCase()){
 									predicted = 'correct';
 								}
 								else {
