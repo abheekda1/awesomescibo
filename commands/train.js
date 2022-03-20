@@ -98,10 +98,7 @@ module.exports = {
 				const tossupQuestion = data.tossup_question;
 				const tossupAnswer = data.tossup_answer;
 				const answerarray = tossupAnswer.split(' (ACCEPT: ');
-				if (tossupAnswer.contains(' (ACCEPT: ')) {
-					const a = 7;
-				}
-				else { 
+				if (tossupAnswer.includes(' (ACCEPT: ') === false) {
 					answerarray[2] = null;
 				}
 				const messageFilter = message => message.author.id === interaction.author.id;
