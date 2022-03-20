@@ -17,11 +17,12 @@ module.exports = {
 					const data = res.data.question;
 					const tossupQuestion = data.tossup_question;
 					const tossupAnswer = data.tossup_answer;
-					const answers = tossupAnswer.split(' (ACCEPT: ');
+					let answers = tossupAnswer.split(' (ACCEPT: ');
 					if (answers.length > 1) {
 						answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
-						answers[1] = answers[1].split(new RegExp(' OR ', 'i')); // Ignore case using the 'i' flag in regex
+						answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
 					}
+					console.log(answers);
 					const dataEmbed = new MessageEmbed()
 						.setTitle('Data')
 						.setDescription(`\`\`\`json\n${JSON.stringify(data, null, 2)}\`\`\``);
