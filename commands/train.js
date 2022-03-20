@@ -9,8 +9,6 @@ const userScore = require('../models/userScore');
 const { log } = require('../helpers/log.js');
 const { updateScore } = require('../helpers/db.js');
 
-const a = message.author;
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('train')
@@ -105,7 +103,7 @@ module.exports = {
 				{
 					answerarray[2] = null;
 				}
-				const messageFilter = message => message.author.id === interaction.author.id && message.author.id === a;
+				const messageFilter = message => message.author.id === interaction.author.id;
 				interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${data.uri}||` })
 					.then(() => {
 						interaction.channel.awaitMessages({
