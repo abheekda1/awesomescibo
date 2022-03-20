@@ -6,6 +6,7 @@ const axios = require('axios');
 
 const userScore = require('../models/userScore');
 
+const { log } = require('../helpers/log.js');
 const { updateScore } = require('../helpers/db.js');
 
 module.exports = {
@@ -42,7 +43,7 @@ module.exports = {
 					score = obj.score;
 				}
 				else {
-					console.log(err);
+					log({ logger: 'train', content: `Getting user score failed: ${err}`, level: 'error' });
 				}
 			});
 
@@ -102,7 +103,6 @@ module.exports = {
 							max: 1,
 						})
 							.then(collected => {
-								console.log(collected.first());
 								const answerMsg = collected.first();
 
 								let predicted = null;
@@ -159,11 +159,11 @@ module.exports = {
 													updateScore(true, score, authorId).then((msgToReply) =>
 														answerMsg.reply(msgToReply),
 													);
-												}).catch(console.error);
-										}).catch(console.error);
+												}).catch(err => log({ logger: 'train', content: `Failed to override score: ${err}`, level: 'error' }));
+										}).catch(err => log({ logger: 'train', content: `Failed to send override message: ${err}`, level: 'error' }));
 								}
-							}).catch(console.error);
-					}).catch(console.error);
-			}).catch(console.error);
+							}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
+					}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
+			}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
 	},
 };

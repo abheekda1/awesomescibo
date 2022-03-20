@@ -3,6 +3,7 @@ const { MessageEmbed } = require('discord.js');
 
 const axios = require('axios');
 
+const { log } = require('../helpers/log');
 const generatedRound = require('../models/generateRound');
 
 module.exports = {
@@ -66,7 +67,7 @@ module.exports = {
 
 					newGeneratedRound.save((err, round) => {
 						if (err) {
-							console.log(err);
+							log({ logger: 'rounds', content: `Saving round to DB failed: ${err}`, level: 'error' });
 							return;
 						}
 						interaction.reply(`Here's your round: https://api.adawesome.tech/round/${round._id.toString()}`, { ephemeral: true });

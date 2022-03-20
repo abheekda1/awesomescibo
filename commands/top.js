@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 
+const { log } = require('../helpers/log');
 const userScore = require('../models/userScore');
 
 module.exports = {
@@ -14,10 +15,8 @@ module.exports = {
 			.sort({ score: -1 }) // Sort by descending order
 			.exec((err, obj) => {
 				if (err) {
+					log({ logger: 'top', content: `Getting top players failed: ${err}`, level: 'error' });
 					console.log(err);
-					return interaction.reply(
-						'Uh oh! :( There was an internal error. Please try again.',
-					);
 				}
 				if (obj.length < 10) {
 				// Need at least 10 scores for top 10
