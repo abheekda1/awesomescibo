@@ -9,6 +9,8 @@ module.exports = {
 		.setName('top')
 		.setDescription('Lists top ten scores across servers (server specific leaderboard WIP)'),
 	async execute(interaction) {
+		await interaction.deferReply();
+
 		let messageContent = '';
 		userScore
 			.find({})
@@ -20,7 +22,7 @@ module.exports = {
 				}
 				if (obj.length < 10) {
 				// Need at least 10 scores for top 10
-					return interaction.reply(
+					return interaction.followUp(
 						`There are only ${obj.length} users, we need at least 10!`,
 					);
 				}
@@ -32,7 +34,7 @@ module.exports = {
 					.setDescription(messageContent)
 					.setColor('#ffffff');
 
-				interaction.reply({ embeds: [leaderboardEmbed] });
+				interaction.followUp({ embeds: [leaderboardEmbed] });
 			});
 	},
 };

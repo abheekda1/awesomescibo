@@ -29,6 +29,8 @@ module.exports = {
 			return subcommand;
 		}),
 	async execute(interaction) {
+		await interaction.deferReply();
+
 		const action = interaction.options.getSubcommand();
 		if (action === 'generate') {
 			let i;
@@ -70,7 +72,7 @@ module.exports = {
 							log({ logger: 'rounds', content: `Saving round to DB failed: ${err}`, level: 'error' });
 							return;
 						}
-						interaction.reply(`Here's your round: https://api.adawesome.tech/round/${round._id.toString()}`, { ephemeral: true });
+						interaction.followUp(`Here's your round: https://api.adawesome.tech/round/${round._id.toString()}`, { ephemeral: true });
 					});
 				});
 		}
@@ -78,7 +80,7 @@ module.exports = {
 			let roundsList = await generatedRound.find({ requestedBy: interaction.user.id }).sort({ timestamp: -1 });
 			let finalMessage = '';
 			if (!roundsList) {
-				interaction.reply('You haven\'t requested any roundsList!');
+				interaction.followUp('You haven\'t requested any roundsList!');
 				return;
 			}
 
@@ -96,7 +98,7 @@ module.exports = {
 				.setDescription(finalMessage)
 				.setTimestamp();
 
-			interaction.reply({
+			interaction.followUp({
 				embeds: [roundsListEmbed],
 				ephemeral: true,
 			});
@@ -105,7 +107,7 @@ module.exports = {
 			const totalCount = await generatedRound.countDocuments({});
 			const userCount = await generatedRound.countDocuments({ requestedBy: interaction.user.id });
 
-			interaction.reply(`Total Hits: ${totalCount}\nYour Hits: ${userCount}`);
+			interaction.followUp(`Total Hits: ${totalCount}\nYour Hits: ${userCount}`);
 		}
 	},
 };

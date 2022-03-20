@@ -29,6 +29,8 @@ module.exports = {
 			return option;
 		}),
 	async execute(interaction) {
+		await interaction.deferReply();
+
 		const subject = interaction.options.get('subject') ? interaction.options.get('subject').value : null;
 		const authorId = interaction.user.id;
 		let score;
@@ -81,7 +83,7 @@ module.exports = {
 			categoryArray = ['ENERGY'];
 			break;
 		default:
-			interaction.reply(
+			interaction.followUp(
 				new MessageEmbed()
 					.setDescription('<:red_x:816791117671825409> Not a valid subject!')
 					.setColor('#ffffff'),
@@ -96,7 +98,7 @@ module.exports = {
 				const tossupQuestion = data.tossup_question;
 				const tossupAnswer = data.tossup_answer;
 				const messageFilter = message => message.author.id === interaction.author.id;
-				interaction.reply({ content: decode(tossupQuestion) + `\n\n||Source: ${data.uri}||` })
+				interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${data.uri}||` })
 					.then(() => {
 						interaction.channel.awaitMessages({
 							messageFilter,

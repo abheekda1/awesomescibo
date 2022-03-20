@@ -6,9 +6,11 @@ module.exports = {
 		.setName('help')
 		.setDescription('Replies with a help message explaining what the bot can do'),
 	async execute(interaction) {
+		await interaction.deferReply();
+
 		const helpEmbed = new MessageEmbed()
 			.setDescription('AwesomeSciBo has migrated to using slash commands! You can take a look at the different commands by typing `/` and clicking on the AwesomeSciBo icon.')
 			.setColor('#ffffff');
-		interaction.reply({ embeds: [helpEmbed] });
+		interaction.followUp({ embeds: [helpEmbed] });
 	},
 };

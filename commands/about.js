@@ -28,6 +28,8 @@ module.exports = {
 			return subcommand;
 		}),
 	async execute(interaction) {
+		await interaction.deferReply();
+
 		const client = interaction.client;
 		const action = interaction.options.getSubcommand();
 		if (action === 'contributors') {
@@ -37,7 +39,7 @@ module.exports = {
 				.setTimestamp()
 				.setColor('#ffffff');
 
-			interaction.reply({ embeds: [contributorEmbed] });
+			interaction.followUp({ embeds: [contributorEmbed] });
 		}
 		else if (action === 'changelog') {
 			const gitRepoLocation = __dirname;
@@ -58,7 +60,7 @@ module.exports = {
 				changelogEmbed.addField(commit.abbrevHash, `> \`Hash:\`${commit.hash}\n> \`Subject:\`${commit.subject}\n> \`Author:\`${commit.authorName}\n> \`Date:\`${commit.authorDateRel}\n> \`Link\`: [GitHub](https://github.com/ADawesomeguy/AwesomeSciBo/commit/${commit.hash})\n`);
 			});
 
-			interaction.reply({ embeds: [changelogEmbed] });
+			interaction.followUp({ embeds: [changelogEmbed] });
 		}
 		else if (action === 'bot') {
 			await client.guilds.fetch();
@@ -70,7 +72,7 @@ module.exports = {
 				.addField('Training Users', `${trainingDocuments}`, true)
 				.setTimestamp();
 
-			interaction.reply({ embeds: [aboutBotEmbed] });
+			interaction.followUp({ embeds: [aboutBotEmbed] });
 		}
 	},
 };
