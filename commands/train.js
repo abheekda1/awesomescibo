@@ -98,10 +98,10 @@ module.exports = {
 				const tossupQuestion = data.tossup_question;
 				const tossupAnswer = data.tossup_answer;
 				const answerarray = tossupAnswer.split(' (ACCEPT: ');
-				if (tossupAnswer.contains(' (ACCEPT: ')){
-					
+				if (tossupAnswer.contains(' (ACCEPT: ')) {
+					const a = 7;
 				}
-				else{
+				else { 
 					answerarray[2] = null;
 				}
 				const messageFilter = message => message.author.id === interaction.author.id;
@@ -123,7 +123,7 @@ module.exports = {
 										predicted = 'incorrect';
 									}
 								}
-								else if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answerMsg.content.toLowerCase() === answerarray[2].toLowerCase()){
+								else if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answerMsg.content.toLowerCase() === answerarray[2].toLowerCase()) {
 									predicted = 'correct';
 								}
 								else {
@@ -168,5 +168,5 @@ module.exports = {
 							}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
 					}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
 			}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
-		},
+	},
 };
