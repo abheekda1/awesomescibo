@@ -1,3 +1,5 @@
+const { log } = require('../helpers/log');
+
 module.exports = {
 	name: 'interactionCreate',
 	once: false,
@@ -13,7 +15,7 @@ module.exports = {
 			await command.execute(interaction);
 		}
 		catch (error) {
-			console.error(error);
+			log({ logger: 'interaction', content: `Interaction ${interaction.name} failed!`, level: 'error' });
 			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 		}
 	},
