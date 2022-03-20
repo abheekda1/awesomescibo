@@ -7,6 +7,10 @@ module.exports = {
 	once: true,
 	async execute(client) {
 		await db.connect(mongoUri);
-		log({ logger: 'status', content: `Logged in at ${client.user.tag}!`, level: 'info' });
+		log({ logger: 'status', content: `Logged in as ${client.user.tag}!`, level: 'info' });
+		client.user.setActivity(
+			'for /help',
+			{ type: 'WATCHING' },
+		);
 	},
 };
