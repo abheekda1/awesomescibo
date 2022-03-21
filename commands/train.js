@@ -99,8 +99,8 @@ module.exports = {
 				const tossupAnswer = data.tossup_answer;
 				let answers = tossupAnswer.split(' (ACCEPT: ');
 				if (answers.length > 1) {
-                    answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
-                    answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
+					answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
+					answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
 				}
 				const messageFilter = message => message.author.id === interaction.author.id;
 				interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${data.uri}||` })
