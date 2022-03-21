@@ -97,15 +97,17 @@ module.exports = {
 				const data = res.data.question;
 				const tossupQuestion = data.tossup_question;
 				const tossupAnswer = data.tossup_answer;
-				const messageFilter = message => message.author.id === interaction.author.id;
 				interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${data.uri}||` })
 					.then(() => {
+						const messageFilter = m => m.author.id === interaction.user.id || m.author.id === interaction.client.user.id;
 						interaction.channel.awaitMessages({
-							messageFilter,
+							filter: messageFilter,
 							max: 1,
 						})
 							.then(collected => {
 								const answerMsg = collected.first();
+
+								if (answerMsg.author.id === interaction.client.user.id) return;
 
 								let predicted = null;
 								if (data.tossup_format === 'Multiple Choice') {
@@ -154,7 +156,7 @@ module.exports = {
 											};
 											overrideMsg
 												.awaitReactions({
-													filter,
+													filter: filter,
 													max: 1,
 												})
 												.then(() => {
