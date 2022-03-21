@@ -8,8 +8,10 @@ services:
       - ./data:/data/db
 
   awesomescibo:
-    image: abheekd/awesomescibo:latest
+    image: abheekd/awesomescibo:local
     restart: unless-stopped
     environment:
-      MONGO_URI: "mongodb://mongo:27017/AWESOME?authSource=AWESOME&w=1"
-      TOKEN: "TOKEN"
+      MONGO_URI: "mongodb://mongo:27017/AWESOME"
+      TOKEN: ""
+      CLIENT_ID: ""
+      TESTING_GUIDE: ""

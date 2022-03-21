@@ -9,8 +9,8 @@ COPY yarn.lock ./
 RUN yarn
 
 # Build
+COPY . .
 RUN yarn tsc
-
-COPY ./built/* .
+RUN cp -r  built/* .
 
 CMD [ "node", "index.js" ]
