@@ -121,7 +121,7 @@ module.exports = {
 										predicted = 'incorrect';
 									}
 								}
-								else if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answers.includes(answerMsg.content.toLowerCase())) {
+								else if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answers.includes(answerMsg.content.toUpperCase())) {
 									predicted = 'correct';
 								}
 								else {
