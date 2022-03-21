@@ -97,6 +97,11 @@ module.exports = {
 				const data = res.data.question;
 				const tossupQuestion = data.tossup_question;
 				const tossupAnswer = data.tossup_answer;
+				let answers = tossupAnswer.split(' (ACCEPT: ');
+				if (answers.length > 1) {
+					answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
+					answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
+				}
 				interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${data.uri}||` })
 					.then(() => {
 						const messageFilter = m => m.author.id === interaction.user.id || m.author.id === interaction.client.user.id;
@@ -111,20 +116,14 @@ module.exports = {
 
 								let predicted = null;
 								if (data.tossup_format === 'Multiple Choice') {
-									if (
-										answerMsg.content.charAt(0).toLowerCase() ===
-							tossupAnswer.charAt(0).toLowerCase()
-									) {
+									if (answerMsg.content.charAt(0).toLowerCase() === tossupAnswer.charAt(0).toLowerCase()) {
 										predicted = 'correct';
 									}
 									else {
 										predicted = 'incorrect';
 									}
 								}
-								else if (
-									answerMsg.content.toLowerCase() ===
-							tossupAnswer.toLowerCase()
-								) {
+								else if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answers.includes(answerMsg.content.toUpperCase())) {
 									predicted = 'correct';
 								}
 								else {
