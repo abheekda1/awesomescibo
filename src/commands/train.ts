@@ -103,8 +103,15 @@ export async function execute(interaction) {
 				answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
 				answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
 			}
-			interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${questionData.uri}||`, fetchMessage: true })
+			interaction.followUp({ content: decode(tossupQuestion), fetchMessage: true })
 				.then(questionMessage => {
+					const sourceButton = new MessageActionRow()
+						.addComponents(
+							new MessageButton()
+								.setURL(questionData.uri)
+								.setLabel('Source')
+								.setStyle('LINK'),
+						);
 					switch (tossupFormat) {
 					case 'Short Answer': {
 						// eslint-disable-next-line no-case-declarations
@@ -161,6 +168,7 @@ export async function execute(interaction) {
 												}).catch(err => log({ logger: 'train', content: `Failed to override score: ${err}`, level: 'error' }));
 										}).catch(err => log({ logger: 'train', content: `Failed to send override message: ${err}`, level: 'error' }));
 								}
+								interaction.editReply({ components: [sourceButton] });
 							}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
 						break;
 					}
@@ -194,11 +202,15 @@ export async function execute(interaction) {
 									);
 								}
 								else {
-									mcChoice.reply({ embeds: [
-										new MessageEmbed()
-											.setDescription(`Unfortunately, ${mcChoice.customId.toUpperCase()} was not the correct answer. The correct answer was actually \`${tossupAnswer}\`.`),
-									] });
+									const incorrectEmbed = new MessageEmbed()
+										.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
+										.addField('Correct answer', `\`${tossupAnswer}\``)
+										.setDescription(`It seems your answer ${mcChoice.customId.toUpperCase()} was incorrect.`)
+										.setColor('#ffffff')
+										.setTimestamp();
+									mcChoice.reply({ embeds: [incorrectEmbed] });
 								}
+								interaction.editReply({ components: [sourceButton] });
 							});
 						break;
 					}
