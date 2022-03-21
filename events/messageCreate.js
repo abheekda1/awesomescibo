@@ -22,7 +22,6 @@ module.exports = {
 						answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
 						answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
 					}
-					console.log(answers);
 					const dataEmbed = new MessageEmbed()
 						.setTitle('Data')
 						.setDescription(`\`\`\`json\n${JSON.stringify(data, null, 2)}\`\`\``);
