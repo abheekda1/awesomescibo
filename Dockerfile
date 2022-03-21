@@ -6,9 +6,11 @@ WORKDIR /usr/src/app
 # Install deps
 COPY package.json ./
 COPY yarn.lock ./
-
 RUN yarn
 
-COPY . .
+# Build
+RUN yarn tsc
+
+COPY ./built/* .
 
 CMD [ "node", "index.js" ]
