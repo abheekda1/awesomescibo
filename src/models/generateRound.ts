@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const generatedRoundSchema = new mongoose.Schema({
 	htmlContent: {
@@ -19,4 +19,4 @@ const generatedRoundSchema = new mongoose.Schema({
 	},
 });
 
-module.exports = mongoose.model('GeneratedRounds', generatedRoundSchema);
+export default mongoose.model('GeneratedRounds', generatedRoundSchema);

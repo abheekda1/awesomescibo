@@ -10,8 +10,11 @@
     "mongoose": "^5.12.5"
   },
   "devDependencies": {
-    "eslint": "^8.7.0",
-    "nodemon": "^2.0.15"
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "eslint": "^8.11.0",
+    "nodemon": "^2.0.15",
+    "typescript": "^4.6.2"
   },
   "name": "awesomescibo",
   "version": "3.2.1",

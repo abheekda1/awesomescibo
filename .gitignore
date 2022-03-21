@@ -12,3 +12,4 @@ config.json
 .DS_Store
 data/
 *.patch
+built/
