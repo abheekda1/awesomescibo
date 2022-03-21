@@ -98,7 +98,6 @@ module.exports = {
 				const tossupQuestion = data.tossup_question;
 				const tossupAnswer = data.tossup_answer;
 				let answers = tossupAnswer.split(' (ACCEPT: ');
-				let maflag = 0;
 				if (answers.length > 1) {
                         answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
                         answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
