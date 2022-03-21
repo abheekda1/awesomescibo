@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { MessageEmbed } from 'discord.js';
 
-const gitlog = require('gitlog').default;
+import gitlog from 'gitlog';
 
 import userScore from '../models/userScore';
 

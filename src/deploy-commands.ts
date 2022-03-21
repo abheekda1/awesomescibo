@@ -12,7 +12,7 @@ for (const file of commandFiles) {
 	import(`./commands/${file}`)
 		.then(command => {
 			commands.push(command.data.toJSON());
-		})
+		});
 }
 
 const rest = new REST({ version: '9' }).setToken(token);

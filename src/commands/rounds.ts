@@ -46,14 +46,14 @@ export async function execute(interaction) {
 		await axios.post('https://scibowldb.com/api/questions', { categories: ['BIOLOGY', 'PHYSICS', 'CHEMISTRY', 'EARTH AND SPACE', 'ASTRONOMY', 'MATH'] })
 			.then((response) => {
 				for (i = 1; i < 26; i++) {
-					const data = response.data.questions[Math.floor(Math.random() * response.data.questions.length)];
-					tossup_question = data.tossup_question;
-					tossup_answer = data.tossup_answer;
-					question_category = data.category;
-					tossup_format = data.tossup_format;
-					bonus_question = data.bonus_question;
-					bonus_answer = data.bonus_answer;
-					bonus_format = data.bonus_format;
+					const questionData = response.data.questions[Math.floor(Math.random() * response.data.questions.length)];
+					tossup_question = questionData.tossup_question;
+					tossup_answer = questionData.tossup_answer;
+					question_category = questionData.category;
+					tossup_format = questionData.tossup_format;
+					bonus_question = questionData.bonus_question;
+					bonus_answer = questionData.bonus_answer;
+					bonus_format = questionData.bonus_format;
 					htmlContent = '<br><br><h3 style=\'text-align: center;\'><strong>TOSS-UP</strong></h3>\n<br>' + `${i}) <strong>${question_category}</strong>` + ' ' + `<em>${tossup_format}</em>` + ' ' + tossup_question + '<br><br>' + '<strong>ANSWER:</strong> ' + tossup_answer + '<br>';
 					htmlContent += '<br><br><h3 style=\'text-align: center;\'><strong>BONUS</strong></h3>\n<br>' + `${i}) <strong>${question_category}</strong>` + ' ' + `<em>${bonus_format}</em>` + ' ' + bonus_question + '<br><br>' + '<strong>ANSWER:</strong> ' + bonus_answer + '<br><br><hr><br>';
 					htmlContent = htmlContent.replace(/\n/g, '<br>');

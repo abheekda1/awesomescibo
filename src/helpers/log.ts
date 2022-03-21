@@ -1,6 +1,6 @@
 import log4js from 'log4js';
 
-export default function (config) {
+export default function(config) {
 	const logger = log4js.getLogger(config.logger);
 	logger.level = 'debug';
 	switch (config.level) {

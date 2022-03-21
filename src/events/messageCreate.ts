@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
-const decode = require('html-entities').decode;
+import { decode } from 'html-entities';
 
 import { testingGuild } from '../helpers/env';
 

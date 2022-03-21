@@ -1,11 +1,15 @@
 {
-	"extends": "eslint:recommended",
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"plugins": [
+		"@typescript-eslint"
+	],
+	"parser": "@typescript-eslint/parser",
 	"env": {
 		"node": true,
 		"es6": true
-	},
-	"parserOptions": {
-		"ecmaVersion": 2021
 	},
 	"rules": {
 		"arrow-spacing": ["warn", { "before": true, "after": true }],

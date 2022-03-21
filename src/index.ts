@@ -19,7 +19,7 @@ for (const file of commandFiles) {
 		.then(command => {
 			client['commands'].set(command.data.name, command);
 			log({ logger: 'command', content: `Registered command ${file}!`, level: 'info' });
-		})
+		});
 }
 
 for (const file of eventFiles) {
@@ -32,7 +32,7 @@ for (const file of eventFiles) {
 				client.on(event.name, (...args) => event.execute(...args));
 			}
 			log({ logger: 'event', content: `Registered event ${file}!`, level: 'info' });
-		})
+		});
 }
 
 client.login(token);

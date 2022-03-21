@@ -94,15 +94,15 @@ export async function execute(interaction) {
 	axios
 		.post('https://scibowldb.com/api/questions/random', { categories: categoryArray })
 		.then((res) => {
-			const data = res.data.question;
-			const tossupQuestion = data.tossup_question;
-			const tossupAnswer = data.tossup_answer;
+			const questionData = res.data.question;
+			const tossupQuestion = questionData.tossup_question;
+			const tossupAnswer = questionData.tossup_answer;
 			let answers = tossupAnswer.split(' (ACCEPT: ');
 			if (answers.length > 1) {
 				answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
 				answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
 			}
-			interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${data.uri}||` })
+			interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${questionData.uri}||` })
 				.then(() => {
 					const messageFilter = m => m.author.id === interaction.user.id || m.author.id === interaction.client.user.id;
 					interaction.channel.awaitMessages({
@@ -115,7 +115,7 @@ export async function execute(interaction) {
 							if (answerMsg.author.id === interaction.client.user.id) return;
 
 							let predicted = '';
-							if (data.tossup_format === 'Multiple Choice') {
+							if (questionData.tossup_format === 'Multiple Choice') {
 								if (answerMsg.content.charAt(0).toLowerCase() === tossupAnswer.charAt(0).toLowerCase()) {
 									predicted = 'correct';
 								}
