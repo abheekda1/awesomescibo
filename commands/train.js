@@ -138,14 +138,14 @@ module.exports = {
 									const overrideEmbed = new MessageEmbed()
 										.setAuthor({ name: answerMsg.author.tag, iconURL: answerMsg.author.displayAvatarURL() })
 										.addField('Correct answer', `\`${tossupAnswer}\``)
-										.setDescription('It seems your answer was incorrect. Please react with <:override:842778128966615060> to override your answer if you think you got it right.')
+										.setDescription('It seems your answer was incorrect. Please react with <:override:955265585086857236> to override your answer if you think you got it right.')
 										.setColor('#ffffff')
 										.setTimestamp();
 									answerMsg.channel.send({
 										embeds: [overrideEmbed],
 									})
 										.then(overrideMsg => {
-											overrideMsg.react('<:override:842778128966615060>');
+											overrideMsg.react('<:override:955265585086857236>');
 											const filter = (reaction, user) => {
 												return (
 													['override'].includes(reaction.emoji.name) &&
