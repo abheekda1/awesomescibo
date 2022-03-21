@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const userScoreSchema = new mongoose.Schema({
 	authorID: {
@@ -11,4 +11,4 @@ const userScoreSchema = new mongoose.Schema({
 	},
 });
 
-module.exports = mongoose.model('UserScore', userScoreSchema);
+export default mongoose.model('UserScore', userScoreSchema);
