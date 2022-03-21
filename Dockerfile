@@ -4,9 +4,10 @@ FROM node:latest
 WORKDIR /usr/src/app
 
 # Install deps
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 
-RUN npm install
+RUN yarn
 
 COPY . .
 
