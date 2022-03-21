@@ -97,6 +97,10 @@ module.exports = {
 				const data = res.data.question;
 				const tossupQuestion = data.tossup_question;
 				const tossupAnswer = data.tossup_answer;
+				const answerarray = tossupAnswer.split(' (ACCEPT: ');
+				if (tossupAnswer.includes(' (ACCEPT: ') === false) {
+					answerarray[2] = null;
+				}
 				const messageFilter = message => message.author.id === interaction.author.id;
 				interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${data.uri}||` })
 					.then(() => {
@@ -106,23 +110,19 @@ module.exports = {
 						})
 							.then(collected => {
 								const answerMsg = collected.first();
-
+								if (answerarray.contains(')') {
+								answerarray[answerarray.length - 1] = answerarray[answerarray.length - 1].replace(')', '');
+								}
 								let predicted = null;
 								if (data.tossup_format === 'Multiple Choice') {
-									if (
-										answerMsg.content.charAt(0).toLowerCase() ===
-							tossupAnswer.charAt(0).toLowerCase()
-									) {
+									if (answerMsg.content.charAt(0).toLowerCase() === tossupAnswer.charAt(0).toLowerCase()) {
 										predicted = 'correct';
 									}
 									else {
 										predicted = 'incorrect';
 									}
 								}
-								else if (
-									answerMsg.content.toLowerCase() ===
-							tossupAnswer.toLowerCase()
-								) {
+								else if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answerMsg.content.toLowerCase() === answerarray[2].toLowerCase()) {
 									predicted = 'correct';
 								}
 								else {
@@ -138,14 +138,14 @@ module.exports = {
 									const overrideEmbed = new MessageEmbed()
 										.setAuthor({ name: answerMsg.author.tag, iconURL: answerMsg.author.displayAvatarURL() })
 										.addField('Correct answer', `\`${tossupAnswer}\``)
-										.setDescription('It seems your answer was incorrect. Please react with <:override:955265585086857236> to override your answer if you think you got it right.')
+										.setDescription('It seems your answer was incorrect. Please react with <:override:842778128966615060> to override your answer if you think you got it right.')
 										.setColor('#ffffff')
 										.setTimestamp();
 									answerMsg.channel.send({
 										embeds: [overrideEmbed],
 									})
 										.then(overrideMsg => {
-											overrideMsg.react('<:override:955265585086857236>');
+											overrideMsg.react('<:override:842778128966615060>');
 											const filter = (reaction, user) => {
 												return (
 													['override'].includes(reaction.emoji.name) &&
