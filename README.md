@@ -6,14 +6,8 @@
 <a href="https://github.com/ADawesomeguy/AwesomeSciBo/blob/master/LICENSE"><img src="https://img.shields.io/github/license/ADawesomeguy/AwesomeSciBo?color=blue&style=for-the-badge"></a>
 <a href="https://github.com/ADawesomeguy/AwesomeSciBo/issues"><img src="https://img.shields.io/github/issues/ADawesomeguy/AwesomeSciBo?color=blue&style=for-the-badge"></a>
 <a href="https://github.com/CQCumbers/ScibowlDB"><img src="https://img.shields.io/badge/API-ScibowlDB-blue?style=for-the-badge"></a>
-<a href="https://hub.docker.com/r/adawesomeguy/awscibo"><img src="https://img.shields.io/docker/pulls/adawesomeguy/awscibo?color=blue&style=for-the-badge"></a>
+<a href="https://hub.docker.com/r/adawesomeguy/awesomescibo"><img src="https://img.shields.io/docker/pulls/adawesomeguy/awesomescibo?color=blue&style=for-the-badge"></a>
 </p>
-
-<!--[![GitHub stars](https://img.shields.io/github/stars/ADawesomeguy/AwesomeSciBo?color=blue&style=for-the-badge)](https://github.com/ADawesomeguy/AwesomeSciBo/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/ADawesomeguy/AwesomeSciBo?style=for-the-badge)](https://github.com/ADawesomeguy/AwesomeSciBo/network)
-[![GitHub license](https://img.shields.io/github/license/ADawesomeguy/AwesomeSciBo?color=blue&style=for-the-badge)](https://github.com/ADawesomeguy/AwesomeSciBo/blob/master/LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/ADawesomeguy/AwesomeSciBo?color=blue&style=for-the-badge)](https://github.com/ADawesomeguy/AwesomeSciBo/issues)
-[![API](https://img.shields.io/badge/API-ScibowlDB-blue?style=for-the-badge)](https://github.com/CQCumbers/ScibowlDB)-->
 
 <p align="center">A simple Discord bot that automatically generates Science Bowl rounds using the ScibowlDB API!</p>
 
