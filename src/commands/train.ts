@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, MessageActionRow, MessageButton } from 'discord.js';
 
 import { decode } from 'html-entities';
 import axios from 'axios';
@@ -97,75 +97,112 @@ export async function execute(interaction) {
 			const questionData = res.data.question;
 			const tossupQuestion = questionData.tossup_question;
 			const tossupAnswer = questionData.tossup_answer;
+			const tossupFormat = questionData.tossup_format;
 			let answers = tossupAnswer.split(' (ACCEPT: ');
 			if (answers.length > 1) {
 				answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
 				answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
 			}
-			interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${questionData.uri}||` })
-				.then(() => {
-					const messageFilter = m => m.author.id === interaction.user.id || m.author.id === interaction.client.user.id;
-					interaction.channel.awaitMessages({
-						filter: messageFilter,
-						max: 1,
-					})
-						.then(collected => {
-							const answerMsg = collected.first();
+			interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${questionData.uri}||`, fetchMessage: true })
+				.then(questionMessage => {
+					switch (tossupFormat) {
+					case 'Short Answer': {
+						// eslint-disable-next-line no-case-declarations
+						const messageFilter = m => m.author.id === interaction.user.id || m.author.id === interaction.client.user.id;
+						interaction.channel.awaitMessages({
+							filter: messageFilter,
+							max: 1,
+						})
+							.then(collected => {
+								const answerMsg = collected.first();
 
-							if (answerMsg.author.id === interaction.client.user.id) return;
+								if (answerMsg.author.id === interaction.client.user.id) return;
 
-							let predicted = '';
-							if (questionData.tossup_format === 'Multiple Choice') {
-								if (answerMsg.content.charAt(0).toLowerCase() === tossupAnswer.charAt(0).toLowerCase()) {
+								let predicted = '';
+								if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answers.includes(answerMsg.content.toUpperCase())) {
 									predicted = 'correct';
 								}
 								else {
 									predicted = 'incorrect';
 								}
-							}
-							else if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answers.includes(answerMsg.content.toUpperCase())) {
-								predicted = 'correct';
-							}
-							else {
-								predicted = 'incorrect';
-							}
 
-							if (predicted === 'correct') {
-								updateScore(true, score, authorId).then((msgToReply) =>
-									answerMsg.reply(msgToReply),
-								);
-							}
-							else {
-								const overrideEmbed = new MessageEmbed()
-									.setAuthor({ name: answerMsg.author.tag, iconURL: answerMsg.author.displayAvatarURL() })
-									.addField('Correct answer', `\`${tossupAnswer}\``)
-									.setDescription('It seems your answer was incorrect. Please react with <:override:955265585086857236> to override your answer if you think you got it right.')
-									.setColor('#ffffff')
-									.setTimestamp();
-								answerMsg.channel.send({
-									embeds: [overrideEmbed],
-								})
-									.then(overrideMsg => {
-										overrideMsg.react('<:override:955265585086857236>');
-										const filter = (reaction, user) => {
-											return (
-												['override'].includes(reaction.emoji.name) &&
-								user.id === answerMsg.author.id
-											);
-										};
-										overrideMsg
-											.awaitReactions({
-												filter: filter,
-												max: 1,
-											})
-											.then(() => {
-												updateScore(true, score, authorId).then((msgToReply) =>
-													answerMsg.reply(msgToReply),
+								if (predicted === 'correct') {
+									updateScore(true, score, authorId).then((msgToReply) =>
+										answerMsg.reply(msgToReply),
+									);
+								}
+								else {
+									const overrideEmbed = new MessageEmbed()
+										.setAuthor({ name: answerMsg.author.tag, iconURL: answerMsg.author.displayAvatarURL() })
+										.addField('Correct answer', `\`${tossupAnswer}\``)
+										.setDescription('It seems your answer was incorrect. Please react with <:override:955265585086857236> to override your answer if you think you got it right.')
+										.setColor('#ffffff')
+										.setTimestamp();
+									answerMsg.channel.send({
+										embeds: [overrideEmbed],
+									})
+										.then(overrideMsg => {
+											overrideMsg.react('<:override:955265585086857236>');
+											const filter = (reaction, user) => {
+												return (
+													['override'].includes(reaction.emoji.name) &&
+                  user.id === answerMsg.author.id
 												);
-											}).catch(err => log({ logger: 'train', content: `Failed to override score: ${err}`, level: 'error' }));
-									}).catch(err => log({ logger: 'train', content: `Failed to send override message: ${err}`, level: 'error' }));
-							}
-						}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
+											};
+											overrideMsg
+												.awaitReactions({
+													filter: filter,
+													max: 1,
+												})
+												.then(() => {
+													updateScore(true, score, authorId).then((msgToReply) =>
+														answerMsg.reply(msgToReply),
+													);
+												}).catch(err => log({ logger: 'train', content: `Failed to override score: ${err}`, level: 'error' }));
+										}).catch(err => log({ logger: 'train', content: `Failed to send override message: ${err}`, level: 'error' }));
+								}
+							}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
+						break;
+					}
+					case 'Multiple Choice': {
+						const choices = new MessageActionRow()
+							.addComponents(
+								new MessageButton()
+									.setCustomId('w')
+									.setLabel('W')
+									.setStyle('SECONDARY'),
+								new MessageButton()
+									.setCustomId('x')
+									.setLabel('X')
+									.setStyle('SECONDARY'),
+								new MessageButton()
+									.setCustomId('y')
+									.setLabel('Y')
+									.setStyle('SECONDARY'),
+								new MessageButton()
+									.setCustomId('z')
+									.setLabel('Z')
+									.setStyle('SECONDARY'),
+							);
+						interaction.editReply({ components: [choices] });
+						const mcFilter = i => ['w', 'x', 'y', 'z'].includes(i.customId) && i.user.id === interaction.user.id;
+						questionMessage.awaitMessageComponent({ filter: mcFilter })
+							.then(mcChoice => {
+								if (tossupAnswer.charAt(0).toLowerCase() === mcChoice.customId) {
+									updateScore(true, score, authorId).then((msgToReply) =>
+										mcChoice.reply(msgToReply),
+									);
+								}
+								else {
+									mcChoice.reply({ embeds: [
+										new MessageEmbed()
+											.setDescription(`Unfortunately, ${mcChoice.customId.toUpperCase()} was not the correct answer. The correct answer was actually \`${tossupAnswer}\`.`),
+									] });
+								}
+							});
+						break;
+					}
+					}
 				}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
 		}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
 }
