@@ -22,6 +22,7 @@ module.exports = {
 				);
 			}
 			else {
+				// TODO: Error handling
 				const doc = await userScore.findOne({
 					authorID: authorId,
 				});

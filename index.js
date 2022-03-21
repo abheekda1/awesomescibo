@@ -3,6 +3,7 @@
 const fs = require('node:fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./helpers/env');
+const { log } = require('./helpers/log');
 
 const client = new Client({
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.DIRECT_MESSAGE_REACTIONS],
@@ -16,6 +17,7 @@ const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.data.name, command);
+	log({ logger: 'command', content: `Registered command ${file}!`, level: 'info' });
 }
 
 for (const file of eventFiles) {
@@ -26,6 +28,7 @@ for (const file of eventFiles) {
 	else {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
+	log({ logger: 'event', content: `Registered event ${file}!`, level: 'info' });
 }
 
 client.login(token);

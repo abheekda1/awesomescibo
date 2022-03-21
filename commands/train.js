@@ -102,15 +102,17 @@ module.exports = {
 					answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
 					answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
 				}
-				const messageFilter = message => message.author.id === interaction.author.id;
 				interaction.followUp({ content: decode(tossupQuestion) + `\n\n||Source: ${data.uri}||` })
 					.then(() => {
+						const messageFilter = m => m.author.id === interaction.user.id || m.author.id === interaction.client.user.id;
 						interaction.channel.awaitMessages({
-							messageFilter,
+							filter: messageFilter,
 							max: 1,
 						})
 							.then(collected => {
 								const answerMsg = collected.first();
+
+								if (answerMsg.author.id === interaction.client.user.id) return;
 
 								let predicted = null;
 								if (data.tossup_format === 'Multiple Choice') {
@@ -153,7 +155,7 @@ module.exports = {
 											};
 											overrideMsg
 												.awaitReactions({
-													filter,
+													filter: filter,
 													max: 1,
 												})
 												.then(() => {
