@@ -100,7 +100,6 @@ module.exports = {
 				let answers = tossupAnswer.split(' (ACCEPT: ');
 				let maflag = 0;
 				if (answers.length > 1) {
-						let maflag = 1;
                         answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
                         answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
 					}
@@ -123,10 +122,7 @@ module.exports = {
 										predicted = 'incorrect';
 									}
 								}
-								else if (maflag === 0 && answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase()) {
-									predicted = 'correct';
-								}
-								else if (maflag === 1 && answers.includes(answerMsg.content.toLowerCase())) {
+								else if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answers.includes(answerMsg.content.toLowerCase())) {
 									predicted = 'correct';
 								}
 								else {
