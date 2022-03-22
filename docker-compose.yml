@@ -14,4 +14,4 @@ services:
       MONGO_URI: "mongodb://mongo:27017/AWESOME"
       TOKEN: ""
       CLIENT_ID: ""
-      TESTING_GUIDE: ""
+      TESTING_GUILD: ""

@@ -45,3 +45,17 @@ jobs:
           draft: true
           generateReleaseNotes: true
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  npmjs-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Install dependencies
+        run: yarn
+
+      - name: Publish to NPM.js
+        run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
