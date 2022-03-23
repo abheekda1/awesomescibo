@@ -168,9 +168,10 @@ export async function execute(interaction) {
 													filter: overrideFilter,
 												})
 												.then(i => {
-													updateScore(true, score, authorId).then((msgToReply) =>
-														i.reply(msgToReply),
-													);
+													updateScore(true, score, authorId).then(async msgToReply => {
+														await i.reply(msgToReply);
+														overrideMsg.edit({ components: [] });
+													});
 												}).catch(err => log({ logger: 'train', content: `Failed to override score: ${err}`, level: 'error' }));
 										}).catch(err => log({ logger: 'train', content: `Failed to send override message: ${err}`, level: 'error' }));
 								}
