@@ -1,5 +1,5 @@
 
-![out](https://user-images.githubusercontent.com/67982792/160637166-b8c3a390-e4f9-46d1-8738-dcb2d8b9baa7.png)
+![logo](https://user-images.githubusercontent.com/67982792/160637166-b8c3a390-e4f9-46d1-8738-dcb2d8b9baa7.png)
 
 <h1 align="center">AwesomeSciBo</h1>
 
@@ -19,7 +19,7 @@
 Deploying this bot to your Discord server is relatively simple: you can add it to your own server by using [this link](https://adat.link/awesomescibo).
 
 ## Contributing
-Please see [CONTRIBUTING.md]().
+Please see [CONTRIBUTING.md](https://github.com/ADawesomeguy/AwesomeSciBo/blob/master/.github/CONTRIBUTING.md).
 
 
 ## Installation
