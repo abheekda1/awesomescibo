@@ -14,11 +14,14 @@ export async function updateScore(isCorrect, score, authorId) {
 				authorID: authorId,
 				score: score,
 			});
-			newUserScore.save((err) =>
-				err
-					? console.log('Error creating new user for scoring')
-					: console.log('Sucessfully created user to score.'),
-			);
+			newUserScore.save(err => {
+				if (err) {
+					log({ logger: 'db', content: `Error creating new user ${authorId} for scoring`, level: 'error' });
+				}
+				else {
+					log({ logger: 'db', content: `Successfully created user ${authorId} for scoring`, level: 'debug' });
+				}
+			});
 		}
 		else {
 			// TODO: Error handling
