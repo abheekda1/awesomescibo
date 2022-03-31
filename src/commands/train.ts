@@ -145,26 +145,33 @@ export async function execute(interaction) {
 										.setDescription('It seems your answer was incorrect. Please react with <:override:955265585086857236> to override your answer if you think you got it right.')
 										.setColor('#ffffff')
 										.setTimestamp();
+									const overrideButton = new MessageActionRow()
+										.addComponents(
+											new MessageButton()
+												.setCustomId('override')
+												.setEmoji('<:override:955265585086857236>')
+												.setStyle('SECONDARY'),
+										);
 									answerMsg.channel.send({
 										embeds: [overrideEmbed],
+										components: [overrideButton],
 									})
 										.then(overrideMsg => {
-											overrideMsg.react('<:override:955265585086857236>');
-											const filter = (reaction, user) => {
+											const overrideFilter = i => {
 												return (
-													['override'].includes(reaction.emoji.name) &&
-                  user.id === answerMsg.author.id
+													['override'].includes(i.customId) &&
+                  i.user.id === answerMsg.author.id
 												);
 											};
 											overrideMsg
-												.awaitReactions({
-													filter: filter,
-													max: 1,
+												.awaitMessageComponent({
+													filter: overrideFilter,
 												})
-												.then(() => {
-													updateScore(true, score, authorId).then((msgToReply) =>
-														answerMsg.reply(msgToReply),
-													);
+												.then(i => {
+													updateScore(true, score, authorId).then(async msgToReply => {
+														await i.reply(msgToReply);
+														overrideMsg.edit({ components: [] });
+													});
 												}).catch(err => log({ logger: 'train', content: `Failed to override score: ${err}`, level: 'error' }));
 										}).catch(err => log({ logger: 'train', content: `Failed to send override message: ${err}`, level: 'error' }));
 								}

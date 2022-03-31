@@ -11,8 +11,9 @@
 		"node": true,
 		"es6": true
 	},
+	"ignorePatterns": ["src/deploy-commands.js"],
 	"rules": {
-		"arrow-spacing": ["warn", { "before": true, "after": true }],
+		"arrow-spacing": ["error", { "before": true, "after": true }],
 		"brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
 		"comma-dangle": ["error", "always-multiline"],
 		"comma-spacing": "error",

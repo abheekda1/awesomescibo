@@ -17,9 +17,9 @@
     "typescript": "^4.6.2"
   },
   "name": "awesomescibo",
-  "version": "4.1.1",
+  "version": "4.3.2",
   "scripts": {
-    "start": "node index.js"
+    "build": "yarn tsc"
   },
   "keywords": [
     "discord",
@@ -27,7 +27,7 @@
     "science bowl",
     "discord.js"
   ],
-  "author": "Abheek Dhawan&Tejas Chugh",
+  "author": "Abheek Dhawan",
   "license": "MIT",
   "description": "A simple Discord bot that automatically generates Science Bowl rounds using the ScibowlDB API!"
 }

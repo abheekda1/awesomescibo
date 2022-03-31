@@ -1,18 +1,16 @@
 #!/usr/bin/env node
 
-import fs from 'node:fs';
-import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v9';
-import { clientId, token } from './helpers/env';
+const fs = require('node:fs');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const { clientId, token } = require('./helpers/env');
 
-const commands : any[] = [];
+const commands = [];
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-	import(`./commands/${file}`)
-		.then(command => {
-			commands.push(command.data.toJSON());
-		});
+	const command = require(`./commands/${file}`);
+	commands.push(command.data.toJSON());
 }
 
 const rest = new REST({ version: '9' }).setToken(token);
