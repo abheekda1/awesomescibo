@@ -94,7 +94,7 @@ export async function execute(interaction) {
 
 		const roundsListEmbed = new MessageEmbed()
 			.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
-			.setTitle(`Last 5 roundsList requested by ${interaction.user.tag}`)
+			.setTitle('Last 5 Rounds Requested')
 			.setDescription(finalMessage)
 			.setTimestamp();
 
