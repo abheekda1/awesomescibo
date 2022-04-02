@@ -14,7 +14,7 @@ export async function execute(interaction) {
 	userScore
 		.find({})
 		.sort({ score: -1 }) // Sort by descending order
-		.exec((err, obj) => {
+		.exec(async (err, obj) => {
 			if (err) {
 				log({ logger: 'top', content: `Getting top players failed: ${err}`, level: 'error' });
 				console.log(err);
@@ -42,11 +42,10 @@ export async function execute(interaction) {
 			embeds.push(leaderboardEmbed);
 
 			let sMessageContent = '';
-			const members = interaction.guild.members.cache;
+			const members = await interaction.guild.members.fetch();
 
-			const serverLeaderBoardArray = obj.filter(o => members.some(m => m.user.id === o.authorID));
-			console.log(serverLeaderBoardArray[0]);
-			if (serverLeaderBoardArray.length < 10) {
+			const serverLeaderBoardArray = await obj.filter(o => members.some(m => m.user.id === o.authorID));
+			if (serverLeaderBoardArray.length > 10) {
 				for (let i = 0; i < 10; i++) {
 					sMessageContent += `${i + 1}: <@${serverLeaderBoardArray[i].authorID}>: ${serverLeaderBoardArray[i].score}\n`;
 				}
