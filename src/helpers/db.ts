@@ -31,7 +31,7 @@ export async function updateScore(isCorrect : boolean, score : number, authorId 
 			doc.save();
 		}
 
-		return `Great job! Your score is now ${score}.`;
+		return `Great job! Your score is now ${score + 4}.`;
 	}
 }
 
