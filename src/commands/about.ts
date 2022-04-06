@@ -31,8 +31,9 @@ export async function execute(interaction : CommandInteraction) {
 	await interaction.deferReply();
 
 	const client = interaction.client;
-	const action = interaction.options.getSubcommand();
-	if (action === 'contributors') {
+
+	switch (interaction.options.getSubcommand()) {
+	case 'contributors': {
 		const contributorEmbed = new MessageEmbed().setTitle('Contributors')
 			.addField('Creator', '<@745063586422063214> [ADawesomeguy#3602]', true)
 			.addField('Contributors', '<@650525101048987649> [tEjAs#8127]\n<@426864344463048705> [tetrident#9396]', true) // Add more contributors here, first one is Abheek, second one is Tejas
@@ -40,8 +41,11 @@ export async function execute(interaction : CommandInteraction) {
 			.setColor('#ffffff');
 
 		interaction.followUp({ embeds: [contributorEmbed] });
+
+		break;
 	}
-	else if (action === 'changelog') {
+
+	case 'changelog': {
 		const gitRepoLocation = __dirname;
 
 		const commits = gitlog({
@@ -61,8 +65,11 @@ export async function execute(interaction : CommandInteraction) {
 		});
 
 		interaction.followUp({ embeds: [changelogEmbed] });
+
+		break;
 	}
-	else if (action === 'bot') {
+
+	case 'bot': {
 		await client.guilds.fetch();
 		const trainingDocuments = await userScore.countDocuments({});
 		const aboutBotEmbed = new MessageEmbed()
@@ -73,5 +80,8 @@ export async function execute(interaction : CommandInteraction) {
 			.setTimestamp();
 
 		interaction.followUp({ embeds: [aboutBotEmbed] });
+
+		break;
+	}
 	}
 }
