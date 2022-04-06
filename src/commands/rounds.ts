@@ -4,7 +4,7 @@ import { MessageEmbed, CommandInteraction } from 'discord.js';
 import axios from 'axios';
 
 import log from '../helpers/log';
-import generatedRound from '../models/generateRound';
+import generatedRound from '../models/generatedRound';
 
 export const data = new SlashCommandBuilder()
 	.setName('rounds')

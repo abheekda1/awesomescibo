@@ -19,4 +19,4 @@ const generatedRoundSchema = new mongoose.Schema({
 	},
 });
 
-export default mongoose.model('GeneratedRounds', generatedRoundSchema);
+export default mongoose.model('GeneratedRound', generatedRoundSchema);
