@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, CommandInteraction } from 'discord.js';
 
 import gitlog from 'gitlog';
 
@@ -27,7 +27,7 @@ export const data = new SlashCommandBuilder()
 		return subcommand;
 	});
 
-export async function execute(interaction) {
+export async function execute(interaction : CommandInteraction) {
 	await interaction.deferReply();
 
 	const client = interaction.client;

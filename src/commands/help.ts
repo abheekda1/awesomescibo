@@ -1,11 +1,11 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, CommandInteraction } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
 	.setName('help')
 	.setDescription('Replies with a help message explaining what the bot can do');
 
-export async function execute(interaction) {
+export async function execute(interaction : CommandInteraction) {
 	await interaction.deferReply();
 
 	const helpEmbed = new MessageEmbed()

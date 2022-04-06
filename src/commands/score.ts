@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageEmbed } from 'discord.js';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
 
 import log from '../helpers/log';
 import userScore from '../models/userScore';
@@ -16,7 +16,7 @@ export const data = new SlashCommandBuilder()
 		return option;
 	});
 
-export async function execute(interaction) {
+export async function execute(interaction : CommandInteraction) {
 	const scoreEmbed = new MessageEmbed()
 		.setColor('#ffffff');
 
@@ -32,7 +32,7 @@ export async function execute(interaction) {
 		}
 
 		scoreEmbed
-			.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL(true) })
+			.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
 			.setDescription(`Score: \`${score.score}\``);
 
 		await interaction.reply({ embeds: [scoreEmbed] });

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageEmbed, MessageActionRow, MessageButton } from 'discord.js';
+import { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, Message } from 'discord.js';
 
 import { decode } from 'html-entities';
 import axios from 'axios';
@@ -28,10 +28,10 @@ export const data = new SlashCommandBuilder()
 		return option;
 	});
 
-export async function execute(interaction) {
+export async function execute(interaction : CommandInteraction) {
 	await interaction.deferReply();
 
-	const subject = interaction.options.get('subject') ? interaction.options.get('subject').value : null;
+	const subject = interaction.options.get('subject') ? interaction.options.get('subject')?.value : null;
 	const authorId = interaction.user.id;
 	let score;
 	userScore
@@ -83,11 +83,11 @@ export async function execute(interaction) {
 		categoryArray = ['ENERGY'];
 		break;
 	default:
-		interaction.followUp(
-			new MessageEmbed()
+		interaction.followUp({
+			embeds: [new MessageEmbed()
 				.setDescription('<:red_x:816791117671825409> Not a valid subject!')
-				.setColor('#ffffff'),
-		);
+				.setColor('#ffffff')],
+		});
 		return;
 	}
 
@@ -103,8 +103,9 @@ export async function execute(interaction) {
 				answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
 				answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
 			}
-			interaction.followUp({ content: decode(tossupQuestion), fetchMessage: true })
-				.then(questionMessage => {
+			interaction.followUp({ content: decode(tossupQuestion), fetchReply: true })
+				.then(q => {
+					const questionMessage = q as Message;
 					const sourceButton = new MessageActionRow()
 						.addComponents(
 							new MessageButton()
@@ -115,18 +116,18 @@ export async function execute(interaction) {
 					switch (tossupFormat) {
 					case 'Short Answer': {
 						// eslint-disable-next-line no-case-declarations
-						const messageFilter = m => m.author.id === interaction.user.id || m.author.id === interaction.client.user.id;
-						interaction.channel.awaitMessages({
+						const messageFilter = m => m.author.id === interaction.user.id || m.author.id === interaction.client.user?.id;
+						interaction.channel?.awaitMessages({
 							filter: messageFilter,
 							max: 1,
 						})
 							.then(collected => {
 								const answerMsg = collected.first();
 
-								if (answerMsg.author.id === interaction.client.user.id) return;
+								if (answerMsg?.author.id === interaction.client.user?.id) return;
 
 								let predicted = '';
-								if (answerMsg.content.toLowerCase() === tossupAnswer.toLowerCase() || answers.includes(answerMsg.content.toUpperCase())) {
+								if (answerMsg?.content.toLowerCase() === tossupAnswer.toLowerCase() || answers.includes(answerMsg?.content.toUpperCase())) {
 									predicted = 'correct';
 								}
 								else {
@@ -135,12 +136,12 @@ export async function execute(interaction) {
 
 								if (predicted === 'correct') {
 									updateScore(true, score, authorId).then((msgToReply) =>
-										answerMsg.reply(msgToReply),
+										answerMsg?.reply(msgToReply),
 									);
 								}
 								else {
 									const overrideEmbed = new MessageEmbed()
-										.setAuthor({ name: answerMsg.author.tag, iconURL: answerMsg.author.displayAvatarURL() })
+										.setAuthor({ name: answerMsg?.author.tag ? answerMsg.author.tag : '', iconURL: answerMsg?.author.displayAvatarURL() })
 										.addField('Correct answer', `\`${tossupAnswer}\``)
 										.setDescription('It seems your answer was incorrect. Please react with <:override:955265585086857236> to override your answer if you think you got it right.')
 										.setColor('#ffffff')
@@ -152,7 +153,7 @@ export async function execute(interaction) {
 												.setEmoji('<:override:955265585086857236>')
 												.setStyle('SECONDARY'),
 										);
-									answerMsg.channel.send({
+									answerMsg?.channel.send({
 										embeds: [overrideEmbed],
 										components: [overrideButton],
 									})
