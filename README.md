@@ -13,7 +13,7 @@
 <a href="https://hub.docker.com/r/adawesomeguy/awesomescibo"><img src="https://img.shields.io/docker/pulls/adawesomeguy/awesomescibo?color=blue&style=for-the-badge"></a>
 </p>
 
-<p align="center">A simple Discord bot that automatically generates Science Bowl rounds using the ScibowlDB API!</p>
+<p align="center">Open-source Discord bot that aims to aid up-and-coming Scibowlers with randomly generated (non-stock) rounds and training. It has many features, including subject-targeted training, a cross-server leaderboard, and a plethora of slash commands!</p>
 
 ## Deployment
 Deploying this bot to your Discord server is relatively simple: you can add it to your own server by using [this link](https://adat.link/awesomescibo).
