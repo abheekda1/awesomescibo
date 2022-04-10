@@ -38,16 +38,17 @@ export async function execute(interaction : CommandInteraction) {
                 ]),
         );
     await interaction.followUp({ embeds: [settingsEmbed], components: [menu] });
+    await interaction.deferReply;
     const client = interaction.client;
     client.on('interactionCreate', async interaction => {
         if (!interaction.isSelectMenu()) return;
         var values = interaction.values[1];
         switch(values)  {
             case "subjects":
-                await interaction.editReply({ content: 'subjects was selected!', components: [] });
+                await interaction.followUp({ content: 'subjects was selected!', components: [] });
                 break;
             case "gradeLevels":
-                await interaction.editReply({ content: 'levels was selected!', components: [] });
+                await interaction.followUp({ content: 'levels was selected!', components: [] });
                 break;
         }
     });
