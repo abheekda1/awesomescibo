@@ -15,6 +15,19 @@ export async function execute(interaction) {
 
 	const command = client.commands.get(interaction.commandName);
 
+	client.on('interactionCreate', async interaction => {
+		if (!interaction.isSelectMenu()) return;
+		var values = interaction.values[1];
+		switch(values)  {
+			case "subjects":
+				await interaction.editReply({ content: 'subjects was selected!', components: [] });
+				break;
+			case "gradeLevels":
+				await interaction.editReply({ content: 'levels was selected!', components: [] });
+				break;
+		}
+	});
+
 	if (!command) return;
 
 	try {
