@@ -8,25 +8,14 @@ export const data = new SlashCommandBuilder()
     .setName('settings')
     .setDescription('BETA - settings configuration');
 
+
 export async function execute(interaction : CommandInteraction) {
     await interaction.deferReply(); 
-    const testEmbed = new MessageEmbed()
-        .setColor('#ffffff');
-    const testEmbed2 = new MessageEmbed()
-        .setColor('#ffffff');
     const settingsEmbed = new MessageEmbed()
         .setColor('#ffffff');
 
     const user = interaction.options.getUser('user') || interaction.user;
-
-    testEmbed
-        .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
-        .setDescription(`b`);
-
-    testEmbed2
-        .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
-        .setDescription(`c`);
-
+    
     settingsEmbed
         .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
         .setDescription(`a`);
@@ -48,17 +37,20 @@ export async function execute(interaction : CommandInteraction) {
                     },
                 ]),
         );
-        await interaction.followUp({ embeds: [settingsEmbed], components: [menu] });
-        client.on('interactionCreate', async interaction => {
-            if (!interaction.isSelectMenu()) return;
-            var values = interaction.values[1];
-            switch(values)  {
-                case "subjects":
-                    await interaction.reply({ embeds: [testEmbed] })
-                    break;
-                case "gradeLevels":
-                    await interaction.reply({ embeds: [testEmbed2] })
-                    break;
-            }
-        });
-    }
+    await interaction.followUp({ embeds: [settingsEmbed], components: [menu] });
+    await interaction.deferReply;
+    const client = interaction.client;
+    client.on('interactionCreate', async interaction => {
+        if (!interaction.isSelectMenu()) return;
+        var values = interaction.values[1];
+        switch(values)  {
+            case "subjects":
+                await interaction.followUp({ content: 'subjects was selected!', components: [] });
+                break;
+            case "gradeLevels":
+                await interaction.followUp({ content: 'levels was selected!', components: [] });
+                break;
+        }
+    });
+
+}
