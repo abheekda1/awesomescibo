@@ -121,7 +121,6 @@ export async function execute(interaction : CommandInteraction) {
                     break;
                 }
             });
-
             break;
         }
         case 'subject': {
