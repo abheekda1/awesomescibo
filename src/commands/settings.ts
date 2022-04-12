@@ -26,30 +26,17 @@ export async function execute(interaction : CommandInteraction) {
                 .setPlaceholder('Nothing selected')
                 .addOptions([
                     {
-                        label: 'Subjects',
-                        description: 'Subjects',
-                        value: 'subjects',
+                        label: 'Select me',
+                        description: 'This is a description',
+                        value: 'first_option',
                     },
                     {
-                        label: 'Grade Levels',
-                        description: 'Grade Levels',
-                        value: 'gradeLevels',
+                        label: 'You can select me too',
+                        description: 'This is also a description',
+                        value: 'second_option',
                     },
                 ]),
         );
-    await interaction.followUp({ embeds: [settingsEmbed], components: [menu] });
-    const client = interaction.client;
-    client.on('interactionCreate', async interaction => {
-        if (!interaction.isSelectMenu()) return;
-        var values = interaction.values[1];
-        switch(values)  {
-            case "subjects":
-                await interaction.editReply({ content: 'subjects was selected!', components: [] });
-                break;
-            case "gradeLevels":
-                await interaction.editReply({ content: 'levels was selected!', components: [] });
-                break;
-        }
-    });
-
+    await interaction.followUp({ embeds: [settingsEmbed] });
+    
 }
