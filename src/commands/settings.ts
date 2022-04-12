@@ -16,9 +16,11 @@ export async function execute(interaction : CommandInteraction) {
 
     const user = interaction.options.getUser('user') || interaction.user;
     
+    const client = interaction.client;
+
     settingsEmbed
         .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
-        .setDescription(`a`);
+        .setDescription(`selections`);
         const menu = new MessageActionRow()
         .addComponents(
             new MessageSelectMenu()
@@ -26,17 +28,32 @@ export async function execute(interaction : CommandInteraction) {
                 .setPlaceholder('Nothing selected')
                 .addOptions([
                     {
-                        label: 'Select me',
-                        description: 'This is a description',
-                        value: 'first_option',
+                        label: 'subjects',
+                        description: 'subjects',
+                        value: 'subjects',
                     },
                     {
-                        label: 'You can select me too',
-                        description: 'This is also a description',
-                        value: 'second_option',
+                        label: 'gradeLevels',
+                        description: 'grade levels',
+                        value: 'gradeLevels',
                     },
                 ]),
         );
-    await interaction.followUp({ embeds: [settingsEmbed] });
+
+    await interaction.followUp({ embeds: [settingsEmbed], components: [menu] });
     
+                //everything below this line is bad
+        client.on('interactionCreate', async interaction => {
+        if (!interaction.isSelectMenu()) return;
+        var values = interaction.values[0]; //potential breaking point
+        switch(values)  {
+            case 'subjects':
+                await interaction.update({ content: 'subjects was selected!', components: [] });
+                break;
+            case 'gradeLevels':
+                await interaction.update({ content: 'levels was selected!', components: [] });
+                break;
+        }
+    });
+
 }
