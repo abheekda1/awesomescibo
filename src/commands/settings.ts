@@ -22,7 +22,7 @@ export const data = new SlashCommandBuilder()
     .addSubcommand(subcommand => {
 		subcommand
 			.setName('display')
-			.setDescription('Displays current settings');
+            .setDescription('Displays current settings');
 		return subcommand;
 	});
 
