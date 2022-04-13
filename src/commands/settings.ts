@@ -15,22 +15,23 @@ export const data = new SlashCommandBuilder()
 	})
     .addSubcommand(subcommand => {
 		subcommand
-			.setName('gradeLevels')
-			.setDescription('Changes grade level of problems');
+			.setName('display')
+			.setDescription('Displays current settings');
 		return subcommand;
 	})
     .addSubcommand(subcommand => {
 		subcommand
-			.setName('display')
-            .setDescription('Displays current settings');
+			.setName('gradeLevels')
+			.setDescription('Changes grade level of problems');
 		return subcommand;
-	});
+	})
+;
 
 export async function execute(interaction : CommandInteraction) {
     const action = interaction.options.getSubcommand();
 	switch (action) {
         case 'display': {
-            await interaction.deferReply({ ephemeral: true }); 
+            await interaction.deferReply(); 
             const settingsEmbed = new MessageEmbed()
                 .setColor('#ffffff');
 
@@ -77,7 +78,7 @@ export async function execute(interaction : CommandInteraction) {
             break;
         }
         case 'gradeLevels': {
-            await interaction.deferReply({ ephemeral: true }); 
+            await interaction.deferReply(); 
             const settingsEmbed = new MessageEmbed()
                 .setColor('#ffffff');
 
@@ -124,7 +125,7 @@ export async function execute(interaction : CommandInteraction) {
             break;
         }
         case 'subject': {
-            await interaction.deferReply({ ephemeral: true }); 
+            await interaction.deferReply(); 
            
             const settingsEmbed = new MessageEmbed()
                 .setColor('#ffffff');
