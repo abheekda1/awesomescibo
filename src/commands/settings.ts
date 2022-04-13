@@ -41,7 +41,7 @@ export async function execute(interaction : CommandInteraction) {
 
             settingsEmbed
               .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
-                .setDescription(`selections`);
+                .setDescription(`Current selections: `);
               const menu = new MessageActionRow()
                 .addComponents(
                     new MessageSelectMenu()
@@ -88,7 +88,7 @@ export async function execute(interaction : CommandInteraction) {
 
             settingsEmbed
               .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
-                .setDescription(`selections`);
+                .setDescription(`Current level settings: `);
               const menu = new MessageActionRow()
                 .addComponents(
                     new MessageSelectMenu()
@@ -97,17 +97,17 @@ export async function execute(interaction : CommandInteraction) {
                        .addOptions([
                         {
                             label: 'All',
-                            description: 'all',
+                            description: 'All',
                             value: 'all',
                         },
                         {
                             label: 'Middle School',
-                            description: 'ms',
+                            description: 'Middle school',
                             value: 'ms',
                         },
                         {
                             label: 'High School',
-                            description: 'hs',
+                            description: 'High school',
                             value: 'hs',
                          },
                         ]),
