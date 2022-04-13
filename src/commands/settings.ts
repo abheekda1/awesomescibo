@@ -96,14 +96,19 @@ export async function execute(interaction : CommandInteraction) {
                         .setPlaceholder('Nothing selected')
                        .addOptions([
                         {
-                            label: 'subjects',
-                            description: 'subjects',
-                            value: 'subjects',
+                            label: 'All',
+                            description: 'all',
+                            value: 'all',
                         },
                         {
-                            label: 'gradelevels',
-                            description: 'grade levels',
-                            value: 'gradelevels',
+                            label: 'Middle School',
+                            description: 'ms',
+                            value: 'ms',
+                        },
+                        {
+                            label: 'High School',
+                            description: 'hs',
+                            value: 'hs',
                          },
                         ]),
                 );
@@ -114,11 +119,14 @@ export async function execute(interaction : CommandInteraction) {
             if (!interaction.isSelectMenu()) return;
             var values = interaction.values[0]; 
             switch(values)  {
-                case 'subjects':
-                    await interaction.update({ content: 'subjects was selected!', components: [] });
+                case 'all':
+                    await interaction.update({ content: 'Level set to: All', components: [] });
                     break;
-                case 'gradelevels':
-                    await interaction.update({ content: 'levels was selected!', components: [] });
+                case 'ms':
+                    await interaction.update({ content: 'Level set to: Middle School', components: [] });
+                    break;
+                case 'hs':
+                    await interaction.update({ content: 'Level set to: High School', components: [] });
                     break;
                 }
             });
