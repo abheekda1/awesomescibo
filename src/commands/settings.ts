@@ -21,7 +21,7 @@ export const data = new SlashCommandBuilder()
 	})
     .addSubcommand(subcommand => {
 		subcommand
-			.setName('gradeLevels')
+			.setName('gradelevels')
 			.setDescription('Changes grade level of problems');
 		return subcommand;
 	})
@@ -54,9 +54,9 @@ export async function execute(interaction : CommandInteraction) {
                             value: 'subjects',
                         },
                         {
-                            label: 'gradeLevels',
+                            label: 'gradelevels',
                             description: 'grade levels',
-                            value: 'gradeLevels',
+                            value: 'gradelevels',
                          },
                         ]),
                 );
@@ -70,14 +70,14 @@ export async function execute(interaction : CommandInteraction) {
                 case 'subjects':
                     await interaction.update({ content: 'subjects was selected!', components: [] });
                     break;
-                case 'gradeLevels':
+                case 'gradelevels':
                     await interaction.update({ content: 'levels was selected!', components: [] });
                     break;
                 }
             });
             break;
         }
-        case 'gradeLevels': {
+        case 'gradelevels': {
             await interaction.deferReply(); 
             const settingsEmbed = new MessageEmbed()
                 .setColor('#ffffff');
@@ -101,9 +101,9 @@ export async function execute(interaction : CommandInteraction) {
                             value: 'subjects',
                         },
                         {
-                            label: 'gradeLevels',
+                            label: 'gradelevels',
                             description: 'grade levels',
-                            value: 'gradeLevels',
+                            value: 'gradelevels',
                          },
                         ]),
                 );
@@ -117,7 +117,7 @@ export async function execute(interaction : CommandInteraction) {
                 case 'subjects':
                     await interaction.update({ content: 'subjects was selected!', components: [] });
                     break;
-                case 'gradeLevels':
+                case 'gradelevels':
                     await interaction.update({ content: 'levels was selected!', components: [] });
                     break;
                 }
