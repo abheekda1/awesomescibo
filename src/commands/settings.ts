@@ -42,7 +42,7 @@ export async function execute(interaction : CommandInteraction) {
             settingsEmbed
               .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
                 .setDescription(`Current selections: `);
-              const menu = new MessageActionRow()
+              const menu = new MessageActionRow() 
                 .addComponents(
                     new MessageSelectMenu()
                         .setCustomId('select')
