@@ -194,35 +194,35 @@ export async function execute(interaction : CommandInteraction) {
             switch(values)  {
                 case 'potpourri':
                     //everything stuff
-                    await interaction.update({ content: 'Subject set to: everything', components: [] });
+                    await interaction.update({ content: 'Subject set to: Everything', components: [] });
                     break;
                 case 'astro':
                     //astronomy stuff
-                    await interaction.update({ content: 'Subject set to: astronomy', components: [] });
+                    await interaction.update({ content: 'Subject set to: Astronomy', components: [] });
                     break;
                 case 'bio':
                     //biology stuff
-                    await interaction.update({ content: 'Subject set to: biology', components: [] });
+                    await interaction.update({ content: 'Subject set to: Biology', components: [] });
                     break;
                 case 'es':
                     //earth science stuff
-                    await interaction.update({ content: 'Subject set to: earth science', components: [] });
+                    await interaction.update({ content: 'Subject set to: Earth Science', components: [] });
                     break;
                 case 'chem':
                     //chemistry stuff
-                    await interaction.update({ content: 'Subject set to: chemistry', components: [] });
+                    await interaction.update({ content: 'Subject set to: Chemistry', components: [] });
                     break;
                 case 'phy':
                     //physics stuff
-                    await interaction.update({ content: 'Subject set to: physics', components: [] });
+                    await interaction.update({ content: 'Subject set to: Physics', components: [] });
                     break;
                 case 'math':
                     //math stuff
-                    await interaction.update({ content: 'Subject set to: mathematics', components: [] });
+                    await interaction.update({ content: 'Subject set to: Mathematics', components: [] });
                     break;
                 case 'energy':
                     //the united states department of energy is a cabinet-level agency responsible for the creation and management of...
-                    await interaction.update({ content: 'Subject set to: energy', components: [] });
+                    await interaction.update({ content: 'Subject set to: Energy', components: [] });
                     break;
                 }
             });
