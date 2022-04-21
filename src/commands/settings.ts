@@ -92,12 +92,9 @@ export async function execute(interaction : CommandInteraction) {
 				new MessageSelectMenu()
 					.setCustomId('select')
 					.setPlaceholder('Nothing selected')
+					.setMinValues(1)
+					.setMaxValues(2)
 					.addOptions([
-						{
-							label: 'All',
-							description: 'All',
-							value: 'all',
-						},
 						{
 							label: 'Middle School',
 							description: 'Middle school',
@@ -117,7 +114,7 @@ export async function execute(interaction : CommandInteraction) {
 			if (!interaction.isSelectMenu()) return;
 			const values = interaction.values[0];
 			switch (values) {
-			case 'all':
+			case 'ms' && 'hs':
 				await interaction.update({ content: 'Level set to: All', components: [] });
 				break;
 			case 'ms':
@@ -148,6 +145,8 @@ export async function execute(interaction : CommandInteraction) {
 				new MessageSelectMenu()
 					.setCustomId('select')
 					.setPlaceholder('Nothing selected')
+					.setMinValues(1)
+					.setMaxValues(7)
 					.addOptions([
 						{
 							label: 'Astronomy',
