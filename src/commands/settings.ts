@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageActionRow, MessageSelectMenu } from 'discord.js';
+import { Message, MessageActionRow, MessageSelectMenu } from 'discord.js';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
@@ -77,6 +77,7 @@ export async function execute(interaction : CommandInteraction) {
 	}
 	case 'gradelevels': {
 		await interaction.deferReply();
+
 		const settingsEmbed = new MessageEmbed()
 			.setColor('#ffffff');
 
@@ -90,42 +91,51 @@ export async function execute(interaction : CommandInteraction) {
 		const menu = new MessageActionRow()
 			.addComponents(
 				new MessageSelectMenu()
-					.setCustomId('select')
+					.setCustomId('selectlvl')
 					.setPlaceholder('Nothing selected')
 					.setMinValues(1)
 					.setMaxValues(2)
 					.addOptions([
 						{
 							label: 'Middle School',
-							description: 'Middle school',
+							description: 'Middle school level problems',
 							value: 'ms',
 						},
 						{
 							label: 'High School',
-							description: 'High school',
+							description: 'High school level problems',
 							value: 'hs',
 						},
 					]),
 			);
 
-		await interaction.followUp({ embeds: [settingsEmbed], components: [menu] });
-
-		client.on('interactionCreate', async interaction => {
-			if (!interaction.isSelectMenu()) return;
-			const values = interaction.values[0];
-			switch (values) {
-			case 'ms' && 'hs':
-				await interaction.update({ content: 'Level set to: All', components: [] });
-				break;
-			case 'ms':
-				await interaction.update({ content: 'Level set to: Middle School', components: [] });
-				break;
-			case 'hs':
-				await interaction.update({ content: 'Level set to: High School', components: [] });
-				break;
-			}
-		});
-		break;
+		let lvlMsg = interaction.followUp({
+			embeds: [settingsEmbed],
+			components: [menu],
+		})
+			.then((lvlMsg => {
+				const w = lvlMsg as Message;
+				let h;
+				const lvlFilter = i => ['selectlvl'].includes(i.customId) && i.user.id == interaction.user.id; // <== ATTENTION! First argument...
+				w.awaitMessageComponent({ filter: lvlFilter, componentType: 'SELECT_MENU' })
+					.then(lvlChoice => {
+						h = lvlChoice.values;
+						console.log(h);
+						if (h == 'ms') {
+							console.log('ms');
+							interaction.editReply({ content: 'Level set to: Middle School', components: [] });
+						}
+						else if (h == 'hs' ) {
+							console.log('hs');
+							interaction.editReply({ content: 'Level set to: High School', components: [] });
+						}
+						else {
+							console.log('both');
+							interaction.editReply({ content: 'Level set to: All', components: [] });
+						}
+					})
+			}));
+			break;
 	}
 	case 'subject': {
 		await interaction.deferReply();
