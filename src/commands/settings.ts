@@ -36,8 +36,6 @@ export async function execute(interaction : CommandInteraction) {
 
 		const user = interaction.options.getUser('user') || interaction.user;
 
-		const client = interaction.client;
-
 		settingsEmbed
 			.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
 			.setDescription('Current selections: ');
@@ -60,7 +58,7 @@ export async function execute(interaction : CommandInteraction) {
 					]),
 			);
 
-		let dispMsg = interaction.followUp({
+		interaction.followUp({
 			embeds: [settingsEmbed],
 			components: [menu],
 		})
@@ -77,10 +75,10 @@ export async function execute(interaction : CommandInteraction) {
 						else if (h == 'gradelevels') {
 							interaction.editReply({ content: 'Level set to: High School', components: [] });
 						}
-						else{
-							err => log({ logger: '\'Error occurred: /settings:display did not equal subjects or gradelevels.\'', content: `${err}`, level: 'error' })
+						else {
+							err => log({ logger: '\'Error occurred: /settings:display did not equal subjects or gradelevels.\'', content: `${err}`, level: 'error' });
 						}
-					})
+					});
 			}));
 		break;
 	}
@@ -91,8 +89,6 @@ export async function execute(interaction : CommandInteraction) {
 			.setColor('#ffffff');
 
 		const user = interaction.options.getUser('user') || interaction.user;
-
-		const client = interaction.client;
 
 		settingsEmbed
 			.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
@@ -118,7 +114,7 @@ export async function execute(interaction : CommandInteraction) {
 					]),
 			);
 
-		let lvlMsg = interaction.followUp({
+		interaction.followUp({
 			embeds: [settingsEmbed],
 			components: [menu],
 		})
@@ -138,9 +134,9 @@ export async function execute(interaction : CommandInteraction) {
 						else {
 							interaction.editReply({ content: 'Level set to: All', components: [] });
 						}
-					})
+					});
 			}));
-			break;
+		break;
 	}
 	case 'subject': {
 		await interaction.deferReply();
@@ -149,8 +145,6 @@ export async function execute(interaction : CommandInteraction) {
 			.setColor('#ffffff');
 
 		const user = interaction.options.getUser('user') || interaction.user;
-
-		const client = interaction.client;
 
 		settingsEmbed
 			.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
@@ -201,7 +195,7 @@ export async function execute(interaction : CommandInteraction) {
 					]),
 			);
 
-		let subjectMsg = interaction.followUp({
+		interaction.followUp({
 			embeds: [settingsEmbed],
 			components: [menu],
 		})
@@ -221,29 +215,29 @@ export async function execute(interaction : CommandInteraction) {
 							// bio processing code here
 							sendstring = sendstring + 'Biology, ';
 						}
-						if (h.includes('es')){
+						if (h.includes('es')) {
 							// earth science processing code here
 							sendstring = sendstring + 'Earth Science, ';
 						}
-						if (h.includes('chem')){
+						if (h.includes('chem')) {
 							// chemistry processing code here
 							sendstring = sendstring + 'Chemistry, ';
 						}
-						if (h.includes('phy')){
+						if (h.includes('phy')) {
 							// physics processing code here
 							sendstring = sendstring + 'Physics, ';
 						}
-						if (h.includes('math')){
+						if (h.includes('math')) {
 							// math processing code here
 							sendstring = sendstring + 'Math, ';
 						}
-						if (h.includes('energy')){
+						if (h.includes('energy')) {
 							// energy processing code here
 							sendstring = sendstring + 'Energy, ';
 						}
 						sendstring = sendstring.slice(0, -2);
 						interaction.editReply({ content: sendstring, components: [] });
-					})
+					});
 			}));
 		break;
 	}
