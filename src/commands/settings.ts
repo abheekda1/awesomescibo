@@ -70,10 +70,10 @@ export async function execute(interaction : CommandInteraction) {
 					.then(dispChoice => {
 						h = dispChoice.values;
 						if (h == 'subjects') {
-							interaction.editReply({ content: 'Level set to: Middle School', components: [] });
+							interaction.editReply({ content: 'Current subjects setting:', components: [] });
 						}
 						else if (h == 'gradelevels') {
-							interaction.editReply({ content: 'Level set to: High School', components: [] });
+							interaction.editReply({ content: 'Current grade level setting: ', components: [] });
 						}
 						else {
 							err => log({ logger: '\'Error occurred: /settings:display did not equal subjects or gradelevels.\'', content: `${err}`, level: 'error' });
