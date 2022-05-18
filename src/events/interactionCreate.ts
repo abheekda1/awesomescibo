@@ -6,10 +6,12 @@ export const once = false;
 
 export async function execute(interaction) {
 	const client = interaction.client;
+
 	if (!interaction.isCommand()) return;
 
 	const command = client.commands.get(interaction.commandName);
-	if (!command) return;
+
+	if (!command) return; //h
 
 	try {
 		await command.execute(interaction);
