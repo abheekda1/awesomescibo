@@ -11,11 +11,11 @@ const client = new Client({
 
 client['commands'] = new Collection();
 
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync(`${__dirname}/commands`).filter(file => file.endsWith('.js'));
+const eventFiles = fs.readdirSync(`${__dirname}/events`).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-	import(`./commands/${file}`)
+	import(`${__dirname}/commands/${file}`)
 		.then(command => {
 			client['commands'].set(command.data.name, command);
 			log({ logger: 'command', content: `Registered command ${file}!`, level: 'info' });
@@ -23,7 +23,7 @@ for (const file of commandFiles) {
 }
 
 for (const file of eventFiles) {
-	import(`./events/${file}`)
+	import(`${__dirname}/events/${file}`)
 		.then(event => {
 			if (event.once) {
 				client.once(event.name, (...args) => event.execute(...args));
