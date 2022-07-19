@@ -17,13 +17,15 @@ export const data = new SlashCommandBuilder()
 			.setName('subject')
 			.setDescription('Optional subject to be used as a filter')
 			.setRequired(false)
-			.addChoice('astro', 'astro')
-			.addChoice('bio', 'bio')
-			.addChoice('ess', 'ess')
-			.addChoice('chem', 'chem')
-			.addChoice('phys', 'phys')
-			.addChoice('math', 'math')
-			.addChoice('energy', 'energy')
+			.addChoices(
+				{ name: 'astro', value: 'astro' },
+				{ name: 'bio', value: 'bio' },
+				{ name: 'chem', value: 'chem' },
+				{ name: 'ess', value: 'ess' },
+				{ name: 'phys', value: 'phys' },
+				{ name: 'math', value: 'math' },
+				{ name: 'energy', value: 'energy' },
+			)
 			.setRequired(false);
 		return option;
 	});
