@@ -33,11 +33,11 @@ export async function execute(interaction : CommandInteraction) {
 
 	const subject = interaction.options.get('subject') ? interaction.options.get('subject')?.value : null;
 	const authorId = interaction.user.id;
-	let score;
+	let score: number;
 	userScore
 		.findOne({ authorID: authorId })
 		.lean()
-		.then((obj, err) => {
+		.then((obj: { score: number; }, err: unknown) => {
 			if (!obj) {
 				score = 0;
 			}
@@ -125,6 +125,22 @@ export async function execute(interaction : CommandInteraction) {
 								const answerMsg = collected.first();
 
 								if (answerMsg?.author.id === interaction.client.user?.id) return;
+
+
+								const doc = userScore.findOne({
+									authorID: authorId,
+								});
+
+								if (!doc) {
+									const firstTimeEmbed = new MessageEmbed()
+										.setAuthor({ name: interaction.client.user?.tag ? interaction.client.user?.tag : '', iconURL: interaction.client.user?.displayAvatarURL() })
+										.setDescription('Hey! It seems like it\'s your first time using AwesomeSciBo. Here\'s some information regarding the bot if you need it (for issues, contributions, etc.):')
+										.addField('Creator', '<@745063586422063214> [@abheekd#3602]')
+										.addField('GitHub', '[Link](https://github.com/ADawesomeguy/AwesomeSciBo) (a star couldn\'t hurt...)')
+										.setColor('#ffffff')
+										.setTimestamp();
+									answerMsg?.author.send({ embeds: [firstTimeEmbed] });
+								}
 
 								let predicted = '';
 								if (answerMsg?.content.toLowerCase() === tossupAnswer.toLowerCase() || answers.includes(answerMsg?.content.toUpperCase())) {
