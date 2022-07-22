@@ -13,3 +13,4 @@ config.json
 data/
 *.patch
 built/
+.idea/
