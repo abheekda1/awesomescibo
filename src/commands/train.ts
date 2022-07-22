@@ -61,12 +61,12 @@ export async function execute(interaction : CommandInteraction) {
 		});
 
 	let categoryArray : string[] = [];
+	const allCategories = ['BIOLOGY', 'PHYSICS', 'CHEMISTRY', 'EARTH AND SPACE', 'ASTRONOMY', 'MATH'];
 	const configCategories = await userConfig.findById(interaction.user.id);
 
 	switch (subject) {
 	case null:
-		// categoryArray = ['BIOLOGY', 'PHYSICS', 'CHEMISTRY', 'EARTH AND SPACE', 'ASTRONOMY', 'MATH'];
-		categoryArray = configCategories.subjects || ['BIOLOGY', 'PHYSICS', 'CHEMISTRY', 'EARTH AND SPACE', 'ASTRONOMY', 'MATH'];
+		categoryArray = (configCategories ? (configCategories.subjects || allCategories) : allCategories);
 		break;
 	case 'astro':
 	case 'astronomy':

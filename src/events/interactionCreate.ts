@@ -18,6 +18,6 @@ export async function execute(interaction) {
 	}
 	catch (error) {
 		log({ logger: 'interaction', content: `Interaction ${interaction.commandName} failed!`, level: 'error' });
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 }
