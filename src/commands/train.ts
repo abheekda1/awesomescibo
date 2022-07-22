@@ -66,7 +66,7 @@ export async function execute(interaction : CommandInteraction) {
 	switch (subject) {
 	case null:
 		// categoryArray = ['BIOLOGY', 'PHYSICS', 'CHEMISTRY', 'EARTH AND SPACE', 'ASTRONOMY', 'MATH'];
-		categoryArray = configCategories.subjects;
+		categoryArray = configCategories.subjects || ['BIOLOGY', 'PHYSICS', 'CHEMISTRY', 'EARTH AND SPACE', 'ASTRONOMY', 'MATH'];
 		break;
 	case 'astro':
 	case 'astronomy':
