@@ -11,7 +11,7 @@ export async function execute(interaction) {
 
 	const command = client.commands.get(interaction.commandName);
 
-	if (!command) return; //h
+	if (!command) return;
 
 	try {
 		await command.execute(interaction);
