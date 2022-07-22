@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { Message, MessageActionRow, MessageSelectMenu } from 'discord.js';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
-import log from '../helpers/log.js';
+import log from '../helpers/log';
+import userConfig from '../models/userConfig';
 
 export const data = new SlashCommandBuilder()
 	.setName('settings')
@@ -23,8 +24,7 @@ export const data = new SlashCommandBuilder()
 			.setName('gradelevels')
 			.setDescription('Changes grade level of problems');
 		return subcommand;
-	})
-;
+	});
 
 export async function execute(interaction : CommandInteraction) {
 	const action = interaction.options.getSubcommand();
@@ -59,24 +59,37 @@ export async function execute(interaction : CommandInteraction) {
 			);
 
 		interaction.followUp({
-			embeds: [settingsEmbed],
+			embeds: [/* settingsEmbed*/],
 			components: [menu],
 		})
 			.then((dispMsg => {
 				const w = dispMsg as Message;
-				let h;
 				const dispFilter = i => ['selectdisp'].includes(i.customId) && i.user.id == interaction.user.id; // <== ATTENTION! First argument...
 				w.awaitMessageComponent({ filter: dispFilter, componentType: 'SELECT_MENU' })
-					.then(dispChoice => {
-						h = dispChoice.values;
-						if (h == 'subjects') {
-							interaction.editReply({ content: 'Current subjects setting:', components: [] });
+					.then(async dispChoice => {
+						const vals = dispChoice.values;
+						const config = await userConfig.findById(interaction.user.id);
+						if (!config) {
+							await interaction.editReply({ content: 'You don\'t have a configuration!', embeds: [], components: [] });
 						}
-						else if (h == 'gradelevels') {
-							interaction.editReply({ content: 'Current grade level setting: ', components: [] });
+						else if (vals.length === 1 && vals.at(0) === 'subjects') {
+							await interaction.editReply({
+								content: `Current subjects setting: ${config.subjects.toString().split(',').join(', ')}`,
+								components: [],
+							});
+						}
+						else if (vals.length === 1 && vals.at(0) === 'gradelevels') {
+							await interaction.editReply({
+								content: `Current grade level setting: ${config.gradeLevels.toString().split(',').join(', ')}`,
+								components: [],
+							});
 						}
 						else {
-							err => log({ logger: '\'Error occurred: /settings:display did not equal subjects or gradelevels.\'', content: `${err}`, level: 'error' });
+							err => log({
+								logger: '\'Error occurred: /settings:display did not equal subjects or gradelevels.\'',
+								content: `${err}`,
+								level: 'error',
+							});
 						}
 					});
 			}));
@@ -104,36 +117,38 @@ export async function execute(interaction : CommandInteraction) {
 						{
 							label: 'Middle School',
 							description: 'Middle school level problems',
-							value: 'ms',
+							value: 'MS',
 						},
 						{
 							label: 'High School',
 							description: 'High school level problems',
-							value: 'hs',
+							value: 'HS',
 						},
 					]),
 			);
 
 		interaction.followUp({
-			embeds: [settingsEmbed],
+			embeds: [/* settingsEmbed*/],
 			components: [menu],
 		})
 			.then((lvlMsg => {
 				const w = lvlMsg as Message;
-				let h;
 				const lvlFilter = i => ['selectlvl'].includes(i.customId) && i.user.id == interaction.user.id; // <== ATTENTION! First argument...
 				w.awaitMessageComponent({ filter: lvlFilter, componentType: 'SELECT_MENU' })
-					.then(lvlChoice => {
-						h = lvlChoice.values;
-						if (h == 'ms') {
-							interaction.editReply({ content: 'Level set to: Middle School', components: [] });
-						}
-						else if (h == 'hs') {
-							interaction.editReply({ content: 'Level set to: High School', components: [] });
-						}
-						else {
-							interaction.editReply({ content: 'Level set to: All', components: [] });
-						}
+					.then(async lvlChoice => {
+						const vals = lvlChoice.values;
+						const levels = new Array<string>();
+						await userConfig.findOneAndUpdate({ _id: interaction.user.id }, { gradeLevels: vals }, { upsert: true, new: true });
+						await vals.forEach(v => {
+							switch (v) {
+							case 'MS':
+								levels.push('Middle School');
+								break;
+							case 'HS':
+								levels.push('High School');
+							}
+						});
+						await interaction.editReply({ content: `Level set to: ${levels.toString().split(',').join(', ')}`, embeds: [], components: [] });
 					});
 			}));
 		break;
@@ -160,83 +175,56 @@ export async function execute(interaction : CommandInteraction) {
 						{
 							label: 'Astronomy',
 							description: 'Astronomy',
-							value: 'astro',
+							value: 'ASTRONOMY',
 						},
 						{
 							label: 'Biology',
 							description: 'Biology',
-							value: 'bio',
+							value: 'BIOLOGY',
 						},
 						{
 							label: 'Earth Science',
 							description: 'Earth Science',
-							value: 'es',
+							value: 'EARTH SCIENCE',
 						},
 						{
 							label: 'Chemistry',
 							description: 'Chemistry',
-							value: 'chem',
+							value: 'CHEMISTRY',
 						},
 						{
 							label: 'Physics',
 							description: 'Physics',
-							value: 'phy',
+							value: 'PHYSICS',
 						},
 						{
 							label: 'Mathematics',
 							description: 'Mathematics',
-							value: 'math',
+							value: 'MATH',
 						},
 						{
 							label: 'Energy',
 							description: 'Energy',
-							value: 'energy',
+							value: 'ENERGY',
 						},
 					]),
 			);
 
 		interaction.followUp({
-			embeds: [settingsEmbed],
+			embeds: [/* settingsEmbed*/],
 			components: [menu],
 		})
 			.then((subjectMsg => {
-				const w = subjectMsg as Message;
-				let h;
 				const subjectFilter = i => ['selectsubject'].includes(i.customId) && i.user.id == interaction.user.id; // <== ATTENTION! First argument...
-				w.awaitMessageComponent({ filter: subjectFilter, componentType: 'SELECT_MENU' })
-					.then(subjectChoice => {
-						let sendstring = 'Subjects set to: ';
-						h = subjectChoice.values;
-						if (h.includes('astro')) {
-							// astro processing code here
-							sendstring = sendstring + 'Astronomy, ';
-						}
-						if (h.includes('bio')) {
-							// bio processing code here
-							sendstring = sendstring + 'Biology, ';
-						}
-						if (h.includes('es')) {
-							// earth science processing code here
-							sendstring = sendstring + 'Earth Science, ';
-						}
-						if (h.includes('chem')) {
-							// chemistry processing code here
-							sendstring = sendstring + 'Chemistry, ';
-						}
-						if (h.includes('phy')) {
-							// physics processing code here
-							sendstring = sendstring + 'Physics, ';
-						}
-						if (h.includes('math')) {
-							// math processing code here
-							sendstring = sendstring + 'Math, ';
-						}
-						if (h.includes('energy')) {
-							// energy processing code here
-							sendstring = sendstring + 'Energy, ';
-						}
-						sendstring = sendstring.slice(0, -2);
-						interaction.editReply({ content: sendstring, components: [] });
+				(subjectMsg as Message).awaitMessageComponent({ filter: subjectFilter, componentType: 'SELECT_MENU' })
+					.then(async subjectChoice => {
+						const vals = subjectChoice.values;
+						await userConfig.findOneAndUpdate({ _id: interaction.user.id }, { subjects: vals }, { upsert: true, new: true });
+						const subjects = new Array<string>();
+						await vals.forEach(v => {
+							subjects.push(v.toLowerCase().split(' ').map(w => w[0].toUpperCase() + w.substring(1)).join(' '));
+						});
+						await interaction.editReply({ content: `Subjects set to: ${subjects.toString().split(',').join(', ')}`, components: [], embeds: [] });
 					});
 			}));
 		break;

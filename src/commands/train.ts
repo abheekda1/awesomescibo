@@ -5,6 +5,7 @@ import { decode } from 'html-entities';
 import axios from 'axios';
 
 import userScore from '../models/userScore';
+import userConfig from '../models/userConfig';
 
 import log from '../helpers/log.js';
 import { updateScore } from '../helpers/db.js';
@@ -60,10 +61,12 @@ export async function execute(interaction : CommandInteraction) {
 		});
 
 	let categoryArray : string[] = [];
+	const configCategories = await userConfig.findById(interaction.user.id);
 
 	switch (subject) {
 	case null:
-		categoryArray = ['BIOLOGY', 'PHYSICS', 'CHEMISTRY', 'EARTH AND SPACE', 'ASTRONOMY', 'MATH'];
+		// categoryArray = ['BIOLOGY', 'PHYSICS', 'CHEMISTRY', 'EARTH AND SPACE', 'ASTRONOMY', 'MATH'];
+		categoryArray = configCategories.subjects;
 		break;
 	case 'astro':
 	case 'astronomy':

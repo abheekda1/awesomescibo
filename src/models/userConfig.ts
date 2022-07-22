@@ -1,18 +1,15 @@
 import mongoose from 'mongoose';
 
 const userConfigSchema = new mongoose.Schema({
-	authorID: {
-		type: String,
-		required: true,
-	},
+	_id: String,
 	subjects: {
 		type: [String],
-		required: false,
+		required: true,
 		default: null,
 	},
 	gradeLevels: {
 		type: [String],
-		required: false,
+		required: true,
 		default: null,
 	},
 });
