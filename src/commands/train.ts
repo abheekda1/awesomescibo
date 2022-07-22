@@ -17,13 +17,15 @@ export const data = new SlashCommandBuilder()
 			.setName('subject')
 			.setDescription('Optional subject to be used as a filter')
 			.setRequired(false)
-			.addChoice('astro', 'astro')
-			.addChoice('bio', 'bio')
-			.addChoice('ess', 'ess')
-			.addChoice('chem', 'chem')
-			.addChoice('phys', 'phys')
-			.addChoice('math', 'math')
-			.addChoice('energy', 'energy')
+			.addChoices(
+				{ name: 'astro', value: 'astro' },
+				{ name: 'bio', value: 'bio' },
+				{ name: 'chem', value: 'chem' },
+				{ name: 'ess', value: 'ess' },
+				{ name: 'phys', value: 'phys' },
+				{ name: 'math', value: 'math' },
+				{ name: 'energy', value: 'energy' },
+			)
 			.setRequired(false);
 		return option;
 	});
@@ -33,13 +35,21 @@ export async function execute(interaction : CommandInteraction) {
 
 	const subject = interaction.options.get('subject') ? interaction.options.get('subject')?.value : null;
 	const authorId = interaction.user.id;
-	let score;
+	let score: number;
 	userScore
 		.findOne({ authorID: authorId })
 		.lean()
-		.then((obj, err) => {
+		.then((obj: { score: number; }, err: unknown) => {
 			if (!obj) {
 				score = 0;
+				const firstTimeEmbed = new MessageEmbed()
+					.setAuthor({ name: interaction.client.user?.tag ? interaction.client.user?.tag : '', iconURL: interaction.client.user?.displayAvatarURL() })
+					.setDescription('Hey! It seems like it\'s your first time using AwesomeSciBo. Here\'s some information regarding the bot if you need it (for issues, contributions, etc.):')
+					.addField('Creator', '<@745063586422063214> [@abheekd#3602]')
+					.addField('GitHub', '[Link](https://github.com/ADawesomeguy/AwesomeSciBo) (a star couldn\'t hurt...)')
+					.setColor('#ffffff')
+					.setTimestamp();
+				interaction.user.send({ embeds: [firstTimeEmbed] });
 			}
 			else if (obj) {
 				score = obj.score;
