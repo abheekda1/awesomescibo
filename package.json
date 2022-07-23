@@ -19,7 +19,8 @@
   "name": "awesomescibo",
   "version": "4.7.4",
   "scripts": {
-    "build": "yarn tsc"
+    "build": "tsc",
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx"
   },
   "keywords": [
     "discord",
