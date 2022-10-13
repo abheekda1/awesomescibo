@@ -4,7 +4,7 @@ services:
   mongo:
     image: mongo:4.4
     restart: always
-    volumes: 
+    volumes:
       - ./data:/data/db
 
   awesomescibo:
