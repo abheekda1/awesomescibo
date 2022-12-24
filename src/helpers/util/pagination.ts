@@ -1,4 +1,4 @@
-import {CommandInteraction, Message, MessageActionRow, MessageButton, MessageEmbed} from 'discord.js';
+import { CommandInteraction, Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 
 export async function paginateMessage(message: Message, embeds: MessageEmbed[]) {
     let index = 0;
@@ -15,7 +15,7 @@ export async function paginateMessage(message: Message, embeds: MessageEmbed[]) 
             .setStyle('SECONDARY')
     );
 
-    await message.reply({content: `Page 1 of ${embeds.length}:`, embeds: [embeds[index]], components: [row]})
+    await message.reply({ content: `Page 1 of ${embeds.length}:`, embeds: [embeds[index]], components: [row] })
         .then(async paginatorMessage => {
             const filter = m => m.author.id === message.author.id;
 
@@ -35,7 +35,7 @@ export async function paginateMessage(message: Message, embeds: MessageEmbed[]) 
                         if (index > embeds.length - 1) index = 0;
                         break;
                 }
-                paginatorMessage.edit({content: `Page ${index + 1} of ${embeds.length}:`, embeds: [embeds[index]]});
+                paginatorMessage.edit({ content: `Page ${index + 1} of ${embeds.length}:`, embeds: [embeds[index]] });
             });
         });
 }
@@ -81,7 +81,7 @@ export async function paginateInteraction(interaction: CommandInteraction, embed
                         if (index > embeds.length - 1) index = 0;
                         break;
                 }
-                await i.update({content: `Page ${index + 1} of ${embeds.length}:`, embeds: [embeds[index]]});
+                await i.update({ content: `Page ${index + 1} of ${embeds.length}:`, embeds: [embeds[index]] });
             });
         });
 }

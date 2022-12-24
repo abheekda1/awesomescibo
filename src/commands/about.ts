@@ -1,11 +1,11 @@
-import {SlashCommandBuilder} from '@discordjs/builders';
-import {MessageEmbed, CommandInteraction} from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { MessageEmbed, CommandInteraction } from 'discord.js';
 
 import gitlog from 'gitlog';
 
 import userScore from '../models/userScore';
 
-import {paginateInteraction} from '../helpers/util/pagination';
+import { paginateInteraction } from '../helpers/util/pagination';
 
 export const data = new SlashCommandBuilder()
     .setName('about')
@@ -33,7 +33,7 @@ export async function execute(interaction: CommandInteraction) {
     });
 
     const changelogEmbed = new MessageEmbed()
-        .setAuthor({name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL()})
+        .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
         .setTitle('Changelog')
         .setColor('#ffffff')
         .setTimestamp();
@@ -46,7 +46,7 @@ export async function execute(interaction: CommandInteraction) {
     await client.guilds.fetch();
     const trainingDocuments = await userScore.countDocuments({});
     const aboutBotEmbed = new MessageEmbed()
-        .setAuthor({name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL()})
+        .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
         .setTitle('About AwesomeSciBo')
         .addField('Servers', `${client.guilds.cache.size}`, true)
         .addField('Training Users', `${trainingDocuments}`, true)

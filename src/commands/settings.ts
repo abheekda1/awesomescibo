@@ -1,6 +1,6 @@
-import {SlashCommandBuilder} from '@discordjs/builders';
-import {Message, MessageActionRow, MessageSelectMenu} from 'discord.js';
-import {CommandInteraction, MessageEmbed} from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { Message, MessageActionRow, MessageSelectMenu } from 'discord.js';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
 import log from '../helpers/log';
 import userConfig from '../models/userConfig';
 
@@ -37,7 +37,7 @@ export async function execute(interaction: CommandInteraction) {
             const user = interaction.options.getUser('user') || interaction.user;
 
             settingsEmbed
-                .setAuthor({name: user.tag, iconURL: user.displayAvatarURL()})
+                .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
                 .setDescription('Current selections: ');
             const menu = new MessageActionRow()
                 .addComponents(
@@ -65,7 +65,7 @@ export async function execute(interaction: CommandInteraction) {
                 .then((dispMsg => {
                     const w = dispMsg as Message;
                     const dispFilter = i => ['selectdisp'].includes(i.customId) && i.user.id == interaction.user.id; // <== ATTENTION! First argument...
-                    w.awaitMessageComponent({filter: dispFilter, componentType: 'SELECT_MENU'})
+                    w.awaitMessageComponent({ filter: dispFilter, componentType: 'SELECT_MENU' })
                         .then(async dispChoice => {
                             const vals = dispChoice.values;
                             const config = await userConfig.findById(interaction.user.id);
@@ -105,7 +105,7 @@ export async function execute(interaction: CommandInteraction) {
             const user = interaction.options.getUser('user') || interaction.user;
 
             settingsEmbed
-                .setAuthor({name: user.tag, iconURL: user.displayAvatarURL()})
+                .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
                 .setDescription('Current level settings: ');
             const menu = new MessageActionRow()
                 .addComponents(
@@ -135,11 +135,11 @@ export async function execute(interaction: CommandInteraction) {
                 .then((lvlMsg => {
                     const w = lvlMsg as Message;
                     const lvlFilter = i => ['selectlvl'].includes(i.customId) && i.user.id == interaction.user.id; // <== ATTENTION! First argument...
-                    w.awaitMessageComponent({filter: lvlFilter, componentType: 'SELECT_MENU'})
+                    w.awaitMessageComponent({ filter: lvlFilter, componentType: 'SELECT_MENU' })
                         .then(async lvlChoice => {
                             const vals = lvlChoice.values;
                             const levels = new Array<string>();
-                            await userConfig.findOneAndUpdate({_id: interaction.user.id}, {gradeLevels: vals}, {
+                            await userConfig.findOneAndUpdate({ _id: interaction.user.id }, { gradeLevels: vals }, {
                                 upsert: true,
                                 new: true
                             });
@@ -170,7 +170,7 @@ export async function execute(interaction: CommandInteraction) {
             const user = interaction.options.getUser('user') || interaction.user;
 
             settingsEmbed
-                .setAuthor({name: user.tag, iconURL: user.displayAvatarURL()})
+                .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
                 .setDescription('Current subject settings: ');
             const menu = new MessageActionRow()
                 .addComponents(
@@ -224,10 +224,10 @@ export async function execute(interaction: CommandInteraction) {
             })
                 .then((subjectMsg => {
                     const subjectFilter = i => ['selectsubject'].includes(i.customId) && i.user.id == interaction.user.id; // <== ATTENTION! First argument...
-                    (subjectMsg as Message).awaitMessageComponent({filter: subjectFilter, componentType: 'SELECT_MENU'})
+                    (subjectMsg as Message).awaitMessageComponent({ filter: subjectFilter, componentType: 'SELECT_MENU' })
                         .then(async subjectChoice => {
                             const vals = subjectChoice.values;
-                            await userConfig.findOneAndUpdate({_id: interaction.user.id}, {subjects: vals}, {
+                            await userConfig.findOneAndUpdate({ _id: interaction.user.id }, { subjects: vals }, {
                                 upsert: true,
                                 new: true
                             });

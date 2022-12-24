@@ -1,5 +1,5 @@
-import {SlashCommandBuilder} from '@discordjs/builders';
-import {CommandInteraction, MessageEmbed} from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
 
 import log from '../helpers/log';
 import userScore from '../models/userScore';
@@ -13,10 +13,10 @@ export async function execute(interaction: CommandInteraction) {
 
     userScore
         .find({})
-        .sort({score: -1}) // Sort by descending order
+        .sort({ score: -1 }) // Sort by descending order
         .exec(async (err, obj) => {
             if (err) {
-                log({logger: 'top', content: `Getting top players failed: ${err}`, level: 'error'});
+                log({ logger: 'top', content: `Getting top players failed: ${err}`, level: 'error' });
                 console.log(err);
             }
 
@@ -58,6 +58,6 @@ export async function execute(interaction: CommandInteraction) {
                 embeds.push(sLeaderboardEmbed);
             }
 
-            interaction.followUp({embeds: embeds});
+            interaction.followUp({ embeds: embeds });
         });
 }

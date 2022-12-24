@@ -1,5 +1,5 @@
-import {SlashCommandBuilder} from '@discordjs/builders';
-import {CommandInteraction, MessageEmbed} from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
 
 import log from '../helpers/log';
 import userScore from '../models/userScore';
@@ -21,9 +21,9 @@ export async function execute(interaction: CommandInteraction) {
         .setColor('#ffffff');
 
     const user = interaction.options.getUser('user') || interaction.user;
-    userScore.findOne({authorID: user.id}, async (err, score) => {
+    userScore.findOne({ authorID: user.id }, async (err, score) => {
         if (err) {
-            log({logger: 'db', content: `Unable to obtain user: ${err}`, level: 'info'});
+            log({ logger: 'db', content: `Unable to obtain user: ${err}`, level: 'info' });
         }
 
         if (!score) {
@@ -35,9 +35,9 @@ export async function execute(interaction: CommandInteraction) {
         }
 
         scoreEmbed
-            .setAuthor({name: user.tag, iconURL: user.displayAvatarURL()})
+            .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
             .setDescription(`Score: \`${score.score}\``);
 
-        await interaction.reply({embeds: [scoreEmbed]});
+        await interaction.reply({ embeds: [scoreEmbed] });
     });
 }

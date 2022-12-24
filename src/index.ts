@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs';
-import {Client, Collection, Intents} from 'discord.js';
-import {token} from './helpers/env';
+import { Client, Collection, Intents } from 'discord.js';
+import { token } from './helpers/env';
 import log from './helpers/log';
 
 const client = new Client({
@@ -18,7 +18,7 @@ for (const file of commandFiles) {
     import(`${__dirname}/commands/${file}`)
         .then(command => {
             client['commands'].set(command.data.name, command);
-            log({logger: 'command', content: `Registered command ${file}!`, level: 'info'});
+            log({ logger: 'command', content: `Registered command ${file}!`, level: 'info' });
         });
 }
 
@@ -30,7 +30,7 @@ for (const file of eventFiles) {
             } else {
                 client.on(event.name, (...args) => event.execute(...args));
             }
-            log({logger: 'event', content: `Registered event ${file}!`, level: 'info'});
+            log({ logger: 'event', content: `Registered event ${file}!`, level: 'info' });
         });
 }
 

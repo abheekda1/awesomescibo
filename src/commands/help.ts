@@ -1,5 +1,5 @@
-import {SlashCommandBuilder} from '@discordjs/builders';
-import {MessageEmbed, CommandInteraction} from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { MessageEmbed, CommandInteraction } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
     .setName('help')
@@ -11,5 +11,5 @@ export async function execute(interaction: CommandInteraction) {
     const helpEmbed = new MessageEmbed()
         .setDescription('AwesomeSciBo has migrated to using slash commands! You can take a look at the different commands by typing `/` and clicking on the AwesomeSciBo icon.')
         .setColor('#ffffff');
-    interaction.followUp({embeds: [helpEmbed]});
+    interaction.followUp({ embeds: [helpEmbed] });
 }
