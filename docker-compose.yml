@@ -1,17 +1,17 @@
 # Use root/example as user/password credentials
 version: '3.1'
 services:
-  mongo:
-    image: mongo:4.4
-    restart: always
-    volumes:
-      - ./data:/data/db
+    mongo:
+        image: mongo:4.4
+        restart: always
+        volumes:
+            - ./data:/data/db
 
-  awesomescibo:
-    image: docker.io/adawesomeguy/awesomescibo:latest
-    restart: unless-stopped
-    environment:
-      MONGO_URI: "mongodb://mongo:27017/AWESOME"
-      TOKEN: ""
-      CLIENT_ID: ""
-      TESTING_GUILD: ""
+    awesomescibo:
+        image: docker.io/adawesomeguy/awesomescibo:latest
+        restart: unless-stopped
+        environment:
+            MONGO_URI: "mongodb://mongo:27017/AWESOME"
+            TOKEN: ""
+            CLIENT_ID: ""
+            TESTING_GUILD: ""

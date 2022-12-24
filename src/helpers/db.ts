@@ -18,9 +18,9 @@ export async function updateScore(isCorrect: boolean, score: number, authorId: s
             });
             newUserScore.save(err => {
                 if (err) {
-                    log({ logger: 'db', content: `Error creating new user ${authorId} for scoring`, level: 'error' });
+                    log({logger: 'db', content: `Error creating new user ${authorId} for scoring`, level: 'error'});
                 } else {
-                    log({ logger: 'db', content: `Successfully created user ${authorId} for scoring`, level: 'debug' });
+                    log({logger: 'db', content: `Successfully created user ${authorId} for scoring`, level: 'debug'});
                 }
             });
         } else {
@@ -38,7 +38,7 @@ export async function connect(mongoUri) {
             useUnifiedTopology: true,
             useNewUrlParser: true,
         })
-        .then(() => log({ logger: 'db', content: `Connected to the database at ${mongoUri}!`, level: 'info' }))
+        .then(() => log({logger: 'db', content: `Connected to the database at ${mongoUri}!`, level: 'info'}))
         .catch(err => log({
             logger: 'db',
             content: `Failed to connect to the database at ${mongoUri}: ${err}`,

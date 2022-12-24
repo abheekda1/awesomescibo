@@ -1,14 +1,14 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, Message } from 'discord.js';
+import {SlashCommandBuilder} from '@discordjs/builders';
+import {MessageEmbed, MessageActionRow, MessageButton, CommandInteraction, Message} from 'discord.js';
 
-import { decode } from 'html-entities';
+import {decode} from 'html-entities';
 import axios from 'axios';
 
 import userScore from '../models/userScore';
 import userConfig from '../models/userConfig';
 
 import log from '../helpers/log.js';
-import { updateScore } from '../helpers/db.js';
+import {updateScore} from '../helpers/db.js';
 
 export const data = new SlashCommandBuilder()
     .setName('train')
@@ -19,13 +19,13 @@ export const data = new SlashCommandBuilder()
             .setDescription('Optional subject to be used as a filter')
             .setRequired(false)
             .addChoices(
-                { name: 'astro', value: 'astro' },
-                { name: 'bio', value: 'bio' },
-                { name: 'chem', value: 'chem' },
-                { name: 'ess', value: 'ess' },
-                { name: 'phys', value: 'phys' },
-                { name: 'math', value: 'math' },
-                { name: 'energy', value: 'energy' },
+                {name: 'astro', value: 'astro'},
+                {name: 'bio', value: 'bio'},
+                {name: 'chem', value: 'chem'},
+                {name: 'ess', value: 'ess'},
+                {name: 'phys', value: 'phys'},
+                {name: 'math', value: 'math'},
+                {name: 'energy', value: 'energy'},
             )
             .setRequired(false);
         return option;
@@ -38,7 +38,7 @@ export async function execute(interaction: CommandInteraction) {
     const authorId = interaction.user.id;
     let score: number;
     userScore
-        .findOne({ authorID: authorId })
+        .findOne({authorID: authorId})
         .lean()
         .then((obj: { score: number; }, err: unknown) => {
             if (!obj) {
@@ -53,11 +53,11 @@ export async function execute(interaction: CommandInteraction) {
                     .addField('GitHub', '[Link](https://github.com/ADawesomeguy/AwesomeSciBo) (a star couldn\'t hurt...)')
                     .setColor('#ffffff')
                     .setTimestamp();
-                interaction.user.send({ embeds: [firstTimeEmbed] });
+                interaction.user.send({embeds: [firstTimeEmbed]});
             } else if (obj) {
                 score = obj.score;
             } else {
-                log({ logger: 'train', content: `Getting user score failed: ${err}`, level: 'error' });
+                log({logger: 'train', content: `Getting user score failed: ${err}`, level: 'error'});
             }
         });
 
@@ -106,7 +106,7 @@ export async function execute(interaction: CommandInteraction) {
     }
 
     axios
-        .post('https://scibowldb.com/api/questions/random', { categories: categoryArray })
+        .post('https://scibowldb.com/api/questions/random', {categories: categoryArray})
         .then((res) => {
             const questionData = res.data.question;
             const tossupQuestion = questionData.tossup_question;
@@ -117,7 +117,7 @@ export async function execute(interaction: CommandInteraction) {
                 answers[1] = answers[1].slice(0, answers[1].length - 1); // If there are multiple elements, it means there was an 'accept' and therefore a trailing ')' which should be removed
                 answers = [answers[0], ...answers[1].split(new RegExp(' OR ', 'i'))]; // Use the first element plus the last element split by 'OR' case insensitive
             }
-            interaction.followUp({ content: decode(tossupQuestion), fetchReply: true })
+            interaction.followUp({content: decode(tossupQuestion), fetchReply: true})
                 .then(q => {
                     const questionMessage = q as Message;
                     const sourceButton = new MessageActionRow()
@@ -186,21 +186,21 @@ export async function execute(interaction: CommandInteraction) {
                                                     .then(i => {
                                                         updateScore(true, score, authorId).then(async msgToReply => {
                                                             await i.reply(msgToReply);
-                                                            overrideMsg.edit({ components: [] });
+                                                            overrideMsg.edit({components: []});
                                                         });
                                                     }).catch(err => log({
-                                                        logger: 'train',
-                                                        content: `Failed to override score: ${err}`,
-                                                        level: 'error'
-                                                    }));
+                                                    logger: 'train',
+                                                    content: `Failed to override score: ${err}`,
+                                                    level: 'error'
+                                                }));
                                             }).catch(err => log({
-                                                logger: 'train',
-                                                content: `Failed to send override message: ${err}`,
-                                                level: 'error'
-                                            }));
+                                            logger: 'train',
+                                            content: `Failed to send override message: ${err}`,
+                                            level: 'error'
+                                        }));
                                     }
-                                    interaction.editReply({ components: [sourceButton] });
-                                }).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
+                                    interaction.editReply({components: [sourceButton]});
+                                }).catch(err => log({logger: 'train', content: `${err}`, level: 'error'}));
                             break;
                         }
                         case 'Multiple Choice': {
@@ -223,9 +223,9 @@ export async function execute(interaction: CommandInteraction) {
                                         .setLabel('Z')
                                         .setStyle('SECONDARY'),
                                 );
-                            interaction.editReply({ components: [choices] });
+                            interaction.editReply({components: [choices]});
                             const mcFilter = i => ['w', 'x', 'y', 'z'].includes(i.customId) && i.user.id === interaction.user.id;
-                            questionMessage.awaitMessageComponent({ filter: mcFilter })
+                            questionMessage.awaitMessageComponent({filter: mcFilter})
                                 .then(mcChoice => {
                                     if (tossupAnswer.charAt(0).toLowerCase() === mcChoice.customId) {
                                         updateScore(true, score, authorId).then((msgToReply) =>
@@ -241,13 +241,13 @@ export async function execute(interaction: CommandInteraction) {
                                             .setDescription(`It seems your answer ${mcChoice.customId.toUpperCase()} was incorrect.`)
                                             .setColor('#ffffff')
                                             .setTimestamp();
-                                        mcChoice.reply({ embeds: [incorrectEmbed] });
+                                        mcChoice.reply({embeds: [incorrectEmbed]});
                                     }
-                                    interaction.editReply({ components: [sourceButton] });
+                                    interaction.editReply({components: [sourceButton]});
                                 });
                             break;
                         }
                     }
-                }).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
-        }).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
+                }).catch(err => log({logger: 'train', content: `${err}`, level: 'error'}));
+        }).catch(err => log({logger: 'train', content: `${err}`, level: 'error'}));
 }
