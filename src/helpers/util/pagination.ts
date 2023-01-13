@@ -1,6 +1,6 @@
 import { CommandInteraction, Message, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 
-export async function paginateMessage(message : Message, embeds : MessageEmbed[]) {
+export async function paginateMessage(message: Message, embeds: MessageEmbed[]) {
 	let index = 0;
 
 	const row = new MessageActionRow;
@@ -19,7 +19,10 @@ export async function paginateMessage(message : Message, embeds : MessageEmbed[]
 		.then(async paginatorMessage => {
 			const filter = m => m.author.id === message.author.id;
 
-			const paginatorCollector = paginatorMessage.createMessageComponentCollector({ componentType: 'BUTTON', filter: filter });
+			const paginatorCollector = paginatorMessage.createMessageComponentCollector({
+				componentType: 'BUTTON',
+				filter: filter,
+			});
 
 			paginatorCollector.on('collect', async i => {
 				switch (i.customId) {
@@ -37,7 +40,7 @@ export async function paginateMessage(message : Message, embeds : MessageEmbed[]
 		});
 }
 
-export async function paginateInteraction(interaction : CommandInteraction, embeds : MessageEmbed[]) {
+export async function paginateInteraction(interaction: CommandInteraction, embeds: MessageEmbed[]) {
 	let index = 0;
 
 	const row = new MessageActionRow;
@@ -52,12 +55,20 @@ export async function paginateInteraction(interaction : CommandInteraction, embe
 			.setStyle('SECONDARY')
 	);
 
-	await interaction.followUp({ content: `Page 1 of ${embeds.length}:`, embeds: [embeds[index]], components: [row], fetchReply: true })
+	await interaction.followUp({
+		content: `Page 1 of ${embeds.length}:`,
+		embeds: [embeds[index]],
+		components: [row],
+		fetchReply: true,
+	})
 		.then(async p => {
 			const paginatorMessage = p as Message;
 			const filter = i => i.user.id === interaction.user.id;
 
-			const paginatorCollector = paginatorMessage.createMessageComponentCollector({ componentType: 'BUTTON', filter: filter });
+			const paginatorCollector = paginatorMessage.createMessageComponentCollector({
+				componentType: 'BUTTON',
+				filter: filter,
+			});
 
 			paginatorCollector.on('collect', async i => {
 				switch (i.customId) {

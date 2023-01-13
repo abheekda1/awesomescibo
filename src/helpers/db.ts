@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import log from '../helpers/log';
 import userScore from '../models/userScore';
 
-export async function updateScore(isCorrect : boolean, score : number, authorId : string) {
+export async function updateScore(isCorrect: boolean, score: number, authorId: string) {
 	if (!isCorrect) {
 		return `Nice try! Your score is still ${score}.`;
 	}
@@ -42,6 +42,10 @@ export async function connect(mongoUri) {
 			useNewUrlParser: true,
 		})
 		.then(() => log({ logger: 'db', content: `Connected to the database at ${mongoUri}!`, level: 'info' }))
-		.catch(err => log({ logger: 'db', content: `Failed to connect to the database at ${mongoUri}: ${err}`, level: 'fatal' }));
+		.catch(err => log({
+			logger: 'db',
+			content: `Failed to connect to the database at ${mongoUri}: ${err}`,
+			level: 'fatal',
+		}));
 }
 

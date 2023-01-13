@@ -16,7 +16,7 @@ export const data = new SlashCommandBuilder()
 		return option;
 	});
 
-export async function execute(interaction : CommandInteraction) {
+export async function execute(interaction: CommandInteraction) {
 	const scoreEmbed = new MessageEmbed()
 		.setColor('#ffffff');
 
@@ -27,7 +27,10 @@ export async function execute(interaction : CommandInteraction) {
 		}
 
 		if (!score) {
-			await interaction.reply({ content: 'Unfortunately, that user does not seem to have used AwesomeSciBo yet.', ephemeral: true });
+			await interaction.reply({
+				content: 'Unfortunately, that user does not seem to have used AwesomeSciBo yet.',
+				ephemeral: true,
+			});
 			return;
 		}
 

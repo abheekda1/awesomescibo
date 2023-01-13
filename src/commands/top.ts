@@ -8,7 +8,7 @@ export const data = new SlashCommandBuilder()
 	.setName('top')
 	.setDescription('Lists top ten scores across servers (server specific leaderboard WIP)');
 
-export async function execute(interaction : CommandInteraction) {
+export async function execute(interaction: CommandInteraction) {
 	await interaction.deferReply();
 
 	userScore
@@ -21,13 +21,13 @@ export async function execute(interaction : CommandInteraction) {
 			}
 
 			if (obj.length < 10) {
-			// Need at least 10 scores for top 10
+				// Need at least 10 scores for top 10
 				return interaction.followUp(
 					`There are only ${obj.length} users, we need at least 10!`,
 				);
 			}
 
-			const embeds : MessageEmbed[] = [];
+			const embeds: MessageEmbed[] = [];
 			let lbMessageContent = '';
 
 			for (let i = 0; i < 10; i++) {

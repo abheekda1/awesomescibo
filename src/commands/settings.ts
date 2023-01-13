@@ -26,7 +26,7 @@ export const data = new SlashCommandBuilder()
 		return subcommand;
 	});
 
-export async function execute(interaction : CommandInteraction) {
+export async function execute(interaction: CommandInteraction) {
 	const action = interaction.options.getSubcommand();
 	switch (action) {
 	case 'display': {
@@ -70,7 +70,11 @@ export async function execute(interaction : CommandInteraction) {
 						const vals = dispChoice.values;
 						const config = await userConfig.findById(interaction.user.id);
 						if (!config) {
-							await interaction.editReply({ content: 'You don\'t have a configuration!', embeds: [], components: [] });
+							await interaction.editReply({
+								content: 'You don\'t have a configuration!',
+								embeds: [],
+								components: [],
+							});
 						}
 						else if (vals.length === 1 && vals.at(0) === 'subjects') {
 							await interaction.editReply({
@@ -138,7 +142,10 @@ export async function execute(interaction : CommandInteraction) {
 					.then(async lvlChoice => {
 						const vals = lvlChoice.values;
 						const levels = new Array<string>();
-						await userConfig.findOneAndUpdate({ _id: interaction.user.id }, { gradeLevels: vals }, { upsert: true, new: true });
+						await userConfig.findOneAndUpdate({ _id: interaction.user.id }, { gradeLevels: vals }, {
+							upsert: true,
+							new: true,
+						});
 						await vals.forEach(v => {
 							switch (v) {
 							case 'MS':
@@ -148,7 +155,11 @@ export async function execute(interaction : CommandInteraction) {
 								levels.push('High School');
 							}
 						});
-						await interaction.editReply({ content: `Level set to: ${levels.toString().split(',').join(', ')}`, embeds: [], components: [] });
+						await interaction.editReply({
+							content: `Level set to: ${levels.toString().split(',').join(', ')}`,
+							embeds: [],
+							components: [],
+						});
 					});
 			}));
 		break;
@@ -219,12 +230,19 @@ export async function execute(interaction : CommandInteraction) {
 				(subjectMsg as Message).awaitMessageComponent({ filter: subjectFilter, componentType: 'SELECT_MENU' })
 					.then(async subjectChoice => {
 						const vals = subjectChoice.values;
-						await userConfig.findOneAndUpdate({ _id: interaction.user.id }, { subjects: vals }, { upsert: true, new: true });
+						await userConfig.findOneAndUpdate({ _id: interaction.user.id }, { subjects: vals }, {
+							upsert: true,
+							new: true,
+						});
 						const subjects = new Array<string>();
 						await vals.forEach(v => {
 							subjects.push(v.toLowerCase().split(' ').map(w => w[0].toUpperCase() + w.substring(1)).join(' '));
 						});
-						await interaction.editReply({ content: `Subjects set to: ${subjects.toString().split(',').join(', ')}`, components: [], embeds: [] });
+						await interaction.editReply({
+							content: `Subjects set to: ${subjects.toString().split(',').join(', ')}`,
+							components: [],
+							embeds: [],
+						});
 					});
 			}));
 		break;

@@ -11,11 +11,11 @@ export const data = new SlashCommandBuilder()
 	.setName('about')
 	.setDescription('Commands regarding the creation/development of the bot');
 
-export async function execute(interaction : CommandInteraction) {
+export async function execute(interaction: CommandInteraction) {
 	await interaction.deferReply();
 
 	const client = interaction.client;
-	const embeds : MessageEmbed[] = [];
+	const embeds: MessageEmbed[] = [];
 
 	const contributorEmbed = new MessageEmbed().setTitle('Contributors')
 		.addField('Creator', '<@745063586422063214> [ADawesomeguy#3602]', true)

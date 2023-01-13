@@ -5,7 +5,8 @@ export const data = new SlashCommandBuilder()
 	.setName('help')
 	.setDescription('Replies with a help message explaining what the bot can do');
 
-export async function execute(interaction : CommandInteraction) {
+export async function execute(interaction: CommandInteraction) {
+	await interaction.deferReply();
 	await interaction.deferReply();
 
 	const helpEmbed = new MessageEmbed()

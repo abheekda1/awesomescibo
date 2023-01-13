@@ -31,7 +31,7 @@ export const data = new SlashCommandBuilder()
 		return option;
 	});
 
-export async function execute(interaction : CommandInteraction) {
+export async function execute(interaction: CommandInteraction) {
 	await interaction.deferReply();
 
 	const subject = interaction.options.get('subject') ? interaction.options.get('subject')?.value : null;
@@ -44,7 +44,10 @@ export async function execute(interaction : CommandInteraction) {
 			if (!obj) {
 				score = 0;
 				const firstTimeEmbed = new MessageEmbed()
-					.setAuthor({ name: interaction.client.user?.tag ? interaction.client.user?.tag : '', iconURL: interaction.client.user?.displayAvatarURL() })
+					.setAuthor({
+						name: interaction.client.user?.tag ? interaction.client.user?.tag : '',
+						iconURL: interaction.client.user?.displayAvatarURL(),
+					})
 					.setDescription('Hey! It seems like it\'s your first time using AwesomeSciBo. Here\'s some information regarding the bot if you need it (for issues, contributions, etc.):')
 					.addField('Creator', '<@745063586422063214> [@abheekd#3602]')
 					.addField('GitHub', '[Link](https://github.com/ADawesomeguy/AwesomeSciBo) (a star couldn\'t hurt...)')
@@ -60,7 +63,7 @@ export async function execute(interaction : CommandInteraction) {
 			}
 		});
 
-	let categoryArray : string[] = [];
+	let categoryArray: string[] = [];
 	const allCategories = ['BIOLOGY', 'PHYSICS', 'CHEMISTRY', 'EARTH AND SPACE', 'ASTRONOMY', 'MATH'];
 	const configCategories = await userConfig.findById(interaction.user.id);
 
@@ -154,7 +157,10 @@ export async function execute(interaction : CommandInteraction) {
 								}
 								else {
 									const overrideEmbed = new MessageEmbed()
-										.setAuthor({ name: answerMsg?.author.tag ? answerMsg.author.tag : '', iconURL: answerMsg?.author.displayAvatarURL() })
+										.setAuthor({
+											name: answerMsg?.author.tag ? answerMsg.author.tag : '',
+											iconURL: answerMsg?.author.displayAvatarURL(),
+										})
 										.addField('Correct answer', `\`${tossupAnswer}\``)
 										.setDescription('It seems your answer was incorrect. Please react with <:override:955265585086857236> to override your answer if you think you got it right.')
 										.setColor('#ffffff')
@@ -174,7 +180,7 @@ export async function execute(interaction : CommandInteraction) {
 											const overrideFilter = i => {
 												return (
 													['override'].includes(i.customId) &&
-                  i.user.id === answerMsg.author.id
+                                                        i.user.id === answerMsg.author.id
 												);
 											};
 											overrideMsg
@@ -186,8 +192,16 @@ export async function execute(interaction : CommandInteraction) {
 														await i.reply(msgToReply);
 														overrideMsg.edit({ components: [] });
 													});
-												}).catch(err => log({ logger: 'train', content: `Failed to override score: ${err}`, level: 'error' }));
-										}).catch(err => log({ logger: 'train', content: `Failed to send override message: ${err}`, level: 'error' }));
+												}).catch(err => log({
+													logger: 'train',
+													content: `Failed to override score: ${err}`,
+													level: 'error',
+												}));
+										}).catch(err => log({
+											logger: 'train',
+											content: `Failed to send override message: ${err}`,
+											level: 'error',
+										}));
 								}
 								interaction.editReply({ components: [sourceButton] });
 							}).catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
@@ -224,7 +238,10 @@ export async function execute(interaction : CommandInteraction) {
 								}
 								else {
 									const incorrectEmbed = new MessageEmbed()
-										.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
+										.setAuthor({
+											name: interaction.user.tag,
+											iconURL: interaction.user.displayAvatarURL(),
+										})
 										.addField('Correct answer', `\`${tossupAnswer}\``)
 										.setDescription(`It seems your answer ${mcChoice.customId.toUpperCase()} was incorrect.`)
 										.setColor('#ffffff')
