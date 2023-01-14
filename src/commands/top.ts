@@ -6,7 +6,7 @@ import userScore from '../models/userScore';
 
 export const data = new SlashCommandBuilder()
 	.setName('top')
-	.setDescription('Lists top ten scores across servers (server specific leaderboard WIP)');
+	.setDescription('Lists top ten scores across servers and in the current server');
 
 export async function execute(interaction: CommandInteraction) {
 	await interaction.deferReply();
