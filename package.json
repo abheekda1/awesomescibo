@@ -20,7 +20,8 @@
   "version": "4.7.6",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "fmt": "prettier --config .prettierrc './**/*.ts' --write"
   },
   "keywords": [
     "discord",
