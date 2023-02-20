@@ -54,7 +54,7 @@ export async function execute(interaction: CommandInteraction) {
 					.setColor('#ffffff')
 					.setTimestamp();
 				interaction.user.send({ embeds: [firstTimeEmbed] })
-                    .catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
+					.catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
 			}
 			else if (obj) {
 				score = obj.score;
