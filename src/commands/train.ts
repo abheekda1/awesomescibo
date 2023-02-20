@@ -53,7 +53,8 @@ export async function execute(interaction: CommandInteraction) {
 					.addField('GitHub', '[Link](https://github.com/ADawesomeguy/AwesomeSciBo) (a star couldn\'t hurt...)')
 					.setColor('#ffffff')
 					.setTimestamp();
-				interaction.user.send({ embeds: [firstTimeEmbed] });
+				interaction.user.send({ embeds: [firstTimeEmbed] })
+                    .catch(err => log({ logger: 'train', content: `${err}`, level: 'error' }));
 			}
 			else if (obj) {
 				score = obj.score;
