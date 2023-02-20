@@ -1,6 +1,7 @@
 {
-  "singleQuote": false,
+  "singleQuote": true,
   "semi": true,
+  "useTabs": true,
   "endOfLine": "lf",
   "trailingComma": "es5"
 }
