@@ -19,7 +19,7 @@ export async function execute(interaction: CommandInteraction) {
 
 	const contributorEmbed = new MessageEmbed()
 		.setTitle('Contributors')
-		.addField('Creator', '<@745063586422063214> [ADawesomeguy#3602]', true)
+		.addField('Creator', '<@745063586422063214> [abheekda1]', true)
 		.addField(
 			'Contributors',
 			'<@650525101048987649> [tEjAs#8127]\n<@426864344463048705> [tetrident#9396]',
